@@ -60,11 +60,43 @@ geometry.setAttribute(
     new THREE.BufferAttribute(positions, 3)
 );
 
+const starCanvas = document.createElement("canvas");
+starCanvas.width = 64;
+starCanvas.height = 64;
+
+const starContext = starCanvas.getContext("2d");
+
+const gradient = starContext.createRadialGradient(
+    32, 32, 0,
+    32, 32, 32
+);
+
+gradient.addColorStop(0, "rgba(255, 255, 255, 1)");
+gradient.addColorStop(0.08, "rgba(255, 255, 255, 1)");
+gradient.addColorStop(0.25, "rgba(255, 255, 255, 0.6)");
+gradient.addColorStop(0.55, "rgba(255, 255, 255, 0.15)");
+gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
+
+starContext.fillStyle = gradient;
+starContext.fillRect(0, 0, 64, 64);
+
+// Petit cœur lumineux
+starContext.fillStyle = "#ffffff";
+starContext.beginPath();
+starContext.arc(32, 32, 2, 0, Math.PI * 2);
+starContext.fill();
+
+const starTexture = new THREE.CanvasTexture(starCanvas);
+
 const material = new THREE.PointsMaterial({
+    map: starTexture,
     color: 0xffffff,
-    size: 0.035,
+    size: 0.12,
     transparent: true,
-    opacity: 0.8
+    opacity: 0.9,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+    alphaTest: 0.001
 });
 
 const particles = new THREE.Points(
