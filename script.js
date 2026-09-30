@@ -8,10 +8,8 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
 
 const scene = new THREE.Scene();
 
-// Fond espace profond
 scene.background = new THREE.Color(0x070b18);
 
-// Brume atmosphérique très légère
 scene.fog = new THREE.FogExp2(
     0x070b18,
     0.008
@@ -83,10 +81,6 @@ for (let i = 0; i < particleCount; i++) {
 
     const i3 = i * 3;
 
-    // ─────────────────────────────────────────
-    // POSITION DANS LE VORTEX
-    // ─────────────────────────────────────────
-
     const z =
         (Math.random() - 0.5) * 30;
 
@@ -110,10 +104,6 @@ for (let i = 0; i < particleCount; i++) {
     positions[i3 + 2] =
         z;
 
-    // ─────────────────────────────────────────
-    // COULEUR
-    // ─────────────────────────────────────────
-
     const color =
         starColors[
             Math.floor(
@@ -130,13 +120,6 @@ for (let i = 0; i < particleCount; i++) {
 
     colors[i3 + 2] =
         color.b;
-
-    // ─────────────────────────────────────────
-    // TAILLE
-    // ─────────────────────────────────────────
-
-    // La majorité reste petite,
-    // avec quelques étoiles légèrement plus imposantes.
 
     if (Math.random() < 0.08) {
 
@@ -238,7 +221,6 @@ const material = new THREE.ShaderMaterial({
                 discard;
             }
 
-            // Cœur lumineux
             float core =
                 1.0 -
                 smoothstep(
@@ -247,7 +229,6 @@ const material = new THREE.ShaderMaterial({
                     d
                 );
 
-            // Halo
             float glow =
                 1.0 -
                 smoothstep(
@@ -304,7 +285,6 @@ const nebulaSizes =
         nebulaCount
     );
 
-// Couleurs très sombres et spatiales
 const nebulaPalette = [
     new THREE.Color(0x172b52),
     new THREE.Color(0x203866),
@@ -317,12 +297,9 @@ for (let i = 0; i < nebulaCount; i++) {
 
     const i3 = i * 3;
 
-    // Même profondeur que les étoiles
     const z =
         (Math.random() - 0.5) * 30;
 
-    // La brume reste concentrée
-    // autour du vortex
     const radius =
         1.5 +
         Math.random() * 5.5;
@@ -330,7 +307,6 @@ for (let i = 0; i < nebulaCount; i++) {
     const angle =
         Math.random() * Math.PI * 2;
 
-    // Nuage irrégulier
     const variation =
         (Math.random() - 0.5) * 2.5;
 
@@ -446,7 +422,6 @@ const nebulaMaterial =
                     discard;
                 }
 
-                // Nuage très doux
                 float cloud =
                     1.0 -
                     smoothstep(
@@ -476,8 +451,407 @@ const nebula =
 scene.add(nebula);
 
 // ─────────────────────────────────────────────
+// TROU NOIR
+// ─────────────────────────────────────────────
+//
+// Une grande surface invisible visuellement
+// sauf au niveau du trou noir.
+// Le shader simule :
+//
+// - horizon noir
+// - disque d'accrétion
+// - halo
+// - distorsion lumineuse
+// - asymétrie
+// - rotation
+//
+// ─────────────────────────────────────────────
+
+const blackHoleGeometry =
+    new THREE.PlaneGeometry(
+        14,
+        14
+    );
+
+const blackHoleMaterial =
+    new THREE.ShaderMaterial({
+
+        transparent: true,
+
+        depthTest: false,
+
+        depthWrite: false,
+
+        uniforms: {
+
+            uTime: {
+                value: 0
+            },
+
+            uAspect: {
+                value:
+                    window.innerWidth /
+                    window.innerHeight
+            }
+        },
+
+        vertexShader: `
+            varying vec2 vUv;
+
+            void main() {
+
+                vUv =
+                    uv;
+
+                gl_Position =
+                    projectionMatrix *
+                    modelViewMatrix *
+                    vec4(
+                        position,
+                        1.0
+                    );
+            }
+        `,
+
+        fragmentShader: `
+            varying vec2 vUv;
+
+            uniform float uTime;
+            uniform float uAspect;
+
+            #define PI 3.14159265359
+
+            void main() {
+
+                // ─────────────────────────────
+                // COORDONNÉES
+                // ─────────────────────────────
+
+                vec2 uv =
+                    vUv * 2.0 - 1.0;
+
+                uv.x *= uAspect;
+
+                float radius =
+                    length(uv);
+
+                float angle =
+                    atan(
+                        uv.y,
+                        uv.x
+                    );
+
+                // ─────────────────────────────
+                // PETITE DISTORSION
+                // ─────────────────────────────
+                //
+                // La frontière n'est volontairement
+                // pas parfaitement circulaire.
+                //
+                float distortion =
+                    sin(
+                        angle * 3.0
+                        -
+                        uTime * 0.7
+                    ) * 0.018;
+
+                distortion +=
+                    sin(
+                        angle * 7.0
+                        +
+                        uTime * 0.45
+                    ) * 0.008;
+
+                float distortedRadius =
+                    radius +
+                    distortion;
+
+                // ─────────────────────────────
+                // HORIZON
+                // ─────────────────────────────
+
+                const float horizon =
+                    0.255;
+
+                float blackMask =
+                    1.0 -
+                    smoothstep(
+                        horizon - 0.015,
+                        horizon + 0.015,
+                        distortedRadius
+                    );
+
+                // ─────────────────────────────
+                // DISQUE D'ACCRÉTION
+                // ─────────────────────────────
+
+                float disk =
+                    1.0 -
+                    smoothstep(
+                        0.26,
+                        0.39,
+                        abs(
+                            distortedRadius -
+                            0.34
+                        )
+                    );
+
+                // ─────────────────────────────
+                // STRUCTURE DU DISQUE
+                // ─────────────────────────────
+
+                float rotation =
+                    angle +
+                    uTime * 0.8;
+
+                float wave =
+                    sin(
+                        rotation * 5.0
+                    ) * 0.035;
+
+                float wave2 =
+                    sin(
+                        rotation * 11.0
+                        -
+                        uTime * 1.4
+                    ) * 0.018;
+
+                disk *=
+                    0.82 +
+                    wave +
+                    wave2;
+
+                // ─────────────────────────────
+                // ASYMÉTRIE
+                // ─────────────────────────────
+
+                float directionalLight =
+                    0.5 +
+                    0.5 *
+                    cos(
+                        angle -
+                        0.7
+                    );
+
+                disk *=
+                    0.65 +
+                    directionalLight *
+                    0.75;
+
+                // ─────────────────────────────
+                // HALO PROCHE
+                // ─────────────────────────────
+
+                float innerHalo =
+                    1.0 -
+                    smoothstep(
+                        0.28,
+                        0.58,
+                        distortedRadius
+                    );
+
+                innerHalo =
+                    pow(
+                        innerHalo,
+                        3.5
+                    );
+
+                // ─────────────────────────────
+                // HALO LARGE
+                // ─────────────────────────────
+
+                float outerHalo =
+                    1.0 -
+                    smoothstep(
+                        0.30,
+                        1.35,
+                        distortedRadius
+                    );
+
+                outerHalo =
+                    pow(
+                        outerHalo,
+                        3.8
+                    );
+
+                // ─────────────────────────────
+                // ANNEAU DE LENTILLE
+                // ─────────────────────────────
+                //
+                // Donne une impression de lumière
+                // qui se courbe autour de l'horizon.
+                //
+                float lensRing =
+                    1.0 -
+                    smoothstep(
+                        0.235,
+                        0.29,
+                        abs(
+                            distortedRadius -
+                            0.275
+                        )
+                    );
+
+                lensRing =
+                    pow(
+                        lensRing,
+                        2.0
+                    );
+
+                // ─────────────────────────────
+                // ARC GRAVITATIONNEL
+                // ─────────────────────────────
+                //
+                // Une partie de la lumière est
+                // volontairement plus intense.
+                //
+                float arc =
+                    smoothstep(
+                        -0.3,
+                        0.9,
+                        cos(
+                            angle -
+                            0.9
+                        )
+                    );
+
+                lensRing *=
+                    0.55 +
+                    arc *
+                    0.9;
+
+                // ─────────────────────────────
+                // COULEURS
+                // ─────────────────────────────
+
+                vec3 white =
+                    vec3(
+                        1.0,
+                        1.0,
+                        1.0
+                    );
+
+                vec3 blueWhite =
+                    vec3(
+                        0.72,
+                        0.88,
+                        1.0
+                    );
+
+                vec3 haloColor =
+                    vec3(
+                        0.25,
+                        0.48,
+                        1.0
+                    );
+
+                // ─────────────────────────────
+                // COMPOSITION
+                // ─────────────────────────────
+
+                vec3 color =
+                    vec3(
+                        0.0
+                    );
+
+                color +=
+                    white *
+                    disk *
+                    2.8;
+
+                color +=
+                    blueWhite *
+                    lensRing *
+                    3.5;
+
+                color +=
+                    blueWhite *
+                    innerHalo *
+                    1.5;
+
+                color +=
+                    haloColor *
+                    outerHalo *
+                    0.65;
+
+                // ─────────────────────────────
+                // ALPHA
+                // ─────────────────────────────
+
+                float alpha =
+                    max(
+                        blackMask,
+                        disk
+                    );
+
+                alpha =
+                    max(
+                        alpha,
+                        lensRing
+                    );
+
+                alpha =
+                    max(
+                        alpha,
+                        innerHalo * 0.7
+                    );
+
+                alpha =
+                    max(
+                        alpha,
+                        outerHalo * 0.28
+                    );
+
+                // ─────────────────────────────
+                // CENTRE NOIR ABSOLU
+                // ─────────────────────────────
+
+                if (
+                    distortedRadius <
+                    horizon
+                ) {
+
+                    color =
+                        vec3(
+                            0.0
+                        );
+
+                    alpha =
+                        1.0;
+                }
+
+                gl_FragColor =
+                    vec4(
+                        color,
+                        alpha
+                    );
+            }
+        `
+    });
+
+const blackHole =
+    new THREE.Mesh(
+        blackHoleGeometry,
+        blackHoleMaterial
+    );
+
+// Placé au centre du vortex
+blackHole.position.set(
+    0,
+    0,
+    0
+);
+
+scene.add(
+    blackHole
+);
+
+// ─────────────────────────────────────────────
 // ANIMATION
 // ─────────────────────────────────────────────
+
+const clock =
+    new THREE.Clock();
 
 function animate() {
 
@@ -485,12 +859,29 @@ function animate() {
         animate
     );
 
-    // Rotation très lente
-    particles.rotation.z += 0.0008;
+    const elapsed =
+        clock.getElapsedTime();
 
-    // La brume bouge légèrement
-    // indépendamment des étoiles
-    nebula.rotation.z -= 0.00018;
+    // ─────────────────────────────────────────
+    // VORTEX
+    // ─────────────────────────────────────────
+
+    particles.rotation.z +=
+        0.0008;
+
+    // ─────────────────────────────────────────
+    // NÉBULEUSE
+    // ─────────────────────────────────────────
+
+    nebula.rotation.z -=
+        0.00018;
+
+    // ─────────────────────────────────────────
+    // TROU NOIR
+    // ─────────────────────────────────────────
+
+    blackHoleMaterial.uniforms.uTime.value =
+        elapsed;
 
     renderer.render(
         scene,
@@ -518,5 +909,9 @@ window.addEventListener(
             window.innerWidth,
             window.innerHeight
         );
+
+        blackHoleMaterial.uniforms.uAspect.value =
+            window.innerWidth /
+            window.innerHeight;
     }
 );
