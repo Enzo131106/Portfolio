@@ -454,23 +454,16 @@ scene.add(nebula);
 // TROU NOIR
 // ─────────────────────────────────────────────
 //
-// Une grande surface invisible visuellement
-// sauf au niveau du trou noir.
-// Le shader simule :
-//
-// - horizon noir
-// - disque d'accrétion
-// - halo
-// - distorsion lumineuse
-// - asymétrie
-// - rotation
-//
+// Petit trou noir au centre du vortex.
+// L'horizon reste parfaitement circulaire.
+// La déformation est uniquement appliquée
+// à la lumière autour de celui-ci.
 // ─────────────────────────────────────────────
 
 const blackHoleGeometry =
     new THREE.PlaneGeometry(
-        14,
-        14
+        5.5,
+        5.5
     );
 
 const blackHoleMaterial =
@@ -500,8 +493,7 @@ const blackHoleMaterial =
 
             void main() {
 
-                vUv =
-                    uv;
+                vUv = uv;
 
                 gl_Position =
                     projectionMatrix *
@@ -542,87 +534,66 @@ const blackHoleMaterial =
                     );
 
                 // ─────────────────────────────
-                // PETITE DISTORSION
-                // ─────────────────────────────
-                //
-                // La frontière n'est volontairement
-                // pas parfaitement circulaire.
-                //
-                float distortion =
-                    sin(
-                        angle * 3.0
-                        -
-                        uTime * 0.7
-                    ) * 0.018;
-
-                distortion +=
-                    sin(
-                        angle * 7.0
-                        +
-                        uTime * 0.45
-                    ) * 0.008;
-
-                float distortedRadius =
-                    radius +
-                    distortion;
-
-                // ─────────────────────────────
                 // HORIZON
                 // ─────────────────────────────
-
+                //
+                // PARFAITEMENT CIRCULAIRE.
+                //
                 const float horizon =
-                    0.255;
+                    0.115;
 
-                float blackMask =
+                float horizonMask =
                     1.0 -
                     smoothstep(
-                        horizon - 0.015,
-                        horizon + 0.015,
-                        distortedRadius
+                        horizon - 0.008,
+                        horizon + 0.008,
+                        radius
                     );
 
                 // ─────────────────────────────
                 // DISQUE D'ACCRÉTION
                 // ─────────────────────────────
 
+                const float diskRadius =
+                    0.155;
+
                 float disk =
                     1.0 -
                     smoothstep(
-                        0.26,
-                        0.39,
+                        0.025,
+                        0.065,
                         abs(
-                            distortedRadius -
-                            0.34
+                            radius -
+                            diskRadius
                         )
                     );
 
                 // ─────────────────────────────
-                // STRUCTURE DU DISQUE
+                // PETITE VARIATION DE LUMINOSITÉ
                 // ─────────────────────────────
 
                 float rotation =
                     angle +
-                    uTime * 0.8;
+                    uTime * 0.9;
 
-                float wave =
+                float variation =
                     sin(
                         rotation * 5.0
-                    ) * 0.035;
+                    ) * 0.025;
 
-                float wave2 =
+                variation +=
                     sin(
-                        rotation * 11.0
+                        rotation * 9.0
                         -
-                        uTime * 1.4
-                    ) * 0.018;
+                        uTime
+                    ) * 0.012;
 
                 disk *=
-                    0.82 +
-                    wave +
-                    wave2;
+                    0.9 +
+                    variation;
 
                 // ─────────────────────────────
-                // ASYMÉTRIE
+                // ASYMÉTRIE TRÈS LÉGÈRE
                 // ─────────────────────────────
 
                 float directionalLight =
@@ -634,91 +605,76 @@ const blackHoleMaterial =
                     );
 
                 disk *=
-                    0.65 +
+                    0.82 +
                     directionalLight *
-                    0.75;
+                    0.35;
 
                 // ─────────────────────────────
-                // HALO PROCHE
-                // ─────────────────────────────
-
-                float innerHalo =
-                    1.0 -
-                    smoothstep(
-                        0.28,
-                        0.58,
-                        distortedRadius
-                    );
-
-                innerHalo =
-                    pow(
-                        innerHalo,
-                        3.5
-                    );
-
-                // ─────────────────────────────
-                // HALO LARGE
-                // ─────────────────────────────
-
-                float outerHalo =
-                    1.0 -
-                    smoothstep(
-                        0.30,
-                        1.35,
-                        distortedRadius
-                    );
-
-                outerHalo =
-                    pow(
-                        outerHalo,
-                        3.8
-                    );
-
-                // ─────────────────────────────
-                // ANNEAU DE LENTILLE
+                // COURBURE DE LA LUMIÈRE
                 // ─────────────────────────────
                 //
-                // Donne une impression de lumière
-                // qui se courbe autour de l'horizon.
+                // Très faible.
                 //
+                // Elle ne déforme PAS le trou noir.
+                // Elle donne seulement une petite
+                // irrégularité au bord lumineux.
+                //
+                float lens =
+                    sin(
+                        angle * 3.0
+                        -
+                        uTime * 0.35
+                    ) * 0.004;
+
                 float lensRing =
                     1.0 -
                     smoothstep(
-                        0.235,
-                        0.29,
+                        0.008,
+                        0.022,
                         abs(
-                            distortedRadius -
-                            0.275
+                            radius -
+                            (
+                                0.135 +
+                                lens
+                            )
                         )
                     );
 
-                lensRing =
-                    pow(
-                        lensRing,
-                        2.0
-                    );
+                // ─────────────────────────────
+                // PETIT HALO
+                // ─────────────────────────────
 
-                // ─────────────────────────────
-                // ARC GRAVITATIONNEL
-                // ─────────────────────────────
-                //
-                // Une partie de la lumière est
-                // volontairement plus intense.
-                //
-                float arc =
+                float halo =
+                    1.0 -
                     smoothstep(
-                        -0.3,
-                        0.9,
-                        cos(
-                            angle -
-                            0.9
-                        )
+                        0.16,
+                        0.34,
+                        radius
                     );
 
-                lensRing *=
-                    0.55 +
-                    arc *
-                    0.9;
+                halo =
+                    pow(
+                        halo,
+                        5.0
+                    );
+
+                // ─────────────────────────────
+                // HALO EXTRÊMEMENT DISCRET
+                // ─────────────────────────────
+
+                float outerGlow =
+                    1.0 -
+                    smoothstep(
+                        0.20,
+                        0.42,
+                        radius
+                    );
+
+                outerGlow =
+                    pow(
+                        outerGlow,
+                        7.0
+                    );
 
                 // ─────────────────────────────
                 // COULEURS
@@ -738,16 +694,12 @@ const blackHoleMaterial =
                         1.0
                     );
 
-                vec3 haloColor =
+                vec3 blue =
                     vec3(
                         0.25,
-                        0.48,
+                        0.45,
                         1.0
                     );
-
-                // ─────────────────────────────
-                // COMPOSITION
-                // ─────────────────────────────
 
                 vec3 color =
                     vec3(
@@ -757,32 +709,29 @@ const blackHoleMaterial =
                 color +=
                     white *
                     disk *
-                    2.8;
+                    3.2;
 
                 color +=
                     blueWhite *
                     lensRing *
-                    3.5;
+                    2.5;
 
                 color +=
                     blueWhite *
-                    innerHalo *
-                    1.5;
+                    halo *
+                    0.75;
 
                 color +=
-                    haloColor *
-                    outerHalo *
-                    0.65;
+                    blue *
+                    outerGlow *
+                    0.22;
 
                 // ─────────────────────────────
                 // ALPHA
                 // ─────────────────────────────
 
                 float alpha =
-                    max(
-                        blackMask,
-                        disk
-                    );
+                    disk;
 
                 alpha =
                     max(
@@ -793,21 +742,21 @@ const blackHoleMaterial =
                 alpha =
                     max(
                         alpha,
-                        innerHalo * 0.7
+                        halo * 0.45
                     );
 
                 alpha =
                     max(
                         alpha,
-                        outerHalo * 0.28
+                        outerGlow * 0.08
                     );
 
                 // ─────────────────────────────
-                // CENTRE NOIR ABSOLU
+                // HORIZON NOIR
                 // ─────────────────────────────
 
                 if (
-                    distortedRadius <
+                    radius <
                     horizon
                 ) {
 
@@ -835,7 +784,6 @@ const blackHole =
         blackHoleMaterial
     );
 
-// Placé au centre du vortex
 blackHole.position.set(
     0,
     0,
@@ -844,74 +792,4 @@ blackHole.position.set(
 
 scene.add(
     blackHole
-);
-
-// ─────────────────────────────────────────────
-// ANIMATION
-// ─────────────────────────────────────────────
-
-const clock =
-    new THREE.Clock();
-
-function animate() {
-
-    requestAnimationFrame(
-        animate
-    );
-
-    const elapsed =
-        clock.getElapsedTime();
-
-    // ─────────────────────────────────────────
-    // VORTEX
-    // ─────────────────────────────────────────
-
-    particles.rotation.z +=
-        0.0008;
-
-    // ─────────────────────────────────────────
-    // NÉBULEUSE
-    // ─────────────────────────────────────────
-
-    nebula.rotation.z -=
-        0.00018;
-
-    // ─────────────────────────────────────────
-    // TROU NOIR
-    // ─────────────────────────────────────────
-
-    blackHoleMaterial.uniforms.uTime.value =
-        elapsed;
-
-    renderer.render(
-        scene,
-        camera
-    );
-}
-
-animate();
-
-// ─────────────────────────────────────────────
-// RESPONSIVE
-// ─────────────────────────────────────────────
-
-window.addEventListener(
-    "resize",
-    () => {
-
-        camera.aspect =
-            window.innerWidth /
-            window.innerHeight;
-
-        camera.updateProjectionMatrix();
-
-        renderer.setSize(
-            window.innerWidth,
-            window.innerHeight
-        );
-
-        blackHoleMaterial.uniforms.uAspect.value =
-            window.innerWidth /
-            window.innerHeight;
-    }
 );
