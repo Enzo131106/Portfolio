@@ -50,9 +50,25 @@ for (let i = 0; i < particleCount; i++) {
 
     const i3 = i * 3;
 
-    positions[i3] = (Math.random() - 0.5) * 20;
-    positions[i3 + 1] = (Math.random() - 0.5) * 20;
-    positions[i3 + 2] = (Math.random() - 0.5) * 20;
+    // Position le long de l'axe du vortex
+    const z = (Math.random() - 0.5) * 30;
+
+    // Progression autour du vortex
+    const angle = Math.random() * Math.PI * 2;
+
+    // Rayon du vortex
+    const radius = 2.5 + Math.random() * 4.5;
+
+    // Légère irrégularité
+    const variation = (Math.random() - 0.5) * 0.8;
+
+    positions[i3] =
+        Math.cos(angle) * (radius + variation);
+
+    positions[i3 + 1] =
+        Math.sin(angle) * (radius + variation);
+
+    positions[i3 + 2] = z;
 }
 
 geometry.setAttribute(
@@ -146,8 +162,7 @@ function animate() {
 
     requestAnimationFrame(animate);
 
-    particles.rotation.y += 0.0005;
-    particles.rotation.x += 0.0002;
+    particles.rotation.z += 0.0008;
 
     renderer.render(scene, camera);
 }
