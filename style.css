@@ -1,0 +1,14 @@
+/* Les variables globales */
+:root {
+
+}
+
+/* Format tablette */
+@media screen and (max-width: 1199px) {
+
+}
+
+/* Format téléphone */
+@media screen and (max-width: 767px) {
+
+}
