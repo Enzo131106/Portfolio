@@ -7,6 +7,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
 // ─────────────────────────────────────────────
 
 const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0F172A);
 
 // ─────────────────────────────────────────────
 // CAMÉRA
@@ -27,7 +28,7 @@ camera.position.z = 5;
 
 const renderer = new THREE.WebGLRenderer({
     antialias: true,
-    alpha: true
+    alpha: false
 });
 
 renderer.setSize(window.innerWidth, window.innerHeight);
