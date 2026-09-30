@@ -60,65 +60,66 @@ geometry.setAttribute(
     new THREE.BufferAttribute(positions, 3)
 );
 
-const starCanvas = document.createElement("canvas");
-starCanvas.width = 64;
-starCanvas.height = 64;
-
-const ctx = starCanvas.getContext("2d");
-
-ctx.clearRect(0, 0, 64, 64);
-
-// Halo
-const glow = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
-glow.addColorStop(0, "rgba(255,255,255,1)");
-glow.addColorStop(0.15, "rgba(255,255,255,0.7)");
-glow.addColorStop(0.4, "rgba(255,255,255,0.15)");
-glow.addColorStop(1, "rgba(255,255,255,0)");
-
-ctx.fillStyle = glow;
-ctx.fillRect(0, 0, 64, 64);
-
-// Étoile à 4 branches
-ctx.save();
-ctx.translate(32, 32);
-
-ctx.fillStyle = "white";
-
-ctx.beginPath();
-
-// Branche verticale
-ctx.moveTo(0, -22);
-ctx.lineTo(3, -3);
-
-// Branche droite
-ctx.lineTo(22, 0);
-ctx.lineTo(3, 3);
-
-// Branche basse
-ctx.lineTo(0, 22);
-ctx.lineTo(-3, 3);
-
-// Branche gauche
-ctx.lineTo(-22, 0);
-ctx.lineTo(-3, -3);
-
-ctx.closePath();
-ctx.fill();
-
-ctx.restore();
-
-const starTexture = new THREE.CanvasTexture(starCanvas);
-starTexture.needsUpdate = true;
-
-const material = new THREE.PointsMaterial({
-    map: starTexture,
-    color: 0xffffff,
-    size: 0.12,
+const material = new THREE.ShaderMaterial({
     transparent: true,
-    opacity: 0.9,
     depthWrite: false,
     blending: THREE.AdditiveBlending,
-    alphaTest: 0.001
+
+    uniforms: {
+        uSize: { value: 90.0 }
+    },
+
+    vertexShader: `
+        uniform float uSize;
+
+        void main() {
+
+            vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+
+            gl_Position = projectionMatrix * mvPosition;
+
+            gl_PointSize = uSize / -mvPosition.z;
+        }
+    `,
+
+    fragmentShader: `
+        void main() {
+
+            // Coordonnées de la particule : de -1 à 1
+            vec2 uv = gl_PointCoord * 2.0 - 1.0;
+
+            float distanceFromCenter = length(uv);
+
+            // Halo circulaire
+            float glow = 1.0 - smoothstep(0.0, 1.0, distanceFromCenter);
+            glow = pow(glow, 3.0);
+
+            // Étoile à 4 branches
+            float horizontal = exp(-abs(uv.y) * 18.0);
+            float vertical = exp(-abs(uv.x) * 18.0);
+
+            float star = max(horizontal, vertical);
+
+            // Centre très lumineux
+            float core = 1.0 - smoothstep(0.0, 0.12, distanceFromCenter);
+
+            // Combinaison étoile + halo
+            float alpha = max(glow * 0.45, star * 0.75);
+            alpha = max(alpha, core);
+
+            // Supprime complètement les coins du quad
+            if (distanceFromCenter > 1.0) {
+                discard;
+            }
+
+            gl_FragColor = vec4(
+                1.0,
+                1.0,
+                1.0,
+                alpha
+            );
+        }
+    `
 });
 
 const particles = new THREE.Points(
