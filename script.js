@@ -64,29 +64,51 @@ const starCanvas = document.createElement("canvas");
 starCanvas.width = 64;
 starCanvas.height = 64;
 
-const starContext = starCanvas.getContext("2d");
+const ctx = starCanvas.getContext("2d");
 
-const gradient = starContext.createRadialGradient(
-    32, 32, 0,
-    32, 32, 32
-);
+ctx.clearRect(0, 0, 64, 64);
 
-gradient.addColorStop(0, "rgba(255, 255, 255, 1)");
-gradient.addColorStop(0.08, "rgba(255, 255, 255, 1)");
-gradient.addColorStop(0.25, "rgba(255, 255, 255, 0.6)");
-gradient.addColorStop(0.55, "rgba(255, 255, 255, 0.15)");
-gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
+// Halo
+const glow = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+glow.addColorStop(0, "rgba(255,255,255,1)");
+glow.addColorStop(0.15, "rgba(255,255,255,0.7)");
+glow.addColorStop(0.4, "rgba(255,255,255,0.15)");
+glow.addColorStop(1, "rgba(255,255,255,0)");
 
-starContext.fillStyle = gradient;
-starContext.fillRect(0, 0, 64, 64);
+ctx.fillStyle = glow;
+ctx.fillRect(0, 0, 64, 64);
 
-// Petit cœur lumineux
-starContext.fillStyle = "#ffffff";
-starContext.beginPath();
-starContext.arc(32, 32, 2, 0, Math.PI * 2);
-starContext.fill();
+// Étoile à 4 branches
+ctx.save();
+ctx.translate(32, 32);
+
+ctx.fillStyle = "white";
+
+ctx.beginPath();
+
+// Branche verticale
+ctx.moveTo(0, -22);
+ctx.lineTo(3, -3);
+
+// Branche droite
+ctx.lineTo(22, 0);
+ctx.lineTo(3, 3);
+
+// Branche basse
+ctx.lineTo(0, 22);
+ctx.lineTo(-3, 3);
+
+// Branche gauche
+ctx.lineTo(-22, 0);
+ctx.lineTo(-3, -3);
+
+ctx.closePath();
+ctx.fill();
+
+ctx.restore();
 
 const starTexture = new THREE.CanvasTexture(starCanvas);
+starTexture.needsUpdate = true;
 
 const material = new THREE.PointsMaterial({
     map: starTexture,
