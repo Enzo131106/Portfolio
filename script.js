@@ -102,40 +102,22 @@ const material = new THREE.ShaderMaterial({
         void main() {
 
             vec2 uv = gl_PointCoord * 2.0 - 1.0;
+            float d = length(uv);
 
-            float distanceFromCenter = length(uv);
-
-            // Supprime les coins
-            if (distanceFromCenter > 1.0) {
+            // Cercle propre : aucun carré visible
+            if (d > 1.0) {
                 discard;
             }
 
-            // Halo très discret
-            float glow = 1.0 - smoothstep(0.0, 1.0, distanceFromCenter);
-            glow = pow(glow, 5.0);
+            // Petit cœur très lumineux
+            float core = 1.0 - smoothstep(0.0, 0.12, d);
 
-            // Petites branches fines
-            float horizontal = exp(-abs(uv.y) * 35.0);
-            float vertical = exp(-abs(uv.x) * 35.0);
+            // Halo doux
+            float glow = 1.0 - smoothstep(0.05, 0.85, d);
+            glow = pow(glow, 4.0);
 
-            float star = max(horizontal, vertical);
-
-            // Réduit fortement les branches vers l'extérieur
-            star *= 1.0 - smoothstep(0.05, 0.75, distanceFromCenter);
-
-            // Petit cœur lumineux
-            float core = 1.0 - smoothstep(
-                0.0,
-                0.10,
-                distanceFromCenter
-            );
-
-            float alpha = max(
-                glow * 0.20,
-                star * 0.45
-            );
-
-            alpha = max(alpha, core);
+            // Halo très léger autour du cœur
+            float alpha = core * 0.95 + glow * 0.22;
 
             gl_FragColor = vec4(
                 1.0,
