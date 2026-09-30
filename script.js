@@ -66,7 +66,7 @@ const material = new THREE.ShaderMaterial({
     blending: THREE.AdditiveBlending,
 
     uniforms: {
-        uSize: { value: 90.0 }
+        uSize: { value: 55.0 }
     },
 
     vertexShader: `
@@ -85,32 +85,41 @@ const material = new THREE.ShaderMaterial({
     fragmentShader: `
         void main() {
 
-            // Coordonnées de la particule : de -1 à 1
             vec2 uv = gl_PointCoord * 2.0 - 1.0;
 
             float distanceFromCenter = length(uv);
 
-            // Halo circulaire
-            float glow = 1.0 - smoothstep(0.0, 1.0, distanceFromCenter);
-            glow = pow(glow, 3.0);
-
-            // Étoile à 4 branches
-            float horizontal = exp(-abs(uv.y) * 18.0);
-            float vertical = exp(-abs(uv.x) * 18.0);
-
-            float star = max(horizontal, vertical);
-
-            // Centre très lumineux
-            float core = 1.0 - smoothstep(0.0, 0.12, distanceFromCenter);
-
-            // Combinaison étoile + halo
-            float alpha = max(glow * 0.45, star * 0.75);
-            alpha = max(alpha, core);
-
-            // Supprime complètement les coins du quad
+            // Supprime les coins
             if (distanceFromCenter > 1.0) {
                 discard;
             }
+
+            // Halo très discret
+            float glow = 1.0 - smoothstep(0.0, 1.0, distanceFromCenter);
+            glow = pow(glow, 5.0);
+
+            // Petites branches fines
+            float horizontal = exp(-abs(uv.y) * 35.0);
+            float vertical = exp(-abs(uv.x) * 35.0);
+
+            float star = max(horizontal, vertical);
+
+            // Réduit fortement les branches vers l'extérieur
+            star *= 1.0 - smoothstep(0.05, 0.75, distanceFromCenter);
+
+            // Petit cœur lumineux
+            float core = 1.0 - smoothstep(
+                0.0,
+                0.10,
+                distanceFromCenter
+            );
+
+            float alpha = max(
+                glow * 0.20,
+                star * 0.45
+            );
+
+            alpha = max(alpha, core);
 
             gl_FragColor = vec4(
                 1.0,
