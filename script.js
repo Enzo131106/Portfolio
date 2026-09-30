@@ -2,25 +2,20 @@
 
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js";
 
-// ─────────────────────────────────────────────
-// SCÈNE
-// ─────────────────────────────────────────────
-
+// Initialise la scène principale qui contient tous les éléments 3D.
 const scene = new THREE.Scene();
 
-// Fond espace profond
+// Définit la couleur de fond de l'espace.
 scene.background = new THREE.Color(0x070b18);
 
-// Brume atmosphérique très légère
+// Ajoute une brume légère pour atténuer progressivement les éléments éloignés.
 scene.fog = new THREE.FogExp2(
     0x070b18,
     0.008
 );
 
-// ─────────────────────────────────────────────
-// CAMÉRA
-// ─────────────────────────────────────────────
 
+// Initialise la caméra avec une perspective 3D.
 const camera = new THREE.PerspectiveCamera(
     75,
     window.innerWidth / window.innerHeight,
@@ -28,49 +23,54 @@ const camera = new THREE.PerspectiveCamera(
     1000
 );
 
+// Place la caméra légèrement en arrière de la scène.
 camera.position.z = 5;
 
-// ─────────────────────────────────────────────
-// RENDERER
-// ─────────────────────────────────────────────
 
+// Initialise le moteur de rendu WebGL.
 const renderer = new THREE.WebGLRenderer({
     antialias: true,
     alpha: false
 });
 
+// Adapte le rendu à la taille de la fenêtre.
 renderer.setSize(
     window.innerWidth,
     window.innerHeight
 );
 
+// Limite la résolution du rendu pour éviter une consommation excessive de ressources.
 renderer.setPixelRatio(
     Math.min(window.devicePixelRatio, 2)
 );
 
+// Ajoute le canvas WebGL à la page.
 document.body.appendChild(renderer.domElement);
 
-// ─────────────────────────────────────────────
-// ÉTOILES
-// ─────────────────────────────────────────────
 
+// Définit le nombre total d'étoiles présentes dans le vortex.
 const particleCount = 4500;
 
+// Crée la structure qui contiendra les données géométriques des particules.
 const geometry = new THREE.BufferGeometry();
 
+// Stocke les coordonnées 3D de chaque étoile.
 const positions = new Float32Array(
     particleCount * 3
 );
 
+// Stocke la couleur de chaque étoile.
 const colors = new Float32Array(
     particleCount * 3
 );
 
+// Stocke la taille individuelle de chaque étoile.
 const sizes = new Float32Array(
     particleCount
 );
 
-// Couleurs naturelles des étoiles
+
+// Définit la palette de couleurs naturelles utilisées pour les étoiles.
 const starColors = [
     new THREE.Color(0xffffff),
     new THREE.Color(0xddeaff),
@@ -79,41 +79,45 @@ const starColors = [
     new THREE.Color(0xffc58a)
 ];
 
+
+// Génère aléatoirement la position, la couleur et la taille de chaque étoile.
 for (let i = 0; i < particleCount; i++) {
 
+    // Permet d'accéder aux trois valeurs X, Y et Z de l'étoile actuelle.
     const i3 = i * 3;
 
-    // ─────────────────────────────────────────
-    // POSITION DANS LE VORTEX
-    // ─────────────────────────────────────────
-
+    // Définit la profondeur de l'étoile dans le vortex.
     const z =
         (Math.random() - 0.5) * 30;
 
+    // Définit l'angle de l'étoile autour de l'axe central du vortex.
     const angle =
         Math.random() * Math.PI * 2;
 
+    // Définit la distance de base entre l'étoile et le centre du vortex.
     const radius =
         2.5 + Math.random() * 4.5;
 
+    // Ajoute une variation aléatoire pour éviter un cercle parfaitement régulier.
     const variation =
         (Math.random() - 0.5) * 0.8;
 
+    // Calcule la position horizontale de l'étoile à partir de son angle et de son rayon.
     positions[i3] =
         Math.cos(angle) *
         (radius + variation);
 
+    // Calcule la position verticale de l'étoile à partir de son angle et de son rayon.
     positions[i3 + 1] =
         Math.sin(angle) *
         (radius + variation);
 
+    // Enregistre la profondeur de l'étoile.
     positions[i3 + 2] =
         z;
 
-    // ─────────────────────────────────────────
-    // COULEUR
-    // ─────────────────────────────────────────
 
+    // Sélectionne aléatoirement une couleur dans la palette disponible.
     const color =
         starColors[
             Math.floor(
@@ -122,36 +126,38 @@ for (let i = 0; i < particleCount; i++) {
             )
         ];
 
+    // Enregistre la composante rouge de la couleur.
     colors[i3] =
         color.r;
 
+    // Enregistre la composante verte de la couleur.
     colors[i3 + 1] =
         color.g;
 
+    // Enregistre la composante bleue de la couleur.
     colors[i3 + 2] =
         color.b;
 
-    // ─────────────────────────────────────────
-    // TAILLE
-    // ─────────────────────────────────────────
 
-    // La majorité reste petite,
-    // avec quelques étoiles légèrement plus imposantes.
-
+    // Définit la taille de l'étoile avec une faible probabilité d'obtenir une étoile plus imposante.
     if (Math.random() < 0.08) {
 
+        // Crée une étoile légèrement plus grande que la majorité.
         sizes[i] =
             5.5 +
             Math.random() * 3.5;
 
     } else {
 
+        // Crée une étoile de taille standard.
         sizes[i] =
             4.0 +
             Math.random() * 2.5;
     }
 }
 
+
+// Associe les positions des étoiles à la géométrie.
 geometry.setAttribute(
     "position",
     new THREE.BufferAttribute(
@@ -160,6 +166,7 @@ geometry.setAttribute(
     )
 );
 
+// Associe les couleurs des étoiles à la géométrie.
 geometry.setAttribute(
     "aColor",
     new THREE.BufferAttribute(
@@ -168,6 +175,7 @@ geometry.setAttribute(
     )
 );
 
+// Associe les tailles individuelles des étoiles à la géométrie.
 geometry.setAttribute(
     "aSize",
     new THREE.BufferAttribute(
@@ -176,25 +184,29 @@ geometry.setAttribute(
     )
 );
 
-// ─────────────────────────────────────────────
-// SHADER DES ÉTOILES
-// ─────────────────────────────────────────────
 
+// Crée le matériau personnalisé utilisé pour afficher les étoiles.
 const material = new THREE.ShaderMaterial({
 
+    // Autorise la transparence des particules.
     transparent: true,
 
+    // Empêche les particules transparentes d'écrire dans le depth buffer.
     depthWrite: false,
 
+    // Additionne les lumières des particules pour créer un effet lumineux.
     blending:
         THREE.AdditiveBlending,
 
+    // Définit les valeurs envoyées au shader.
     uniforms: {
         uSize: {
             value: 65.0
         }
     },
 
+
+    // Définit la position et la taille des particules directement sur le GPU.
     vertexShader: `
         attribute vec3 aColor;
         attribute float aSize;
@@ -205,16 +217,20 @@ const material = new THREE.ShaderMaterial({
 
         void main() {
 
+            // Transmet la couleur de l'étoile au fragment shader.
             vColor = aColor;
 
+            // Transforme la position de l'étoile dans l'espace de la caméra.
             vec4 mvPosition =
                 modelViewMatrix *
                 vec4(position, 1.0);
 
+            // Convertit la position dans l'espace visible par la caméra.
             gl_Position =
                 projectionMatrix *
                 mvPosition;
 
+            // Calcule la taille apparente de l'étoile en fonction de sa distance.
             gl_PointSize =
                 uSize *
                 aSize /
@@ -223,22 +239,27 @@ const material = new THREE.ShaderMaterial({
         }
     `,
 
+
+    // Définit l'apparence visuelle de chaque particule.
     fragmentShader: `
         varying vec3 vColor;
 
         void main() {
 
+            // Convertit les coordonnées de la particule en coordonnées centrées autour de son centre.
             vec2 uv =
                 gl_PointCoord * 2.0 - 1.0;
 
+            // Calcule la distance entre le pixel actuel et le centre de la particule.
             float d =
                 length(uv);
 
+            // Supprime les pixels situés en dehors de la forme circulaire de la particule.
             if (d > 1.0) {
                 discard;
             }
 
-            // Cœur lumineux
+            // Crée le cœur lumineux de l'étoile.
             float core =
                 1.0 -
                 smoothstep(
@@ -247,7 +268,7 @@ const material = new THREE.ShaderMaterial({
                     d
                 );
 
-            // Halo
+            // Crée une zone lumineuse plus large autour du cœur.
             float glow =
                 1.0 -
                 smoothstep(
@@ -256,13 +277,16 @@ const material = new THREE.ShaderMaterial({
                     d
                 );
 
+            // Renforce le centre du halo pour obtenir une lumière plus concentrée.
             glow =
                 pow(glow, 4.0);
 
+            // Combine le cœur et le halo pour calculer la transparence finale.
             float alpha =
                 core * 0.95 +
                 glow * 0.22;
 
+            // Applique la couleur et la transparence finales au pixel.
             gl_FragColor =
                 vec4(
                     vColor,
@@ -272,39 +296,45 @@ const material = new THREE.ShaderMaterial({
     `
 });
 
+
+// Crée le système de particules à partir de la géométrie et du matériau.
 const particles =
     new THREE.Points(
         geometry,
         material
     );
 
+// Ajoute le système d'étoiles à la scène.
 scene.add(particles);
 
-// ─────────────────────────────────────────────
-// NÉBULEUSE
-// ─────────────────────────────────────────────
 
+// Définit le nombre de particules utilisées pour créer la nébuleuse.
 const nebulaCount = 700;
 
+// Crée la géométrie contenant les particules de la nébuleuse.
 const nebulaGeometry =
     new THREE.BufferGeometry();
 
+// Stocke les positions 3D des particules de la nébuleuse.
 const nebulaPositions =
     new Float32Array(
         nebulaCount * 3
     );
 
+// Stocke les couleurs des particules de la nébuleuse.
 const nebulaColors =
     new Float32Array(
         nebulaCount * 3
     );
 
+// Stocke les tailles des particules de la nébuleuse.
 const nebulaSizes =
     new Float32Array(
         nebulaCount
     );
 
-// Couleurs très sombres et spatiales
+
+// Définit la palette sombre utilisée pour la nébuleuse.
 const nebulaPalette = [
     new THREE.Color(0x172b52),
     new THREE.Color(0x203866),
@@ -313,38 +343,46 @@ const nebulaPalette = [
     new THREE.Color(0x193b55)
 ];
 
+
+// Génère aléatoirement les particules composant la nébuleuse.
 for (let i = 0; i < nebulaCount; i++) {
 
+    // Permet d'accéder aux trois valeurs X, Y et Z de la particule actuelle.
     const i3 = i * 3;
 
-    // Même profondeur que les étoiles
+    // Définit la profondeur de la particule dans le vortex.
     const z =
         (Math.random() - 0.5) * 30;
 
-    // La brume reste concentrée
-    // autour du vortex
+    // Définit la distance de base de la particule par rapport au centre.
     const radius =
         1.5 +
         Math.random() * 5.5;
 
+    // Définit l'angle de la particule autour du centre du vortex.
     const angle =
         Math.random() * Math.PI * 2;
 
-    // Nuage irrégulier
+    // Ajoute une variation importante pour créer un nuage irrégulier.
     const variation =
         (Math.random() - 0.5) * 2.5;
 
+    // Calcule la position horizontale de la particule.
     nebulaPositions[i3] =
         Math.cos(angle) *
         (radius + variation);
 
+    // Calcule la position verticale de la particule.
     nebulaPositions[i3 + 1] =
         Math.sin(angle) *
         (radius + variation);
 
+    // Enregistre la profondeur de la particule.
     nebulaPositions[i3 + 2] =
         z;
 
+
+    // Sélectionne aléatoirement une couleur de la palette de la nébuleuse.
     const color =
         nebulaPalette[
             Math.floor(
@@ -353,20 +391,26 @@ for (let i = 0; i < nebulaCount; i++) {
             )
         ];
 
+    // Enregistre la composante rouge de la couleur.
     nebulaColors[i3] =
         color.r;
 
+    // Enregistre la composante verte de la couleur.
     nebulaColors[i3 + 1] =
         color.g;
 
+    // Enregistre la composante bleue de la couleur.
     nebulaColors[i3 + 2] =
         color.b;
 
+    // Définit une taille relativement importante pour chaque particule de brume.
     nebulaSizes[i] =
         35 +
         Math.random() * 55;
 }
 
+
+// Associe les positions à la géométrie de la nébuleuse.
 nebulaGeometry.setAttribute(
     "position",
     new THREE.BufferAttribute(
@@ -375,6 +419,7 @@ nebulaGeometry.setAttribute(
     )
 );
 
+// Associe les couleurs à la géométrie de la nébuleuse.
 nebulaGeometry.setAttribute(
     "aColor",
     new THREE.BufferAttribute(
@@ -383,6 +428,7 @@ nebulaGeometry.setAttribute(
     )
 );
 
+// Associe les tailles à la géométrie de la nébuleuse.
 nebulaGeometry.setAttribute(
     "aSize",
     new THREE.BufferAttribute(
@@ -391,22 +437,26 @@ nebulaGeometry.setAttribute(
     )
 );
 
-// ─────────────────────────────────────────────
-// SHADER DE LA BRUME
-// ─────────────────────────────────────────────
 
+// Crée le matériau personnalisé utilisé pour afficher la nébuleuse.
 const nebulaMaterial =
     new THREE.ShaderMaterial({
 
+        // Autorise la transparence des particules.
         transparent: true,
 
+        // Empêche les particules transparentes d'écrire dans le depth buffer.
         depthWrite: false,
 
+        // Additionne les particules pour renforcer les zones où elles se superposent.
         blending:
             THREE.AdditiveBlending,
 
+        // La nébuleuse n'utilise pas de valeurs externes.
         uniforms: {},
 
+
+        // Calcule la position et la taille des particules de brume.
         vertexShader: `
             attribute vec3 aColor;
             attribute float aSize;
@@ -415,38 +465,47 @@ const nebulaMaterial =
 
             void main() {
 
+                // Transmet la couleur au fragment shader.
                 vColor = aColor;
 
+                // Transforme la position dans l'espace de la caméra.
                 vec4 mvPosition =
                     modelViewMatrix *
                     vec4(position, 1.0);
 
+                // Convertit la position dans l'espace visible par la caméra.
                 gl_Position =
                     projectionMatrix *
                     mvPosition;
 
+                // Définit la taille apparente de la particule selon sa distance.
                 gl_PointSize =
                     aSize *
                     (35.0 / -mvPosition.z);
             }
         `,
 
+
+        // Définit l'apparence douce et diffuse des particules de brume.
         fragmentShader: `
             varying vec3 vColor;
 
             void main() {
 
+                // Centre les coordonnées de la particule autour de son origine.
                 vec2 uv =
                     gl_PointCoord * 2.0 - 1.0;
 
+                // Calcule la distance du pixel par rapport au centre.
                 float d =
                     length(uv);
 
+                // Supprime les pixels situés en dehors de la particule circulaire.
                 if (d > 1.0) {
                     discard;
                 }
 
-                // Nuage très doux
+                // Crée une transition douce entre le centre et le bord.
                 float cloud =
                     1.0 -
                     smoothstep(
@@ -455,9 +514,11 @@ const nebulaMaterial =
                         d
                     );
 
+                // Rend la luminosité plus concentrée au centre de la particule.
                 cloud =
                     pow(cloud, 2.8);
 
+                // Applique la couleur et la faible opacité de la brume.
                 gl_FragColor =
                     vec4(
                         vColor,
@@ -467,53 +528,58 @@ const nebulaMaterial =
         `
     });
 
+
+// Crée le système de particules représentant la nébuleuse.
 const nebula =
     new THREE.Points(
         nebulaGeometry,
         nebulaMaterial
     );
 
+// Ajoute la nébuleuse à la scène.
 scene.add(nebula);
 
-// ─────────────────────────────────────────────
-// ANIMATION
-// ─────────────────────────────────────────────
 
+// Fonction principale exécutée à chaque image.
 function animate() {
 
+    // Demande au navigateur d'exécuter à nouveau cette fonction à la prochaine image.
     requestAnimationFrame(
         animate
     );
 
-    // Rotation très lente
+    // Fait tourner très lentement le vortex d'étoiles.
     particles.rotation.z += 0.0008;
 
-    // La brume bouge légèrement
-    // indépendamment des étoiles
+    // Fait tourner la nébuleuse dans la direction opposée à une vitesse différente.
     nebula.rotation.z -= 0.00018;
 
+    // Dessine la scène depuis le point de vue de la caméra.
     renderer.render(
         scene,
         camera
     );
 }
 
+
+// Lance la boucle d'animation.
 animate();
 
-// ─────────────────────────────────────────────
-// RESPONSIVE
-// ─────────────────────────────────────────────
 
+// Met à jour la caméra et le rendu lorsque la taille de la fenêtre change.
 window.addEventListener(
     "resize",
     () => {
 
+        // Adapte le ratio de la caméra aux nouvelles dimensions.
         camera.aspect =
             window.innerWidth /
             window.innerHeight;
 
+        // Applique le nouveau ratio à la projection de la caméra.
         camera.updateProjectionMatrix();
 
+        // Adapte le canvas WebGL aux nouvelles dimensions.
         renderer.setSize(
             window.innerWidth,
             window.innerHeight
