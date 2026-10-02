@@ -14,26 +14,20 @@ const isTablet =
 // Définit le nombre d'étoiles selon le type d'appareil.
 const particleCount =
     isMobile ? 2800 :
-    isTablet ? 3600 :
-    4500;
+        isTablet ? 3600 :
+            4500;
 
 // Définit le nombre de particules de nébuleuse selon le type d'appareil.
 const nebulaCount =
     isMobile ? 400 :
-    isTablet ? 550 :
-    700;
+        isTablet ? 550 :
+            700;
 
 // Définit la taille globale des étoiles selon le type d'appareil.
 const particleSize =
     isMobile ? 105.0 :
-    isTablet ? 85.0 :
-    75.0;
-
-// Définit la résolution maximale du rendu selon le type d'appareil.
-const maxPixelRatio =
-    isMobile ? 1.5 :
-    isTablet ? 1.75 :
-    2;
+        isTablet ? 85.0 :
+            75.0;
 
 // Initialise la scène principale qui contient tous les éléments 3D.
 const scene = new THREE.Scene();
@@ -143,10 +137,10 @@ for (let i = 0; i < particleCount; i++) {
     // Sélectionne aléatoirement une couleur dans la palette disponible.
     const color =
         starColors[
-            Math.floor(
-                Math.random() *
-                starColors.length
-            )
+        Math.floor(
+            Math.random() *
+            starColors.length
+        )
         ];
 
     // Enregistre la couleur de l'étoile.
@@ -393,10 +387,10 @@ for (let i = 0; i < nebulaCount; i++) {
     // Sélectionne aléatoirement une couleur de la palette de la nébuleuse.
     const color =
         nebulaPalette[
-            Math.floor(
-                Math.random() *
-                nebulaPalette.length
-            )
+        Math.floor(
+            Math.random() *
+            nebulaPalette.length
+        )
         ];
 
     // Enregistre la couleur de la particule.
@@ -537,18 +531,24 @@ const nebula =
 // Ajoute la nébuleuse à la scène.
 scene.add(nebula);
 
+// Indique si l'animation doit actuellement être exécutée.
+let isAnimationPaused = false;
+
 // Fonction principale exécutée à chaque image.
 function animate() {
 
-    // Demande au navigateur d'exécuter à nouveau cette fonction à la prochaine image.
-    requestAnimationFrame(
-        animate
-    );
+    // Demande au navigateur de rappeler cette fonction à la prochaine image.
+    requestAnimationFrame(animate);
+
+    // Arrête le rendu lorsque l'onglet n'est plus visible.
+    if (isAnimationPaused) {
+        return;
+    }
 
     // Fait tourner très lentement le vortex d'étoiles.
     particles.rotation.z += 0.0008;
 
-    // Fait tourner la nébuleuse dans la direction opposée à une vitesse différente.
+    // Fait tourner la nébuleuse dans la direction opposée.
     nebula.rotation.z -= 0.00018;
 
     // Dessine la scène depuis le point de vue de la caméra.
@@ -558,26 +558,47 @@ function animate() {
     );
 }
 
+// Détecte lorsque l'utilisateur quitte ou revient sur l'onglet.
+document.addEventListener(
+    "visibilitychange",
+    () => {
+
+        // Met l'animation en pause lorsque la page devient invisible.
+        isAnimationPaused =
+            document.visibilityState === "hidden";
+    }
+);
+
 // Lance la boucle d'animation.
 animate();
 
-// Met à jour la caméra et le rendu lorsque la taille de la fenêtre change.
-window.addEventListener(
-    "resize",
-    () => {
+// Recalcule les dimensions du rendu lors du redimensionnement de la fenêtre.
+function handleResize() {
 
-        // Adapte le ratio de la caméra aux nouvelles dimensions.
-        camera.aspect =
-            window.innerWidth /
-            window.innerHeight;
+    // Met à jour les dimensions de la caméra.
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
 
-        // Applique le nouveau ratio à la projection de la caméra.
-        camera.updateProjectionMatrix();
+    // Met à jour les dimensions du canvas.
+    renderer.setSize(
+        window.innerWidth,
+        window.innerHeight
+    );
 
-        // Adapte le canvas WebGL aux nouvelles dimensions.
-        renderer.setSize(
-            window.innerWidth,
-            window.innerHeight
-        );
-    }
-);
+    // Recalcule le pixel ratio selon la nouvelle largeur.
+    const currentPixelRatio =
+        window.innerWidth < 768 ? 1.5 :
+            window.innerWidth < 1024 ? 1.75 :
+                2;
+
+    // Limite le pixel ratio à la valeur réelle de l'écran.
+    renderer.setPixelRatio(
+        Math.min(
+            window.devicePixelRatio,
+            currentPixelRatio
+        )
+    );
+}
+
+// Écoute les changements de dimensions de la fenêtre.
+window.addEventListener("resize", handleResize);
