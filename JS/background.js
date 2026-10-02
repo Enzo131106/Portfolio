@@ -64,8 +64,16 @@ renderer.setSize(
 );
 
 // Limite la résolution du rendu pour éviter une consommation excessive de ressources.
+const initialPixelRatio =
+    window.innerWidth < 768 ? 1.5 :
+        window.innerWidth < 1024 ? 1.75 :
+            2;
+
 renderer.setPixelRatio(
-    Math.min(window.devicePixelRatio, maxPixelRatio)
+    Math.min(
+        window.devicePixelRatio,
+        initialPixelRatio
+    )
 );
 
 // Ajoute le canvas WebGL à la page.
