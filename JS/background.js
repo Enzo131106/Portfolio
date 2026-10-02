@@ -1,6 +1,6 @@
 "use strict";
 
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js";
+import THREE from "./three-loader.js";
 
 // Définit la valeur correspondant à un cercle complet en radians.
 const FULL_CIRCLE = Math.PI * 2;
