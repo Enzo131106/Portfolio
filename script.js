@@ -5,6 +5,36 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
 // Définit la valeur correspondant à un cercle complet en radians.
 const FULL_CIRCLE = Math.PI * 2;
 
+// Détermine le type d'appareil selon la largeur de l'écran.
+const isMobile = window.innerWidth < 768;
+const isTablet =
+    window.innerWidth >= 768 &&
+    window.innerWidth < 1024;
+
+// Définit le nombre d'étoiles selon le type d'appareil.
+const particleCount =
+    isMobile ? 2800 :
+    isTablet ? 3600 :
+    4500;
+
+// Définit le nombre de particules de nébuleuse selon le type d'appareil.
+const nebulaCount =
+    isMobile ? 400 :
+    isTablet ? 550 :
+    700;
+
+// Définit la taille globale des étoiles selon le type d'appareil.
+const particleSize =
+    isMobile ? 105.0 :
+    isTablet ? 85.0 :
+    75.0;
+
+// Définit la résolution maximale du rendu selon le type d'appareil.
+const maxPixelRatio =
+    isMobile ? 1.5 :
+    isTablet ? 1.75 :
+    2;
+
 // Initialise la scène principale qui contient tous les éléments 3D.
 const scene = new THREE.Scene();
 
@@ -41,14 +71,11 @@ renderer.setSize(
 
 // Limite la résolution du rendu pour éviter une consommation excessive de ressources.
 renderer.setPixelRatio(
-    Math.min(window.devicePixelRatio, 2)
+    Math.min(window.devicePixelRatio, maxPixelRatio)
 );
 
 // Ajoute le canvas WebGL à la page.
 document.body.appendChild(renderer.domElement);
-
-// Définit le nombre total d'étoiles présentes dans le vortex.
-const particleCount = 4500;
 
 // Crée la structure qui contiendra les données géométriques des particules.
 const geometry = new THREE.BufferGeometry();
@@ -192,7 +219,7 @@ const material = new THREE.ShaderMaterial({
     // Définit les valeurs envoyées au shader.
     uniforms: {
         uSize: {
-            value: 65.0
+            value: particleSize
         }
     },
 
@@ -294,9 +321,6 @@ const particles =
 
 // Ajoute le système d'étoiles à la scène.
 scene.add(particles);
-
-// Définit le nombre de particules utilisées pour créer la nébuleuse.
-const nebulaCount = 700;
 
 // Crée la géométrie contenant les particules de la nébuleuse.
 const nebulaGeometry =
