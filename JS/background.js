@@ -574,6 +574,12 @@ document.addEventListener(
         // Met l'animation en pause lorsque la page devient invisible.
         isAnimationPaused =
             document.visibilityState === "hidden";
+
+        console.log(
+            isAnimationPaused
+                ? "⏸️ Animation en pause"
+                : "▶️ Animation reprise"
+        );
     }
 );
 
