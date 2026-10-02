@@ -2,6 +2,9 @@
 
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js";
 
+// Définit la valeur correspondant à un cercle complet en radians.
+const FULL_CIRCLE = Math.PI * 2;
+
 // Initialise la scène principale qui contient tous les éléments 3D.
 const scene = new THREE.Scene();
 
@@ -14,7 +17,6 @@ scene.fog = new THREE.FogExp2(
     0.008
 );
 
-
 // Initialise la caméra avec une perspective 3D.
 const camera = new THREE.PerspectiveCamera(
     75,
@@ -26,11 +28,9 @@ const camera = new THREE.PerspectiveCamera(
 // Place la caméra légèrement en arrière de la scène.
 camera.position.z = 5;
 
-
 // Initialise le moteur de rendu WebGL.
 const renderer = new THREE.WebGLRenderer({
-    antialias: true,
-    alpha: false
+    antialias: true
 });
 
 // Adapte le rendu à la taille de la fenêtre.
@@ -46,7 +46,6 @@ renderer.setPixelRatio(
 
 // Ajoute le canvas WebGL à la page.
 document.body.appendChild(renderer.domElement);
-
 
 // Définit le nombre total d'étoiles présentes dans le vortex.
 const particleCount = 4500;
@@ -69,7 +68,6 @@ const sizes = new Float32Array(
     particleCount
 );
 
-
 // Définit la palette de couleurs naturelles utilisées pour les étoiles.
 const starColors = [
     new THREE.Color(0xffffff),
@@ -78,7 +76,6 @@ const starColors = [
     new THREE.Color(0xfff1d0),
     new THREE.Color(0xffc58a)
 ];
-
 
 // Génère aléatoirement la position, la couleur et la taille de chaque étoile.
 for (let i = 0; i < particleCount; i++) {
@@ -92,7 +89,7 @@ for (let i = 0; i < particleCount; i++) {
 
     // Définit l'angle de l'étoile autour de l'axe central du vortex.
     const angle =
-        Math.random() * Math.PI * 2;
+        Math.random() * FULL_CIRCLE;
 
     // Définit la distance de base entre l'étoile et le centre du vortex.
     const radius =
@@ -116,7 +113,6 @@ for (let i = 0; i < particleCount; i++) {
     positions[i3 + 2] =
         z;
 
-
     // Sélectionne aléatoirement une couleur dans la palette disponible.
     const color =
         starColors[
@@ -126,18 +122,15 @@ for (let i = 0; i < particleCount; i++) {
             )
         ];
 
-    // Enregistre la composante rouge de la couleur.
+    // Enregistre la couleur de l'étoile.
     colors[i3] =
         color.r;
 
-    // Enregistre la composante verte de la couleur.
     colors[i3 + 1] =
         color.g;
 
-    // Enregistre la composante bleue de la couleur.
     colors[i3 + 2] =
         color.b;
-
 
     // Définit la taille de l'étoile avec une faible probabilité d'obtenir une étoile plus imposante.
     if (Math.random() < 0.08) {
@@ -155,7 +148,6 @@ for (let i = 0; i < particleCount; i++) {
             Math.random() * 2.5;
     }
 }
-
 
 // Associe les positions des étoiles à la géométrie.
 geometry.setAttribute(
@@ -184,7 +176,6 @@ geometry.setAttribute(
     )
 );
 
-
 // Crée le matériau personnalisé utilisé pour afficher les étoiles.
 const material = new THREE.ShaderMaterial({
 
@@ -204,7 +195,6 @@ const material = new THREE.ShaderMaterial({
             value: 65.0
         }
     },
-
 
     // Définit la position et la taille des particules directement sur le GPU.
     vertexShader: `
@@ -238,7 +228,6 @@ const material = new THREE.ShaderMaterial({
                 -mvPosition.z;
         }
     `,
-
 
     // Définit l'apparence visuelle de chaque particule.
     fragmentShader: `
@@ -296,7 +285,6 @@ const material = new THREE.ShaderMaterial({
     `
 });
 
-
 // Crée le système de particules à partir de la géométrie et du matériau.
 const particles =
     new THREE.Points(
@@ -306,7 +294,6 @@ const particles =
 
 // Ajoute le système d'étoiles à la scène.
 scene.add(particles);
-
 
 // Définit le nombre de particules utilisées pour créer la nébuleuse.
 const nebulaCount = 700;
@@ -333,7 +320,6 @@ const nebulaSizes =
         nebulaCount
     );
 
-
 // Définit la palette sombre utilisée pour la nébuleuse.
 const nebulaPalette = [
     new THREE.Color(0x172b52),
@@ -342,7 +328,6 @@ const nebulaPalette = [
     new THREE.Color(0x35274f),
     new THREE.Color(0x193b55)
 ];
-
 
 // Génère aléatoirement les particules composant la nébuleuse.
 for (let i = 0; i < nebulaCount; i++) {
@@ -361,7 +346,7 @@ for (let i = 0; i < nebulaCount; i++) {
 
     // Définit l'angle de la particule autour du centre du vortex.
     const angle =
-        Math.random() * Math.PI * 2;
+        Math.random() * FULL_CIRCLE;
 
     // Ajoute une variation importante pour créer un nuage irrégulier.
     const variation =
@@ -381,7 +366,6 @@ for (let i = 0; i < nebulaCount; i++) {
     nebulaPositions[i3 + 2] =
         z;
 
-
     // Sélectionne aléatoirement une couleur de la palette de la nébuleuse.
     const color =
         nebulaPalette[
@@ -391,15 +375,13 @@ for (let i = 0; i < nebulaCount; i++) {
             )
         ];
 
-    // Enregistre la composante rouge de la couleur.
+    // Enregistre la couleur de la particule.
     nebulaColors[i3] =
         color.r;
 
-    // Enregistre la composante verte de la couleur.
     nebulaColors[i3 + 1] =
         color.g;
 
-    // Enregistre la composante bleue de la couleur.
     nebulaColors[i3 + 2] =
         color.b;
 
@@ -408,7 +390,6 @@ for (let i = 0; i < nebulaCount; i++) {
         35 +
         Math.random() * 55;
 }
-
 
 // Associe les positions à la géométrie de la nébuleuse.
 nebulaGeometry.setAttribute(
@@ -437,7 +418,6 @@ nebulaGeometry.setAttribute(
     )
 );
 
-
 // Crée le matériau personnalisé utilisé pour afficher la nébuleuse.
 const nebulaMaterial =
     new THREE.ShaderMaterial({
@@ -451,10 +431,6 @@ const nebulaMaterial =
         // Additionne les particules pour renforcer les zones où elles se superposent.
         blending:
             THREE.AdditiveBlending,
-
-        // La nébuleuse n'utilise pas de valeurs externes.
-        uniforms: {},
-
 
         // Calcule la position et la taille des particules de brume.
         vertexShader: `
@@ -484,7 +460,6 @@ const nebulaMaterial =
                     (35.0 / -mvPosition.z);
             }
         `,
-
 
         // Définit l'apparence douce et diffuse des particules de brume.
         fragmentShader: `
@@ -528,7 +503,6 @@ const nebulaMaterial =
         `
     });
 
-
 // Crée le système de particules représentant la nébuleuse.
 const nebula =
     new THREE.Points(
@@ -538,7 +512,6 @@ const nebula =
 
 // Ajoute la nébuleuse à la scène.
 scene.add(nebula);
-
 
 // Fonction principale exécutée à chaque image.
 function animate() {
@@ -561,10 +534,8 @@ function animate() {
     );
 }
 
-
 // Lance la boucle d'animation.
 animate();
-
 
 // Met à jour la caméra et le rendu lorsque la taille de la fenêtre change.
 window.addEventListener(

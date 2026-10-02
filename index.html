@@ -17,25 +17,35 @@
     <meta http-equiv="Content-Security-Policy" content="
         default-src 'self';
         script-src 'self' https://cdn.jsdelivr.net;
-        style-src 'self' https://cdn.jsdelivr.net;
+        style-src 'self' https://cdn.jsdelivr.net https://fonts.bunny.net;
         img-src 'self';
-        font-src 'self' https://cdn.jsdelivr.net;
+        font-src 'self' https://fonts.bunny.net;
+        connect-src 'self';
         object-src 'none';
         base-uri 'self';
+        upgrade-insecure-requests;
     ">
 
     <!-- Open Graph pour les réseaux sociaux -->
-    <meta property="og:title" content="Enzo Camilo — Portfolio">
+    <meta property="og:title" content="Enzo Camilo | Portfolio">
     <meta property="og:description"
         content="Portfolio d'Enzo Camilo, étudiant en MMI à l'IUT de Tarbes. Découvrez mes projets en développement logiciel, création de jeux vidéo et création numérique.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="">
+    <meta property="og:url" content="https://enzo131106.github.io/Portfolio/">
     <meta property="og:image" content="">
     <meta property="og:site_name" content="Enzo Camilo">
     <meta property="og:locale" content="fr_FR">
 
-    <!-- Connexion anticipée au CDN -->
+    <!-- Twitter Card pour X -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Enzo Camilo | Portfolio">
+    <meta name="twitter:description"
+        content="Portfolio d'Enzo Camilo, étudiant en MMI à l'IUT de Tarbes. Découvrez mes projets en développement logiciel, création de jeux vidéo et création numérique.">
+    <meta name="twitter:image" content="">
+
+    <!-- Connexions anticipées aux CDN -->
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://fonts.bunny.net">
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -63,7 +73,7 @@
     <main>
         <!-- Hero -->
         <section id="accueil">
-            
+
         </section>
 
         <!-- Projets -->
