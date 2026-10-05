@@ -1,0 +1,215 @@
+/* Les variables globales */
+:root {
+
+    --navigation-profile-size: 52px;
+    --navigation-social-size: 52px;
+
+    --navigation-gap: 18px;
+    --navigation-link-gap: 4px;
+    --navigation-social-gap: 12px;
+
+}
+
+/* Barre de navigation */
+.navbar {
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+
+    padding: 20px 24px;
+
+    background: transparent !important;
+
+    z-index: 1000;
+
+}
+
+/* Conteneur de la navigation */
+.navbar-container {
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: fit-content;
+    max-width: 100%;
+
+    margin: auto;
+
+    gap: var(--navigation-gap);
+
+}
+
+/* Photo de profil */
+.navbar-profile {
+
+    display: flex;
+
+    width: var(--navigation-profile-size);
+    height: var(--navigation-profile-size);
+
+    flex-shrink: 0;
+
+}
+
+.profile-picture {
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+
+}
+
+/* Liens de navigation */
+.navbar-nav {
+
+    display: flex !important;
+
+    flex-direction: row !important;
+    flex-wrap: nowrap;
+
+    align-items: center;
+
+    gap: var(--navigation-link-gap);
+
+}
+
+.nav-link {
+
+    padding: 10px 16px !important;
+
+    color: white !important;
+
+    white-space: nowrap;
+
+    flex-shrink: 0;
+
+}
+
+/* Réseaux sociaux */
+.navbar-socials {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: var(--navigation-social-gap);
+
+    flex-shrink: 0;
+
+}
+
+.navbar-socials a {
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: var(--navigation-social-size);
+    height: var(--navigation-social-size);
+
+    color: white;
+
+    text-decoration: none;
+
+}
+
+.navbar-socials i {
+
+    font-size: 22px;
+
+}
+
+/* Format tablette */
+@media screen and (max-width: 1199px) {
+
+    :root {
+
+        --navigation-profile-size: 46px;
+        --navigation-social-size: 46px;
+
+        --navigation-gap: 12px;
+        --navigation-social-gap: 6px;
+
+    }
+
+    .navbar {
+
+        padding: 16px 20px;
+
+    }
+
+    .nav-link {
+
+        padding: 9px 12px !important;
+
+        font-size: 15px;
+
+    }
+
+    .navbar-socials i {
+
+        font-size: 20px;
+
+    }
+
+}
+
+/* Format téléphone */
+@media screen and (max-width: 767px) {
+
+    :root {
+
+        --navigation-profile-size: 40px;
+        --navigation-social-size: 40px;
+
+        --navigation-gap: 6px;
+        --navigation-social-gap: 3px;
+
+    }
+
+    .navbar {
+
+        padding: 12px 10px;
+
+    }
+
+    .navbar-nav {
+
+        display: flex !important;
+
+        flex-direction: row !important;
+        flex-wrap: nowrap;
+
+        justify-content: center;
+
+        width: 100%;
+
+        gap: 0;
+
+    }
+
+    .nav-link {
+
+        padding: 8px 5px !important;
+
+        font-size: 12px;
+
+    }
+
+    .navbar-socials i {
+
+        font-size: 18px;
+
+    }
+
+}

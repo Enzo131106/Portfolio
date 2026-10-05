@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <!-- Métadonnées principales -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enzo Camilo | Portfolio</title>
+    <meta name="description"
+        content="Portfolio d'Enzo Camilo, étudiant en MMI à l'IUT de Tarbes. Découvrez mes projets en développement logiciel, création de jeux vidéo et création numérique.">
+
+    <!-- Sécurité et confidentialité -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+
+    <!-- Politique de sécurité -->
+    <meta http-equiv="Content-Security-Policy" content="
+            default-src 'self';
+            script-src 'self' https://cdn.jsdelivr.net;
+            style-src 'self' https://cdn.jsdelivr.net https://fonts.bunny.net;
+            img-src 'self';
+            font-src 'self' https://cdn.jsdelivr.net https://fonts.bunny.net;
+            connect-src 'self' https://cdn.jsdelivr.net https://fonts.bunny.net;
+            object-src 'none';
+            base-uri 'self';
+            upgrade-insecure-requests;
+        ">
+
+    <!-- Open Graph pour les réseaux sociaux -->
+    <meta property="og:title" content="Enzo Camilo | Portfolio">
+    <meta property="og:description"
+        content="Portfolio d'Enzo Camilo, étudiant en MMI à l'IUT de Tarbes. Découvrez mes projets en développement logiciel, création de jeux vidéo et création numérique.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://enzo131106.github.io/Portfolio/">
+    <meta property="og:image" content="">
+    <meta property="og:site_name" content="Enzo Camilo">
+    <meta property="og:locale" content="fr_FR">
+
+    <!-- Twitter Card pour X -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Enzo Camilo | Portfolio">
+    <meta name="twitter:description"
+        content="Portfolio d'Enzo Camilo, étudiant en MMI à l'IUT de Tarbes. Découvrez mes projets en développement logiciel, création de jeux vidéo et création numérique.">
+    <meta name="twitter:image" content="">
+
+    <!-- Connexions anticipées aux CDN -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://fonts.bunny.net">
+
+    <!-- Bootstrap CSS -->
+    <link id="bootstrap-css" rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+    <!-- Bootstrap Icons -->
+    <link id="bootstrap-icons" rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+        integrity="sha384-CK2SzKma4jA5H/MXDUU7i1TqZlCFaD4T01vtyDFvPlD97JQyS+IsSh1nI2EFbpyk" crossorigin="anonymous">
+
+    <!-- Feuille de style -->
+    <link rel="stylesheet" href="./assets/CSS/index-popup-privacy.css">
+    <link rel="stylesheet" href="./assets/CSS/index-navigation.css">
+    <link rel="stylesheet" href="./assets/CSS/background.css">
+
+    <!-- Favicon -->
+    <link rel="icon" href="" type="image/svg+xml">
+</head>
+
+<body>
+    <!-- Pop-up de confidentialité -->
+    <div id="privacy-popup" class="privacy-popup">
+        <div class="privacy-box p-4 p-md-5">
+
+            <!-- Icône -->
+            <div class="privacy-icon mb-3">
+                <i class="bi bi-shield-lock" aria-hidden="true"></i>
+            </div>
+
+            <!-- Titre -->
+            <h2 class="privacy-title mb-3">
+                Votre confidentialité
+            </h2>
+
+            <!-- Message principal -->
+            <p class="privacy-text mb-3">
+                Ce site n'utilise aucun cookie de suivi et ne collecte
+                aucune donnée personnelle à des fins de suivi ou de publicité.
+            </p>
+
+            <!-- Informations complémentaires -->
+            <p class="privacy-details mb-4">
+                Les ressources nécessaires au fonctionnement du site
+                peuvent être chargées depuis des CDN externes.
+                En cas d'indisponibilité, des versions locales des librairies sont utilisées.
+            </p>
+
+            <!-- Boutons -->
+            <div class="privacy-actions">
+
+                <button id="privacy-button" class="privacy-button">
+                    Compris
+                </button>
+
+                <a href="./privacy.html" class="privacy-more" target="_blank" rel="noopener noreferrer">
+                    En savoir plus
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+
+    <header>
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg fixed-top">
+            <div class="navbar-container">
+
+                <!-- Photo de profil -->
+                <a class="navbar-profile">
+                    <img src="./assets/images/photo-profil.png" alt="Photo de profil" class="profile-picture">
+                </a>
+
+                <!-- Navigation centrale -->
+                <div class="navbar-nav">
+                    <a href="#accueil" class="nav-link">Accueil</a>
+                    <a href="#projects" class="nav-link">Projets</a>
+                    <a href="#parcours" class="nav-link">Parcours</a>
+                    <a href="#contact" class="nav-link">Contact</a>
+                </div>
+
+                <!-- Réseaux sociaux -->
+                <div class="navbar-socials">
+                    <a href="https://github.com/Enzo131106" target="_blank" rel="noopener noreferrer"
+                        aria-label="GitHub">
+                        <i class="bi bi-github"></i>
+                    </a>
+
+                    <a href="https://www.linkedin.com/in/enzo-camilo-4190a939b/" target="_blank"
+                        rel="noopener noreferrer" aria-label="LinkedIn">
+                        <i class="bi bi-linkedin"></i>
+                    </a>
+                </div>
+
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero -->
+        <section id="accueil">
+
+        </section>
+
+        <!-- Projets -->
+        <section id="projects">
+
+        </section>
+
+        <!-- Parcours -->
+        <section id="parcours">
+
+        </section>
+    </main>
+
+    <!-- Contact -->
+    <footer id="contact">
+
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script id="bootstrap-js" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"
+        defer>
+        </script>
+
+    <!-- JavaScript -->
+    <script src="./JS/fallback.js"></script>
+    <script src="./JS/privacy-popup.js"></script>
+    <script type="module" src="./JS/background.js"></script>
+</body>
+
+</html>

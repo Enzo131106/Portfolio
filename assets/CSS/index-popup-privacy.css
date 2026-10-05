@@ -1,0 +1,299 @@
+/* Les variables globales */
+:root {
+
+    --privacy-bg: rgba(10, 15, 30, 0.94);
+    --privacy-overlay: rgba(3, 7, 18, 0.65);
+
+    --privacy-border: rgba(255, 255, 255, 0.12);
+
+    --privacy-text: rgba(255, 255, 255, 0.82);
+    --privacy-text-muted: rgba(255, 255, 255, 0.48);
+
+    --privacy-button-bg: #ffffff;
+    --privacy-button-text: #070b18;
+
+}
+
+/* Pop-up de confidentialité */
+.privacy-popup {
+
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: var(--privacy-overlay);
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition:
+        opacity 0.35s ease,
+        visibility 0.35s ease;
+
+}
+
+.privacy-box {
+
+    width: 100%;
+    max-width: 480px;
+
+    text-align: center;
+
+    background: var(--privacy-bg);
+
+    border: 1px solid var(--privacy-border);
+    border-radius: 20px;
+
+    box-shadow:
+        0 25px 80px rgba(0, 0, 0, 0.45),
+        0 0 40px rgba(100, 150, 255, 0.05);
+
+    transform: translateY(20px) scale(0.97);
+
+    transition:
+        transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+
+}
+
+.privacy-icon {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 52px;
+    height: 52px;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.06);
+
+    color: rgba(255, 255, 255, 0.9);
+
+    font-size: 1.35rem;
+
+}
+
+.privacy-title {
+
+    color: #ffffff;
+
+    font-size: 1.7rem;
+    font-weight: 600;
+
+}
+
+.privacy-text {
+
+    color: var(--privacy-text);
+
+    font-size: 0.95rem;
+    line-height: 1.7;
+
+}
+
+.privacy-details {
+
+    color: var(--privacy-text-muted);
+
+    font-size: 0.8rem;
+    line-height: 1.6;
+
+}
+
+.privacy-actions {
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    width: 100%;
+
+}
+
+.privacy-button,
+.privacy-more {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 1;
+
+    height: 44px;
+
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 999px;
+
+    background: transparent;
+    color: rgba(255, 255, 255, 0.7);
+
+    font-size: 0.9rem;
+    font-weight: 500;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease;
+
+}
+
+.privacy-button {
+
+    border: none;
+
+    background: var(--privacy-button-bg);
+    color: var(--privacy-button-text);
+
+    font-weight: 600;
+
+}
+
+.privacy-button:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 25px rgba(255, 255, 255, 0.15);
+
+}
+
+.privacy-button:active {
+
+    transform: translateY(0);
+
+}
+
+.privacy-more {
+
+    border: 1px solid rgba(255, 255, 255, 0.15);
+
+    background: transparent;
+    color: rgba(255, 255, 255, 0.7);
+
+}
+
+.privacy-more:hover {
+
+    transform: translateY(-2px);
+
+    border-color: rgba(255, 255, 255, 0.3);
+
+    background: rgba(255, 255, 255, 0.05);
+
+    color: #ffffff;
+
+}
+
+.privacy-popup.show {
+
+    opacity: 1;
+    visibility: visible;
+
+}
+
+.privacy-popup.show .privacy-box {
+
+    transform: translateY(0) scale(1);
+
+}
+
+/* Format tablette */
+@media screen and (max-width: 1199px) {
+
+    .privacy-box {
+
+        max-width: 450px;
+
+    }
+
+}
+
+/* Format téléphone */
+@media screen and (max-width: 767px) {
+
+    .privacy-popup {
+
+        padding: 15px;
+
+    }
+
+    .privacy-box {
+
+        max-width: 100%;
+
+        border-radius: 18px;
+
+    }
+
+    .privacy-title {
+
+        font-size: 1.4rem;
+
+    }
+
+    .privacy-text {
+
+        font-size: 0.9rem;
+
+    }
+
+    .privacy-details {
+
+        font-size: 0.78rem;
+
+    }
+
+    .privacy-actions {
+
+        flex-direction: row;
+
+        gap: 10px;
+
+    }
+
+    .privacy-button,
+    .privacy-more {
+
+        width: auto;
+
+        min-width: 0;
+
+    }
+
+}
+
+/* Réduction des animations */
+@media (prefers-reduced-motion: reduce) {
+
+    .privacy-popup,
+    .privacy-box,
+    .privacy-button,
+    .privacy-more {
+
+        transition: none;
+
+    }
+
+}
