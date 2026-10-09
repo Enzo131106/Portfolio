@@ -17,12 +17,6 @@ const particleCount =
         isTablet ? 1100 :
             1600;
 
-// Définit le nombre de particules de brume selon le type d'appareil.
-const nebulaCount =
-    isMobile ? 70 :
-        isTablet ? 110 :
-            160;
-
 // Définit la taille globale des caractères selon le type d'appareil.
 const particleSize =
     isMobile ? 100.0 :
@@ -31,15 +25,6 @@ const particleSize =
 
 // Initialise la scène principale qui contient tous les éléments 3D.
 const scene = new THREE.Scene();
-
-// Définit la couleur de fond de l'espace numérique.
-scene.background = new THREE.Color(0x050914);
-
-// Ajoute une brume légère pour atténuer les éléments éloignés.
-scene.fog = new THREE.FogExp2(
-    0x050914,
-    0.008
-);
 
 // Initialise la caméra avec une perspective 3D.
 const camera = new THREE.PerspectiveCamera(
@@ -82,7 +67,175 @@ renderer.setPixelRatio(
 renderer.domElement.id = "background";
 document.body.prepend(renderer.domElement);
 
-// Définit les caractères utilisés pour représenter les données informatiques.
+
+// ============================================================
+// FOND NUMÉRIQUE ANIMÉ
+// ============================================================
+
+// Définit une couleur de secours pour le fond de la scène.
+scene.background = new THREE.Color(0x050914);
+
+// Crée un grand plan placé derrière tous les caractères.
+const backgroundGeometry = new THREE.PlaneGeometry(
+    200,
+    120
+);
+
+// Crée un matériau personnalisé pour produire un dégradé animé.
+const backgroundMaterial = new THREE.ShaderMaterial({
+
+    // Transmet le temps au shader pour animer les couleurs.
+    uniforms: {
+        uTime: {
+            value: 0
+        }
+    },
+
+    // Désactive la profondeur pour garder le fond derrière les caractères.
+    depthTest: false,
+    depthWrite: false,
+
+    // Calcule les coordonnées du fond.
+    vertexShader: `
+        varying vec2 vUv;
+
+        void main() {
+
+            // Transmet les coordonnées de la texture au fragment shader.
+            vUv = uv;
+
+            // Calcule la position du plan dans la scène.
+            gl_Position =
+                projectionMatrix *
+                modelViewMatrix *
+                vec4(position, 1.0);
+        }
+    `,
+
+    // Produit un fond profond avec des zones lumineuses mouvantes.
+    fragmentShader: `
+        uniform float uTime;
+
+        varying vec2 vUv;
+
+        // Calcule une zone lumineuse diffuse.
+        float lightSpot(
+            vec2 uv,
+            vec2 center,
+            float radius
+        ) {
+            float distanceToCenter =
+                length(uv - center);
+
+            return exp(
+                -distanceToCenter *
+                distanceToCenter /
+                radius
+            );
+        }
+
+        void main() {
+
+            // Centre les coordonnées pour répartir les lumières.
+            vec2 uv = vUv;
+
+            // Définit un fond bleu nuit presque noir.
+            vec3 baseColor = vec3(
+                0.008,
+                0.015,
+                0.040
+            );
+
+            // Anime lentement la position des zones lumineuses.
+            float time = uTime * 0.10;
+
+            vec2 blueCenter = vec2(
+                0.28 + sin(time) * 0.12,
+                0.62 + cos(time * 0.8) * 0.10
+            );
+
+            vec2 cyanCenter = vec2(
+                0.76 + cos(time * 0.7) * 0.12,
+                0.36 + sin(time * 0.9) * 0.12
+            );
+
+            vec2 violetCenter = vec2(
+                0.52 + sin(time * 0.6) * 0.16,
+                0.78 + cos(time * 0.7) * 0.08
+            );
+
+            // Calcule la force de chaque zone lumineuse.
+            float blueLight = lightSpot(
+                uv,
+                blueCenter,
+                0.075
+            );
+
+            float cyanLight = lightSpot(
+                uv,
+                cyanCenter,
+                0.055
+            );
+
+            float violetLight = lightSpot(
+                uv,
+                violetCenter,
+                0.10
+            );
+
+            // Ajoute des nuances colorées au fond.
+            vec3 finalColor = baseColor;
+
+            finalColor +=
+                vec3(0.015, 0.075, 0.24) *
+                blueLight;
+
+            finalColor +=
+                vec3(0.005, 0.10, 0.19) *
+                cyanLight;
+
+            finalColor +=
+                vec3(0.045, 0.025, 0.16) *
+                violetLight;
+
+            // Assombrit les bords pour renforcer la profondeur.
+            float edgeDistance =
+                length((uv - 0.5) * vec2(1.0, 0.85));
+
+            float vignette =
+                smoothstep(0.25, 0.78, edgeDistance);
+
+            finalColor *= 1.0 - vignette * 0.55;
+
+            // Affiche le fond avec une opacité complète.
+            gl_FragColor = vec4(
+                finalColor,
+                1.0
+            );
+        }
+    `
+});
+
+// Place le fond très loin derrière le vortex.
+const background = new THREE.Mesh(
+    backgroundGeometry,
+    backgroundMaterial
+);
+
+background.position.z = -45;
+
+// Garantit que le fond soit dessiné avant les caractères.
+background.renderOrder = -1;
+
+// Ajoute le fond animé à la scène.
+scene.add(background);
+
+
+// ============================================================
+// TEXTURE DES CARACTÈRES INFORMATIQUES
+// ============================================================
+
+// Définit les caractères utilisés pour représenter les données.
 const glyphs = [
     "0", "1", "{", "}", "<", ">", "/", ";"
 ];
@@ -90,7 +243,7 @@ const glyphs = [
 // Définit le nombre de caractères différents disponibles.
 const glyphCount = glyphs.length;
 
-// Crée une texture regroupant tous les caractères dans une seule image.
+// Crée une texture regroupant tous les caractères dans une image.
 const glyphCanvas = document.createElement("canvas");
 const glyphContext = glyphCanvas.getContext("2d");
 
@@ -100,7 +253,7 @@ const glyphCellSize = 64;
 glyphCanvas.width = glyphCellSize * glyphCount;
 glyphCanvas.height = glyphCellSize;
 
-// Prépare le style graphique des caractères.
+// Prépare la texture transparente des caractères.
 glyphContext.clearRect(
     0,
     0,
@@ -108,6 +261,7 @@ glyphContext.clearRect(
     glyphCanvas.height
 );
 
+// Définit une typographie nette et lisible.
 glyphContext.font = "bold 46px monospace";
 glyphContext.textAlign = "center";
 glyphContext.textBaseline = "middle";
@@ -129,13 +283,20 @@ for (let i = 0; i < glyphCount; i++) {
     );
 }
 
-// Convertit l'image des caractères en texture utilisable par le GPU.
-const glyphTexture = new THREE.CanvasTexture(glyphCanvas);
+// Convertit l'image des caractères en texture GPU.
+const glyphTexture = new THREE.CanvasTexture(
+    glyphCanvas
+);
 
 // Indique que la texture contient des caractères transparents.
 glyphTexture.colorSpace = THREE.SRGBColorSpace;
 
-// Crée la structure qui contiendra les données géométriques des caractères.
+
+// ============================================================
+// CRÉATION DU VORTEX DE CARACTÈRES
+// ============================================================
+
+// Crée la structure géométrique des caractères.
 const geometry = new THREE.BufferGeometry();
 
 // Stocke les coordonnées 3D de chaque caractère.
@@ -163,51 +324,52 @@ const phases = new Float32Array(
     particleCount
 );
 
-// Définit la palette des caractères numériques.
+// Définit une palette de néons bleus et cyan.
 const dataColors = [
-    new THREE.Color(0x8abaff),
-    new THREE.Color(0x60a5fa),
-    new THREE.Color(0x38bdf8),
-    new THREE.Color(0xb4d8ff),
-    new THREE.Color(0x647fba)
+    new THREE.Color(0x168bff),
+    new THREE.Color(0x00c8ff),
+    new THREE.Color(0x3980ff),
+    new THREE.Color(0x45f3ff),
+    new THREE.Color(0x5b9dff),
+    new THREE.Color(0x2870e8)
 ];
 
-// Génère aléatoirement la position, la couleur et le caractère de chaque particule.
+// Génère les positions, les couleurs et les caractères.
 for (let i = 0; i < particleCount; i++) {
 
-    // Permet d'accéder aux trois valeurs X, Y et Z du caractère actuel.
+    // Permet d'accéder aux trois valeurs X, Y et Z.
     const i3 = i * 3;
 
     // Définit la profondeur du caractère dans le vortex.
     const z =
         (Math.random() - 0.5) * 30;
 
-    // Définit l'angle du caractère autour de l'axe central du vortex.
+    // Définit l'angle du caractère autour de l'axe central.
     const angle =
         Math.random() * FULL_CIRCLE;
 
-    // Définit la distance de base entre le caractère et le centre du vortex.
+    // Définit la distance entre le caractère et le centre.
     const radius =
         2.5 + Math.random() * 4.5;
 
-    // Ajoute une variation aléatoire pour éviter une disposition trop régulière.
+    // Ajoute une variation pour éviter une disposition trop régulière.
     const variation =
         (Math.random() - 0.5) * 0.8;
 
-    // Calcule la position horizontale du caractère.
+    // Calcule la position horizontale.
     positions[i3] =
         Math.cos(angle) *
         (radius + variation);
 
-    // Calcule la position verticale du caractère.
+    // Calcule la position verticale.
     positions[i3 + 1] =
         Math.sin(angle) *
         (radius + variation);
 
-    // Enregistre la profondeur du caractère.
+    // Enregistre la profondeur.
     positions[i3 + 2] = z;
 
-    // Sélectionne une couleur dans la palette numérique.
+    // Sélectionne une couleur de néon.
     const color =
         dataColors[
             Math.floor(
@@ -220,22 +382,22 @@ for (let i = 0; i < particleCount; i++) {
     colors[i3 + 1] = color.g;
     colors[i3 + 2] = color.b;
 
-    // Définit la taille du caractère pour créer un flux de données plus lisible.
+    // Définit une taille individuelle discrète.
     sizes[i] =
         Math.random() < 0.12
             ? 1.5 + Math.random() * 0.5
             : 0.9 + Math.random() * 0.5;
 
-    // Associe un caractère aléatoire à la particule actuelle.
+    // Associe un caractère aléatoire à la particule.
     glyphIndices[i] =
         Math.floor(Math.random() * glyphCount);
 
-    // Définit un décalage aléatoire pour varier l'animation de chaque caractère.
+    // Définit un décalage temporel indépendant.
     phases[i] =
         Math.random() * FULL_CIRCLE;
 }
 
-// Associe les positions des caractères à la géométrie.
+// Associe les positions à la géométrie.
 geometry.setAttribute(
     "position",
     new THREE.BufferAttribute(positions, 3)
@@ -247,7 +409,7 @@ geometry.setAttribute(
     new THREE.BufferAttribute(colors, 3)
 );
 
-// Associe les tailles individuelles à la géométrie.
+// Associe les tailles à la géométrie.
 geometry.setAttribute(
     "aSize",
     new THREE.BufferAttribute(sizes, 1)
@@ -259,13 +421,18 @@ geometry.setAttribute(
     new THREE.BufferAttribute(glyphIndices, 1)
 );
 
-// Associe les décalages temporels à la géométrie.
+// Associe les phases temporelles à la géométrie.
 geometry.setAttribute(
     "aPhase",
     new THREE.BufferAttribute(phases, 1)
 );
 
-// Crée le matériau personnalisé utilisé pour afficher les caractères.
+
+// ============================================================
+// MATÉRIAU NÉON DES CARACTÈRES
+// ============================================================
+
+// Crée le matériau personnalisé des caractères lumineux.
 const material = new THREE.ShaderMaterial({
 
     // Autorise la transparence des caractères.
@@ -274,10 +441,10 @@ const material = new THREE.ShaderMaterial({
     // Empêche les particules transparentes d'écrire dans le depth buffer.
     depthWrite: false,
 
-    // Mélange les couleurs pour produire une lumière bleutée discrète.
+    // Additionne les lumières pour créer un véritable effet néon.
     blending: THREE.AdditiveBlending,
 
-    // Utilise la texture des caractères et définit les paramètres du shader.
+    // Définit les paramètres utilisés par les shaders.
     uniforms: {
         uSize: {
             value: particleSize
@@ -293,7 +460,7 @@ const material = new THREE.ShaderMaterial({
         }
     },
 
-    // Définit la position, la couleur et le caractère de chaque particule sur le GPU.
+    // Calcule la position et l'animation des caractères.
     vertexShader: `
         attribute vec3 aColor;
         attribute float aSize;
@@ -308,30 +475,32 @@ const material = new THREE.ShaderMaterial({
 
         void main() {
 
-            // Transmet la couleur et l'indice du caractère au fragment shader.
+            // Transmet la couleur et le caractère au fragment shader.
             vColor = aColor;
             vGlyph = aGlyph;
 
-            // Anime chaque caractère avec un mouvement doux et indépendant.
+            // Prépare la position animée du caractère.
             vec3 animatedPosition = position;
 
+            // Anime doucement le mouvement horizontal.
             animatedPosition.x +=
                 sin(uTime * 0.45 + aPhase) * 0.045;
 
+            // Anime indépendamment le mouvement vertical.
             animatedPosition.y +=
                 cos(uTime * 0.35 + aPhase * 1.7) * 0.065;
 
-            // Transforme la position animée dans l'espace de la caméra.
+            // Transforme la position dans l'espace de la caméra.
             vec4 mvPosition =
                 modelViewMatrix *
                 vec4(animatedPosition, 1.0);
 
-            // Convertit la position dans l'espace visible par la caméra.
+            // Convertit la position pour le rendu.
             gl_Position =
                 projectionMatrix *
                 mvPosition;
 
-            // Augmente la taille apparente des caractères tout en conservant la perspective.
+            // Adapte la taille du caractère à sa profondeur.
             gl_PointSize =
                 clamp(
                     uSize * aSize / max(-mvPosition.z, 0.1),
@@ -341,7 +510,7 @@ const material = new THREE.ShaderMaterial({
         }
     `,
 
-    // Définit l'apparence de chaque caractère informatique.
+    // Produit le cœur lumineux et le halo du néon.
     fragmentShader: `
         uniform sampler2D uGlyphTexture;
         uniform float uGlyphCount;
@@ -357,65 +526,134 @@ const material = new THREE.ShaderMaterial({
                 gl_PointCoord.y
             );
 
-            // Récupère la forme du caractère dans la texture.
+            // Récupère la forme du caractère.
             float glyphAlpha = texture2D(
                 uGlyphTexture,
                 uv
             ).a;
 
-            // Définit la taille du halo autour du caractère.
+            // Définit le rayon du halo autour des traits.
             vec2 glowOffset = vec2(
-                2.5 / (64.0 * uGlyphCount),
-                2.5 / 64.0
+                2.0 / (64.0 * uGlyphCount),
+                2.0 / 64.0
             );
 
-            // Échantillonne les contours voisins pour créer une lueur diffuse.
+            // Calcule une première couche de lumière diffuse.
             float glow = 0.0;
 
-            glow = max(glow, texture2D(
-                uGlyphTexture,
-                uv + vec2(glowOffset.x, 0.0)
-            ).a);
+            glow = max(
+                glow,
+                texture2D(
+                    uGlyphTexture,
+                    uv + vec2(glowOffset.x, 0.0)
+                ).a
+            );
 
-            glow = max(glow, texture2D(
-                uGlyphTexture,
-                uv - vec2(glowOffset.x, 0.0)
-            ).a);
+            glow = max(
+                glow,
+                texture2D(
+                    uGlyphTexture,
+                    uv - vec2(glowOffset.x, 0.0)
+                ).a
+            );
 
-            glow = max(glow, texture2D(
-                uGlyphTexture,
-                uv + vec2(0.0, glowOffset.y)
-            ).a);
+            glow = max(
+                glow,
+                texture2D(
+                    uGlyphTexture,
+                    uv + vec2(0.0, glowOffset.y)
+                ).a
+            );
 
-            glow = max(glow, texture2D(
-                uGlyphTexture,
-                uv - vec2(0.0, glowOffset.y)
-            ).a);
+            glow = max(
+                glow,
+                texture2D(
+                    uGlyphTexture,
+                    uv - vec2(0.0, glowOffset.y)
+                ).a
+            );
 
-            // Élimine les pixels sans caractère ni halo.
-            if (glyphAlpha < 0.03 && glow < 0.03) {
+            // Ajoute quatre échantillons diagonaux au halo.
+            glow = max(
+                glow,
+                texture2D(
+                    uGlyphTexture,
+                    uv + glowOffset
+                ).a
+            );
+
+            glow = max(
+                glow,
+                texture2D(
+                    uGlyphTexture,
+                    uv - glowOffset
+                ).a
+            );
+
+            glow = max(
+                glow,
+                texture2D(
+                    uGlyphTexture,
+                    uv + vec2(glowOffset.x, -glowOffset.y)
+                ).a
+            );
+
+            glow = max(
+                glow,
+                texture2D(
+                    uGlyphTexture,
+                    uv + vec2(-glowOffset.x, glowOffset.y)
+                ).a
+            );
+
+            // Supprime les pixels totalement transparents.
+            if (glyphAlpha < 0.02 && glow < 0.02) {
                 discard;
             }
 
-            // Intensifie la lumière autour des contours.
-            float halo = max(glow - glyphAlpha, 0.0);
-
-            // Mélange un cœur bleu clair et un halo cyan.
-            vec3 coreColor = vec3(0.68, 0.84, 1.0);
-            vec3 haloColor = vec3(0.10, 0.48, 1.0);
-
-            // Renforce la lumière centrale sans surexposer les caractères.
-            vec3 finalColor =
-                coreColor * glyphAlpha * 1.35 +
-                haloColor * halo * 1.8;
-
-            // Combine la luminosité et la transparence du néon.
-            float alpha = max(
-                glyphAlpha * 0.95,
-                halo * 0.55
+            // Isole la lumière extérieure au caractère.
+            float halo = max(
+                glow - glyphAlpha,
+                0.0
             );
 
-            // Applique le résultat lumineux au pixel.
+            // Définit une lueur douce et une lueur plus concentrée.
+            float softGlow = pow(
+                halo,
+                0.75
+            );
+
+            float innerGlow = pow(
+                glyphAlpha,
+                0.7
+            );
+
+            // Teinte le halo en cyan électrique.
+            vec3 haloColor = mix(
+                vColor,
+                vec3(0.02, 0.85, 1.0),
+                0.45
+            );
+
+            // Conserve la couleur choisie pour le cœur du caractère.
+            vec3 coreColor =
+                vColor * 1.65;
+
+            // Superpose le cœur et les deux intensités de lumière.
+            vec3 finalColor =
+                coreColor * innerGlow +
+                haloColor * softGlow * 0.95 +
+                vColor * glyphAlpha * 0.45;
+
+            // Définit une transparence plus douce autour du caractère.
+            float alpha = clamp(
+                glyphAlpha * 0.95 +
+                softGlow * 0.32,
+                0.0,
+                1.0
+            );
+
+            // Affiche le caractère lumineux.
             gl_FragColor = vec4(
                 finalColor,
                 alpha
@@ -433,211 +671,32 @@ const particles = new THREE.Points(
 // Ajoute le vortex numérique à la scène.
 scene.add(particles);
 
-// Crée la géométrie contenant les particules de brume.
-const nebulaGeometry = new THREE.BufferGeometry();
 
-// Stocke les positions 3D des particules de brume.
-const nebulaPositions = new Float32Array(
-    nebulaCount * 3
-);
+// ============================================================
+// ANIMATION
+// ============================================================
 
-// Stocke les couleurs des particules de brume.
-const nebulaColors = new Float32Array(
-    nebulaCount * 3
-);
-
-// Stocke les tailles des particules de brume.
-const nebulaSizes = new Float32Array(
-    nebulaCount
-);
-
-// Définit une palette sombre pour le brouillard numérique.
-const nebulaPalette = [
-    new THREE.Color(0x10264a),
-    new THREE.Color(0x12365c),
-    new THREE.Color(0x17264d),
-    new THREE.Color(0x123e58)
-];
-
-// Génère les particules qui créent une profondeur lumineuse discrète.
-for (let i = 0; i < nebulaCount; i++) {
-
-    // Permet d'accéder aux trois valeurs X, Y et Z de la particule actuelle.
-    const i3 = i * 3;
-
-    // Définit la profondeur de la particule dans le vortex.
-    const z =
-        (Math.random() - 0.5) * 30;
-
-    // Définit la distance de la particule par rapport au centre.
-    const radius =
-        1.5 + Math.random() * 5.5;
-
-    // Définit l'angle de la particule autour du centre.
-    const angle =
-        Math.random() * FULL_CIRCLE;
-
-    // Ajoute une variation pour créer un nuage irrégulier.
-    const variation =
-        (Math.random() - 0.5) * 2.5;
-
-    // Calcule la position horizontale de la particule.
-    nebulaPositions[i3] =
-        Math.cos(angle) *
-        (radius + variation);
-
-    // Calcule la position verticale de la particule.
-    nebulaPositions[i3 + 1] =
-        Math.sin(angle) *
-        (radius + variation);
-
-    // Enregistre la profondeur de la particule.
-    nebulaPositions[i3 + 2] = z;
-
-    // Sélectionne une couleur dans la palette sombre.
-    const color =
-        nebulaPalette[
-            Math.floor(
-                Math.random() * nebulaPalette.length
-            )
-        ];
-
-    // Enregistre la couleur de la particule.
-    nebulaColors[i3] = color.r;
-    nebulaColors[i3 + 1] = color.g;
-    nebulaColors[i3 + 2] = color.b;
-
-    // Définit une taille modérée pour les halos de brume.
-    nebulaSizes[i] =
-        30 + Math.random() * 35;
-}
-
-// Associe les positions à la géométrie de la brume.
-nebulaGeometry.setAttribute(
-    "position",
-    new THREE.BufferAttribute(nebulaPositions, 3)
-);
-
-// Associe les couleurs à la géométrie de la brume.
-nebulaGeometry.setAttribute(
-    "aColor",
-    new THREE.BufferAttribute(nebulaColors, 3)
-);
-
-// Associe les tailles à la géométrie de la brume.
-nebulaGeometry.setAttribute(
-    "aSize",
-    new THREE.BufferAttribute(nebulaSizes, 1)
-);
-
-// Crée le matériau utilisé pour afficher la brume numérique.
-const nebulaMaterial = new THREE.ShaderMaterial({
-
-    // Autorise la transparence des halos.
-    transparent: true,
-
-    // Empêche les particules transparentes d'écrire dans le depth buffer.
-    depthWrite: false,
-
-    // Mélange les halos pour obtenir une lumière douce.
-    blending: THREE.AdditiveBlending,
-
-    // Calcule la position et la taille des particules sur le GPU.
-    vertexShader: `
-        attribute vec3 aColor;
-        attribute float aSize;
-
-        varying vec3 vColor;
-
-        void main() {
-
-            // Transmet la couleur au fragment shader.
-            vColor = aColor;
-
-            // Transforme la position dans l'espace de la caméra.
-            vec4 mvPosition =
-                modelViewMatrix *
-                vec4(position, 1.0);
-
-            // Convertit la position dans l'espace visible par la caméra.
-            gl_Position =
-                projectionMatrix *
-                mvPosition;
-
-            // Définit la taille du halo selon sa distance.
-            gl_PointSize =
-                clamp(
-                    aSize * (35.0 / max(-mvPosition.z, 0.1)),
-                    1.0,
-                    128.0
-                );
-        }
-    `,
-
-    // Définit l'apparence diffuse des halos bleus.
-    fragmentShader: `
-        varying vec3 vColor;
-
-        void main() {
-
-            // Centre les coordonnées autour de l'origine de la particule.
-            vec2 uv =
-                gl_PointCoord * 2.0 - 1.0;
-
-            // Calcule la distance par rapport au centre.
-            float d = length(uv);
-
-            // Supprime les pixels situés en dehors du halo.
-            if (d > 1.0) {
-                discard;
-            }
-
-            // Crée un halo progressif sans contour visible.
-            float cloud =
-                1.0 - smoothstep(0.0, 1.0, d);
-
-            // Concentre légèrement la luminosité au centre.
-            cloud = pow(cloud, 2.8);
-
-            // Applique une opacité faible pour préserver la lisibilité.
-            gl_FragColor = vec4(
-                vColor,
-                cloud * 0.035
-            );
-        }
-    `
-});
-
-// Crée le système de particules représentant la brume.
-const nebula = new THREE.Points(
-    nebulaGeometry,
-    nebulaMaterial
-);
-
-// Ajoute la brume à la scène.
-scene.add(nebula);
-
-// Indique si l'animation doit actuellement être exécutée.
+// Indique si l'animation doit être mise en pause.
 let isAnimationPaused = false;
 
 // Stocke le moment du dernier rendu.
 let lastFrameTime = 0;
 
-// Définit l'intervalle entre deux images pour limiter le rendu à environ 30 FPS.
+// Définit l'intervalle entre deux images pour viser environ 30 FPS.
 const frameInterval = 1000 / 30;
 
-// Fonction principale exécutée à chaque image disponible.
+// Fonction principale exécutée à chaque image.
 function animate(currentTime) {
 
     // Demande au navigateur de rappeler cette fonction.
     requestAnimationFrame(animate);
 
-    // Ne fait aucun calcul lorsque l'onglet est masqué.
+    // Arrête les calculs lorsque l'onglet est masqué.
     if (isAnimationPaused) {
         return;
     }
 
-    // Ignore cette image si le délai minimum entre deux rendus n'est pas atteint.
+    // Limite la fréquence de rendu.
     if (currentTime - lastFrameTime < frameInterval) {
         return;
     }
@@ -648,15 +707,21 @@ function animate(currentTime) {
     // Fait tourner lentement le vortex de données.
     particles.rotation.z += 0.0008;
 
-    // Fait tourner la brume dans la direction opposée.
-    nebula.rotation.z -= 0.00018;
-
-    // Actualise le temps utilisé pour animer les caractères sur le GPU.
-    material.uniforms.uTime.value =
+    // Actualise le temps du fond et des caractères.
+    const elapsedTime =
         currentTime * 0.001;
 
+    backgroundMaterial.uniforms.uTime.value =
+        elapsedTime;
+
+    material.uniforms.uTime.value =
+        elapsedTime;
+
     // Dessine la scène depuis le point de vue de la caméra.
-    renderer.render(scene, camera);
+    renderer.render(
+        scene,
+        camera
+    );
 }
 
 // Détecte lorsque l'utilisateur quitte ou revient sur l'onglet.
@@ -673,7 +738,12 @@ document.addEventListener(
 // Lance la boucle d'animation.
 animate();
 
-// Recalcule les dimensions du rendu lors du redimensionnement de la fenêtre.
+
+// ============================================================
+// REDIMENSIONNEMENT
+// ============================================================
+
+// Recalcule les dimensions du rendu lors du redimensionnement.
 function handleResize() {
 
     // Met à jour les dimensions de la caméra.
@@ -688,13 +758,13 @@ function handleResize() {
         window.innerHeight
     );
 
-    // Recalcule le pixel ratio selon la nouvelle largeur.
+    // Recalcule le pixel ratio selon la largeur de l'écran.
     const currentPixelRatio =
         window.innerWidth < 768 ? 1 :
             window.innerWidth < 1024 ? 1.25 :
                 1.5;
 
-    // Applique le pixel ratio adapté à la résolution actuelle.
+    // Applique le pixel ratio adapté.
     renderer.setPixelRatio(
         Math.min(
             window.devicePixelRatio,
@@ -704,4 +774,7 @@ function handleResize() {
 }
 
 // Écoute les changements de dimensions de la fenêtre.
-window.addEventListener("resize", handleResize);
+window.addEventListener(
+    "resize",
+    handleResize
+);
