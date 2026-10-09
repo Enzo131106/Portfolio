@@ -67,11 +67,6 @@ renderer.setPixelRatio(
 renderer.domElement.id = "background";
 document.body.prepend(renderer.domElement);
 
-
-// ============================================================
-// FOND NUMÉRIQUE ANIMÉ
-// ============================================================
-
 // Définit une couleur de secours pour le fond de la scène.
 scene.background = new THREE.Color(0x050914);
 
@@ -230,11 +225,6 @@ background.renderOrder = -1;
 // Ajoute le fond animé à la scène.
 scene.add(background);
 
-
-// ============================================================
-// TEXTURE DES CARACTÈRES INFORMATIQUES
-// ============================================================
-
 // Définit les caractères utilisés pour représenter les données.
 const glyphs = [
     "0", "1", "{", "}", "<", ">", "/", ";"
@@ -290,11 +280,6 @@ const glyphTexture = new THREE.CanvasTexture(
 
 // Indique que la texture contient des caractères transparents.
 glyphTexture.colorSpace = THREE.SRGBColorSpace;
-
-
-// ============================================================
-// CRÉATION DU VORTEX DE CARACTÈRES
-// ============================================================
 
 // Crée la structure géométrique des caractères.
 const geometry = new THREE.BufferGeometry();
@@ -426,11 +411,6 @@ geometry.setAttribute(
     "aPhase",
     new THREE.BufferAttribute(phases, 1)
 );
-
-
-// ============================================================
-// MATÉRIAU NÉON DES CARACTÈRES
-// ============================================================
 
 // Crée le matériau personnalisé des caractères lumineux.
 const material = new THREE.ShaderMaterial({
@@ -671,11 +651,6 @@ const particles = new THREE.Points(
 // Ajoute le vortex numérique à la scène.
 scene.add(particles);
 
-
-// ============================================================
-// ANIMATION
-// ============================================================
-
 // Indique si l'animation doit être mise en pause.
 let isAnimationPaused = false;
 
@@ -737,11 +712,6 @@ document.addEventListener(
 
 // Lance la boucle d'animation.
 animate();
-
-
-// ============================================================
-// REDIMENSIONNEMENT
-// ============================================================
 
 // Recalcule les dimensions du rendu lors du redimensionnement.
 function handleResize() {
