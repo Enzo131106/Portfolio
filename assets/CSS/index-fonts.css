@@ -1,7 +1,7 @@
 /* Inter 700 en local */
 @font-face {
     font-family: "Inter Local";
-    src: url("../../vendor/inter/Inter-Bold.woff2") format("woff2");
+    src: url("../../vendor/fonts/inter/Inter-Bold.woff2") format("woff2");
     font-style: normal;
     font-weight: 700;
     font-display: swap;
