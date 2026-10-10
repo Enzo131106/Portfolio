@@ -69,3 +69,31 @@ if (bootstrapJS) {
         "./vendor/bootstrap/bootstrap.bundle.min.js"
     );
 }
+
+//Inter 700
+//Bunny Fonts en priorité → police locale en cas d'échec.
+const interFonts = document.getElementById("inter-fonts");
+
+function activateLocalInter() {
+    console.warn("Inter CDN indisponible : activation de la police locale.");
+
+    document.documentElement.classList.add("inter-local-fallback");
+}
+
+if (interFonts) {
+    // La feuille CSS distante n'a pas pu être chargée.
+    interFonts.addEventListener("error", activateLocalInter);
+
+    // La feuille CSS est chargée : on vérifie la police elle-même.
+    interFonts.addEventListener("load", async () => {
+        try {
+            const faces = await document.fonts.load("700 16px Inter");
+
+            if (!faces.length || faces.every(face => face.status !== "loaded")) {
+                activateLocalInter();
+            }
+        } catch {
+            activateLocalInter();
+        }
+    });
+}
