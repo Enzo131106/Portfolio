@@ -8,7 +8,6 @@
 
     --privacy-text: rgba(255, 255, 255, 0.82);
     --privacy-text-muted: rgba(255, 255, 255, 0.48);
-    --privacy-text-link: font-family: initial;
 
     --privacy-button-bg: #ffffff;
     --privacy-button-text: #070b18;
@@ -95,8 +94,6 @@
     font-size: 1.7rem;
     font-weight: 600;
 
-    font-family: var(--privacy-text-link)
-
 }
 
 .privacy-text {
@@ -106,8 +103,6 @@
     font-size: 0.95rem;
     line-height: 1.7;
 
-    font-family: var(--privacy-text-link)
-
 }
 
 .privacy-details {
@@ -116,8 +111,6 @@
 
     font-size: 0.8rem;
     line-height: 1.6;
-
-    font-family: var(--privacy-text-link)
 
 }
 
