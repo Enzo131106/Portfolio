@@ -1,6 +1,6 @@
 /* Variables globales */
 :root {
-    --navigation-gap: 16px;
+    --navigation-gap: 4px;
     --navigation-padding-x: 24px;
     --navigation-padding-y: 20px;
 }
@@ -34,6 +34,7 @@
     border-radius: 50px;
     border: 1px solid rgba(255, 255, 255, 0);
     box-shadow: 0 8px 80px -5px rgba(0, 0, 0, 0.5);
+    padding: 10px;
 
     margin: auto;
 }
@@ -89,6 +90,14 @@
 
     .navbar-container {
         width: 100%;
+
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(5px) saturate(180%);
+        -webkit-backdrop-filter: blur(5px) saturate(180%);
+        border-radius: 50px;
+        border: 1px solid rgba(255, 255, 255, 0);
+        box-shadow: 0 8px 80px -5px rgba(0, 0, 0, 0.5);
+        padding: 10px;
     }
 
     .navbar-nav {
