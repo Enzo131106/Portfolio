@@ -91,7 +91,7 @@
     .navbar-nav {
         width: 100%;
         justify-content: center;
-        gap: 0;
+        gap: 2px;
     }
 
     .nav-link {
