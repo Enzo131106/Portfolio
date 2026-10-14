@@ -39,7 +39,7 @@
     margin: auto;
 }
 
-/* Liens de navigation */
+/* Navigation */
 .navbar-nav {
     display: flex !important;
     flex-direction: row !important;
@@ -50,18 +50,12 @@
     gap: var(--navigation-gap);
 }
 
-/* Liens de navigation */
+/* liens de navigation */
 .nav-link {
-    padding: 10px 16px !important;
-
-    color: white !important;
-    font-size: 17px;
-    text-decoration: none;
-
-    white-space: nowrap;
-    flex-shrink: 0;
-
     transform: scale(1);
+    margin-left: 0;
+    margin-right: 0;
+
     transition:
         transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
         color 0.25s ease,
@@ -69,22 +63,24 @@
         margin 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-/* Section actuellement visible */
-.nav-link.active {
+/* Survol : agrandissement et décalage des voisins */
+.nav-link:hover {
     transform: scale(1.1);
     margin-left: 4px;
     margin-right: 4px;
 
-    color: white !important;
+    color: rgba(255, 255, 255, 0.8) !important;
     text-shadow: 0 0 12px rgba(255, 255, 255, 0.25);
 }
 
-/* Évite que le lien actif rétrécisse au survol */
-.nav-link.active:hover {
+/* Section active : reste agrandie */
+.nav-link.active {
     transform: scale(1.1);
+    margin-left: 4px;
+    margin-right: 4px;
 }
 
-/* Conserve l'effet au clic */
+/* Clic : contraction temporaire */
 .nav-link:active {
     transform: scale(0.97);
     transition-duration: 0.1s;
