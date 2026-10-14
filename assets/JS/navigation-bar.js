@@ -1,4 +1,4 @@
-"use strict";
+/*"use strict";
 
 // Récupération des liens de navigation
 const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
@@ -31,4 +31,4 @@ function updateActiveSection() {
 // Actualisation au scroll et au chargement
 window.addEventListener('scroll', updateActiveSection, { passive: true });
 window.addEventListener('load', updateActiveSection);
-updateActiveSection();
+updateActiveSection();*/
