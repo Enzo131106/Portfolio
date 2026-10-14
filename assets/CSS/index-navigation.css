@@ -48,6 +48,12 @@
     justify-content: center;
 
     gap: var(--navigation-gap);
+
+    transition: transform 0.2s ease-in-out;
+}
+
+.navbar-nav:hover {
+    transform: scale(1.1);
 }
 
 .nav-link {
@@ -59,12 +65,6 @@
 
     white-space: nowrap;
     flex-shrink: 0;
-
-    transition: transform 0.2s ease-in-out;
-}
-
-.nav-link:hover {
-    transform: scale(1.1);
 }
 
 /* Format tablette */
