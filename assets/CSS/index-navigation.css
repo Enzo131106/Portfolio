@@ -69,17 +69,22 @@
         margin 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-/* Survol : agrandissement et décalage des voisins */
-.nav-link:hover {
+/* Section actuellement visible */
+.nav-link.active {
     transform: scale(1.1);
     margin-left: 4px;
     margin-right: 4px;
 
-    color: rgba(255, 255, 255, 0.8) !important;
+    color: white !important;
     text-shadow: 0 0 12px rgba(255, 255, 255, 0.25);
 }
 
-/* Clic : on conserve l'effet que tu aimes */
+/* Évite que le lien actif rétrécisse au survol */
+.nav-link.active:hover {
+    transform: scale(1.1);
+}
+
+/* Conserve l'effet au clic */
 .nav-link:active {
     transform: scale(0.97);
     transition-duration: 0.1s;
