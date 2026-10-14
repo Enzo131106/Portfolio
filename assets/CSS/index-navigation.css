@@ -61,26 +61,27 @@
     white-space: nowrap;
     flex-shrink: 0;
 
-    /* Animation fluide */
+    transform: scale(1);
     transition:
-        color 0.25s ease,
         transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
-        text-shadow 0.3s ease;
-
-    transform: translateY(0);
-    will-change: transform;
+        color 0.25s ease,
+        text-shadow 0.3s ease,
+        margin 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-/* Animation au survol */
+/* Survol : agrandissement et décalage des voisins */
 .nav-link:hover {
+    transform: scale(1.1);
+    margin-left: 4px;
+    margin-right: 4px;
+
     color: rgba(255, 255, 255, 0.8) !important;
-    transform: translateY(-2px);
     text-shadow: 0 0 12px rgba(255, 255, 255, 0.25);
 }
 
-/* Interaction au clic */
+/* Clic : on conserve l'effet que tu aimes */
 .nav-link:active {
-    transform: translateY(0) scale(0.97);
+    transform: scale(0.97);
     transition-duration: 0.1s;
 }
 
