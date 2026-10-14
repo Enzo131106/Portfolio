@@ -1,6 +1,6 @@
 /* Variables globales */
 :root {
-    --navigation-gap: 8px;
+    --navigation-gap: 16px;
     --navigation-padding-x: 24px;
     --navigation-padding-y: 20px;
 }
