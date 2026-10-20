@@ -42,7 +42,11 @@
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         state.player.width = Math.max(15, Math.min(23, width * 0.045));
         state.player.height = state.player.width * 0.72;
-        if (!state.running) draw();
+        if (!state.running) {
+            state.player.x = width / 2;
+            state.player.y = height * 0.88;
+            draw();
+        }
     }
     function updateHud() {
         scoreText.textContent = formatScore(state.score);
