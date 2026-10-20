@@ -295,13 +295,62 @@
 
 
     function getScoreShareText() {
-        return "J’ai marqué " + formatScore(state.score) + " points sur BYTE INVADERS ! Tu peux battre mon score ? " + window.location.href;
+        return "J’ai marqué " + formatScore(state.score) + " points sur BYTE INVADERS ! Tu peux battre mon score ?\n" + window.location.href;
+    }
+    function createScoreImageBlob() {
+        return new Promise(resolve => {
+            const exportCanvas = document.createElement("canvas");
+            exportCanvas.width = 1200;
+            exportCanvas.height = 630;
+            const exportCtx = exportCanvas.getContext("2d");
+            if (!exportCtx) { resolve(null); return; }
+            const gradient = exportCtx.createLinearGradient(0, 0, 1200, 630);
+            gradient.addColorStop(0, "#071329");
+            gradient.addColorStop(1, "#10294a");
+            exportCtx.fillStyle = gradient;
+            exportCtx.fillRect(0, 0, 1200, 630);
+            exportCtx.strokeStyle = "rgba(103, 209, 255, .22)";
+            exportCtx.lineWidth = 1;
+            for (let x = 0; x < 1200; x += 40) {
+                exportCtx.beginPath(); exportCtx.moveTo(x, 0); exportCtx.lineTo(x, 630); exportCtx.stroke();
+            }
+            for (let y = 0; y < 630; y += 40) {
+                exportCtx.beginPath(); exportCtx.moveTo(0, y); exportCtx.lineTo(1200, y); exportCtx.stroke();
+            }
+            exportCtx.fillStyle = "#72e2ff";
+            exportCtx.font = "700 28px Inter, Arial, sans-serif";
+            exportCtx.letterSpacing = "6px";
+            exportCtx.fillText("BYTE INVADERS", 84, 112);
+            exportCtx.fillStyle = "#f3f7ff";
+            exportCtx.font = "700 34px Inter, Arial, sans-serif";
+            exportCtx.letterSpacing = "0px";
+            exportCtx.fillText("MON SCORE", 84, 220);
+            exportCtx.fillStyle = "#ffffff";
+            exportCtx.font = "800 118px Inter, Arial, sans-serif";
+            exportCtx.fillText(formatScore(state.score), 78, 365);
+            exportCtx.fillStyle = "#a8bdd9";
+            exportCtx.font = "500 25px Inter, Arial, sans-serif";
+            exportCtx.fillText("Et toi, tu peux faire mieux ?", 86, 440);
+            exportCtx.fillStyle = "#72e2ff";
+            exportCtx.font = "600 22px Inter, Arial, sans-serif";
+            exportCtx.fillText("enzo131106.github.io/Portfolio/", 86, 555);
+            exportCanvas.toBlob(resolve, "image/png");
+        });
     }
     async function shareScore() {
         const text = getScoreShareText();
         if (navigator.share) {
             try {
-                await navigator.share({ title: "Mon score BYTE INVADERS", text, url: window.location.href });
+                const blob = await createScoreImageBlob();
+                if (blob && typeof File !== "undefined") {
+                    const file = new File([blob], "byte-invaders-score-" + state.score + ".png", { type: "image/png" });
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        await navigator.share({ title: "Mon score BYTE INVADERS", text, files: [file] });
+                        return;
+                    }
+                }
+                // Ne pas fournir url séparément : certaines applis n'envoient alors que le lien.
+                await navigator.share({ title: "BYTE INVADERS — " + formatScore(state.score) + " points", text });
                 return;
             } catch (error) {
                 if (error && error.name === "AbortError") return;
@@ -317,53 +366,17 @@
             window.prompt("Copie ton score pour le partager :", text);
         }
     }
-    function downloadScore() {
-        const exportCanvas = document.createElement("canvas");
-        exportCanvas.width = 1200;
-        exportCanvas.height = 630;
-        const exportCtx = exportCanvas.getContext("2d");
-        if (!exportCtx) return;
-        const gradient = exportCtx.createLinearGradient(0, 0, 1200, 630);
-        gradient.addColorStop(0, "#071329");
-        gradient.addColorStop(1, "#10294a");
-        exportCtx.fillStyle = gradient;
-        exportCtx.fillRect(0, 0, 1200, 630);
-        exportCtx.strokeStyle = "rgba(103, 209, 255, .22)";
-        exportCtx.lineWidth = 1;
-        for (let x = 0; x < 1200; x += 40) {
-            exportCtx.beginPath(); exportCtx.moveTo(x, 0); exportCtx.lineTo(x, 630); exportCtx.stroke();
-        }
-        for (let y = 0; y < 630; y += 40) {
-            exportCtx.beginPath(); exportCtx.moveTo(0, y); exportCtx.lineTo(1200, y); exportCtx.stroke();
-        }
-        exportCtx.fillStyle = "#72e2ff";
-        exportCtx.font = "700 28px Inter, Arial, sans-serif";
-        exportCtx.letterSpacing = "6px";
-        exportCtx.fillText("BYTE INVADERS", 84, 112);
-        exportCtx.fillStyle = "#f3f7ff";
-        exportCtx.font = "700 34px Inter, Arial, sans-serif";
-        exportCtx.letterSpacing = "0px";
-        exportCtx.fillText("MON SCORE", 84, 220);
-        exportCtx.fillStyle = "#ffffff";
-        exportCtx.font = "800 118px Inter, Arial, sans-serif";
-        exportCtx.fillText(formatScore(state.score), 78, 365);
-        exportCtx.fillStyle = "#a8bdd9";
-        exportCtx.font = "500 25px Inter, Arial, sans-serif";
-        exportCtx.fillText("Et toi, tu peux faire mieux ?", 86, 440);
-        exportCtx.fillStyle = "#72e2ff";
-        exportCtx.font = "600 22px Inter, Arial, sans-serif";
-        exportCtx.fillText("enzo131106.github.io/Portfolio/", 86, 555);
-        exportCanvas.toBlob(blob => {
-            if (!blob) return;
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement("a");
-            link.href = url;
-            link.download = "byte-invaders-score-" + state.score + ".png";
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-            URL.revokeObjectURL(url);
-        }, "image/png");
+    async function downloadScore() {
+        const blob = await createScoreImageBlob();
+        if (!blob) return;
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "byte-invaders-score-" + state.score + ".png";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.setTimeout(() => URL.revokeObjectURL(url), 1000);
     }
 
     if (shareScoreButton) shareScoreButton.addEventListener("click", shareScore);
