@@ -51,8 +51,8 @@ renderer.setSize(
 
 // Définit la résolution du rendu selon le type d'appareil.
 const initialPixelRatio =
-    isMobile ? 1 :
-        isTablet ? 1.25 :
+    isMobile ? 1.25 :
+        isTablet ? 1.5 :
             1.5;
 
 // Limite le pixel ratio pour préserver les performances.
@@ -730,8 +730,8 @@ function handleResize() {
 
     // Recalcule le pixel ratio selon la largeur de l'écran.
     const currentPixelRatio =
-        window.innerWidth < 768 ? 1 :
-            window.innerWidth < 1024 ? 1.25 :
+        window.innerWidth < 768 ? 1.25 :
+            window.innerWidth < 1024 ? 1.5 :
                 1.5;
 
     // Applique le pixel ratio adapté.
