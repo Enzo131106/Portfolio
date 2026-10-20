@@ -276,3 +276,59 @@
     .arcade-overlay,
     .arcade-start { transition: none; }
 }
+
+
+/* État de fin de partie : alerte rouge et actions de score. */
+.arcade-status.is-game-over {
+    color: #ff6b78;
+}
+
+.arcade-status.is-game-over > span:first-child {
+    background: #ff4d5e;
+    box-shadow: 0 0 9px rgba(255, 77, 94, .65);
+}
+
+.arcade-result-actions {
+    display: none;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin: 0 0 12px;
+}
+
+.arcade-overlay.is-game-over .arcade-result-actions {
+    display: flex;
+}
+
+.arcade-result-button {
+    display: inline-flex;
+    min-height: 32px;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 0 11px;
+    border: 1px solid rgba(145, 183, 230, .25);
+    border-radius: 8px;
+    color: #dbe8fb;
+    background: rgba(255, 255, 255, .055);
+    font: inherit;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .025em;
+    cursor: pointer;
+    transition: border-color 160ms ease, background 160ms ease;
+}
+
+.arcade-result-button:hover {
+    border-color: rgba(155, 221, 232, .55);
+    background: rgba(155, 221, 232, .12);
+}
+
+.arcade-result-button i {
+    font-size: 12px;
+}
+
+@media (max-width: 430px) {
+    .arcade-result-actions { gap: 6px; }
+    .arcade-result-button { padding-inline: 9px; font-size: 9px; }
+}
