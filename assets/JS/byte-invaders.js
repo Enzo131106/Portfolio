@@ -32,7 +32,7 @@
     try { best = Number(localStorage.getItem("byteInvadersBest")) || 0; } catch (_) { /* stockage facultatif */ }
     bestText.textContent = formatScore(best);
 
-    function formatScore(value) { return String(Math.max(0, value)).padStart(4, "0"); }
+    function formatScore(value) { return String(Math.max(0, Math.floor(Number(value) || 0))); }
     function resize() {
         const rect = screen.getBoundingClientRect();
         if (!rect.width || !rect.height) return;
