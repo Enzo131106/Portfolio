@@ -1,7 +1,7 @@
 "use strict";
 
 // Seuls les liens d'ancrage de la navigation participent au suivi des sections.
-const navLinks = document.querySelectorAll('.navbar__links .navbar__link[href^="#"]');
+const navLinks = document.querySelectorAll('.navbar-nav .nav-link[href^="#"]');
 
 const sections = [...navLinks]
     .map(link => document.querySelector(link.getAttribute('href')))
