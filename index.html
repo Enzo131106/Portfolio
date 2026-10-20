@@ -90,7 +90,7 @@
                 En cas d'indisponibilité, des versions locales des librairies sont utilisées.
             </p>
             <div class="privacy-actions">
-                <button id="privacy-button" class="privacy-button">Compris</button>
+                <button id="privacy-button" class="privacy-button" type="button">Compris</button>
                 <a href="./privacy.html" class="privacy-more" target="_blank" rel="noopener noreferrer">
                     En savoir plus
                 </a>
@@ -99,7 +99,7 @@
     </div>
 
     <header>
-        <!-- Navigation existante : conservée telle quelle -->
+        <!-- Navigation principale -->
         <nav class="navbar fixed-top" aria-label="Navigation principale">
             <div class="navbar-container">
                 <div class="navbar-identity">
@@ -158,8 +158,8 @@
                         <span class="arcade-status"><span aria-hidden="true"></span> <span id="arcade-status-text">READY</span></span>
                     </div>
                     <div class="arcade-scorebar" aria-live="polite">
-                        <div><span class="arcade-label">SCORE</span><strong id="arcade-score">0000</strong></div>
-                        <div><span class="arcade-label">RECORD</span><strong id="arcade-best">0000</strong></div>
+                        <div><span class="arcade-label">SCORE</span><strong id="arcade-score">0</strong></div>
+                        <div><span class="arcade-label">RECORD</span><strong id="arcade-best">0</strong></div>
                         <div><span class="arcade-label">VIES</span><strong id="arcade-lives" aria-label="3 vies">♥ ♥ ♥</strong></div>
                     </div>
                     <div class="arcade-screen" id="arcade-screen">
@@ -173,7 +173,6 @@
                             </div>
                             <button class="arcade-start" id="arcade-start" type="button">PRESS TO START</button>
                         </div>
-                        <div class="arcade-scanlines" aria-hidden="true"></div>
                     </div>
                     <div class="arcade-controls">
                         <span><kbd>←</kbd><kbd>→</kbd> DÉPLACER</span>
