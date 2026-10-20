@@ -1,4 +1,4 @@
-/* Navigation du portfolio */
+/* Navigation principale */
 :root {
     --nav-text: rgba(235, 243, 255, 0.8);
     --nav-text-strong: #f8fbff;
@@ -16,7 +16,7 @@
     background: transparent !important;
 }
 
-.navbar__container {
+.navbar-container {
     position: relative;
     display: flex;
     align-items: center;
@@ -27,7 +27,7 @@
     margin: 0 auto;
     padding: 8px 12px;
     border: 1px solid var(--nav-border);
-    border-radius: 18px;
+    border-radius: 14px;
     background: rgba(9, 14, 32, 0.88);
     -webkit-backdrop-filter: blur(14px);
     backdrop-filter: blur(14px);
@@ -35,7 +35,7 @@
     transition: border-color var(--nav-motion);
 }
 
-.navbar__container::before {
+.navbar-container::before {
     position: absolute;
     top: -1px;
     left: 12%;
@@ -47,14 +47,14 @@
     pointer-events: none;
 }
 
-.navbar__identity {
+.navbar-identity {
     display: inline-flex;
     align-items: center;
     flex: 0 0 auto;
     gap: 9px;
 }
 
-.navbar__photo {
+.profile-photo {
     display: block;
     width: 36px;
     height: 36px;
@@ -65,7 +65,7 @@
     border-radius: 50%;
 }
 
-.navbar__name {
+.brand-name {
     color: var(--nav-text-strong);
     font-size: 11px;
     font-weight: 800;
@@ -73,12 +73,12 @@
     white-space: nowrap;
 }
 
-.navbar__name span {
+.brand-name span {
     color: #a9b8d8;
     font-weight: 600;
 }
 
-.navbar__links {
+.navbar-nav {
     display: flex !important;
     flex-direction: row !important;
     align-items: center;
@@ -87,7 +87,7 @@
     min-width: 0;
 }
 
-.navbar .navbar__link {
+.navbar .nav-link {
     position: relative;
     display: inline-flex;
     align-items: center;
@@ -103,26 +103,26 @@
     transition: color var(--nav-motion), background-color var(--nav-motion), box-shadow var(--nav-motion), transform var(--nav-motion);
 }
 
-.navbar .navbar__link:hover,
-.navbar .navbar__link:focus-visible {
+.navbar .nav-link:hover,
+.navbar .nav-link:focus-visible {
     color: var(--nav-text-strong) !important;
     background: rgba(255, 255, 255, 0.055);
 }
 
-.navbar .navbar__link.active {
+.navbar .nav-link.active {
     color: var(--nav-text-strong) !important;
-    background: rgba(255, 255, 255, 0.09);
+    background: rgba(255, 255, 255, 0.075);
     box-shadow: none;
 }
 
-.navbar__socials {
+.navbar-socials {
     display: inline-flex;
     align-items: center;
     flex: 0 0 auto;
     gap: 13px;
 }
 
-.navbar__social-link {
+.social-link {
     display: inline-grid;
     width: 24px;
     height: 32px;
@@ -137,8 +137,8 @@
     transition: color var(--nav-motion), transform var(--nav-motion), filter var(--nav-motion);
 }
 
-.navbar__social-link:hover,
-.navbar__social-link:focus-visible {
+.social-link:hover,
+.social-link:focus-visible {
     transform: translateY(-2px);
     color: var(--nav-cyan);
 }
@@ -157,28 +157,28 @@
         padding: 14px 12px;
     }
 
-    .navbar__container {
+    .navbar-container {
         gap: 12px;
         padding: 8px 12px;
     }
 
-    .navbar__name {
+    .brand-name {
         font-size: 10px;
         letter-spacing: 0.06em;
     }
 
-    .navbar__photo {
+    .profile-photo {
         width: 33px;
         height: 33px;
         flex-basis: 33px;
     }
 
-    .navbar .navbar__link {
+    .navbar .nav-link {
         padding: 9px 9px !important;
         font-size: 11px;
     }
 
-    .navbar__socials {
+    .navbar-socials {
         gap: 8px;
     }
 }
@@ -188,7 +188,7 @@
         padding: 10px;
     }
 
-    .navbar__container {
+    .navbar-container {
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
         gap: 8px 12px;
@@ -197,27 +197,27 @@
         border-radius: 24px;
     }
 
-    .navbar__identity {
+    .navbar-identity {
         gap: 8px;
     }
 
-    .navbar__photo {
+    .profile-photo {
         width: 31px;
         height: 31px;
         flex-basis: 31px;
     }
 
-    .navbar__socials {
+    .navbar-socials {
         gap: 10px;
     }
 
-    .navbar__social-link {
+    .social-link {
         width: 22px;
         height: 28px;
         font-size: 17px;
     }
 
-    .navbar__links {
+    .navbar-nav {
         grid-column: 1 / -1;
         grid-row: 2;
         justify-content: space-between;
@@ -226,7 +226,7 @@
         border-top: 1px solid rgba(126, 170, 255, 0.12);
     }
 
-    .navbar .navbar__link {
+    .navbar .nav-link {
         padding: 9px 10px !important;
         font-size: 11px;
     }
@@ -234,17 +234,17 @@
 }
 
 @media (max-width: 360px) {
-    .navbar__container {
+    .navbar-container {
         padding-inline: 9px;
         gap: 7px 8px;
     }
 
-    .navbar__name {
+    .brand-name {
         font-size: 9px;
         letter-spacing: 0.035em;
     }
 
-    .navbar .navbar__link {
+    .navbar .nav-link {
         padding: 8px 7px !important;
         font-size: 10px;
     }
