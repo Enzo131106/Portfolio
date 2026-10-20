@@ -1,36 +1,56 @@
 "use strict";
 
-// Seuls les liens d'ancrage de la navigation participent au suivi des sections.
-const navLinks = document.querySelectorAll('.navbar-nav .nav-link[href^="#"]');
+(() => {
+    const navigationLinks = document.querySelectorAll(
+        '.navbar-nav .nav-link[href^="#"]'
+    );
 
-const sections = [...navLinks]
-    .map(link => document.querySelector(link.getAttribute('href')))
-    .filter(section => section !== null);
+    if (!navigationLinks.length) return;
 
-function updateActiveSection() {
-    if (!sections.length) return;
+    const navigationItems = [...navigationLinks]
+        .map(link => ({
+            link,
+            section: document.querySelector(link.getAttribute("href"))
+        }))
+        .filter(item => item.section);
 
-    const screenPosition = window.innerHeight * 0.4;
-    let currentSection = sections[0];
+    if (!navigationItems.length) return;
 
-    sections.forEach(section => {
-        if (section.getBoundingClientRect().top <= screenPosition) {
-            currentSection = section;
-        }
-    });
+    let scrollFrame = 0;
 
-    navLinks.forEach(link => {
-        const isActive = link.getAttribute('href') === `#${currentSection.id}`;
-        link.classList.toggle('active', isActive);
+    function updateActiveLink() {
+        scrollFrame = 0;
 
-        if (isActive) {
-            link.setAttribute('aria-current', 'location');
-        } else {
-            link.removeAttribute('aria-current');
-        }
-    });
-}
+        const activationPoint = window.innerHeight * 0.4;
+        let activeItem = navigationItems[0];
 
-window.addEventListener('scroll', updateActiveSection, { passive: true });
-window.addEventListener('load', updateActiveSection);
-updateActiveSection();
+        navigationItems.forEach(item => {
+            if (item.section.getBoundingClientRect().top <= activationPoint) {
+                activeItem = item;
+            }
+        });
+
+        navigationItems.forEach(item => {
+            const isActive = item === activeItem;
+
+            item.link.classList.toggle("active", isActive);
+
+            if (isActive) {
+                item.link.setAttribute("aria-current", "location");
+            } else {
+                item.link.removeAttribute("aria-current");
+            }
+        });
+    }
+
+    function scheduleActiveLinkUpdate() {
+        if (scrollFrame) return;
+        scrollFrame = window.requestAnimationFrame(updateActiveLink);
+    }
+
+    window.addEventListener("scroll", scheduleActiveLinkUpdate, { passive: true });
+    window.addEventListener("resize", scheduleActiveLinkUpdate, { passive: true });
+    window.addEventListener("load", updateActiveLink);
+
+    updateActiveLink();
+})();
