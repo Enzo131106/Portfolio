@@ -62,9 +62,11 @@
     <link rel="stylesheet" href="./assets/CSS/index-fonts.css">
     <link rel="stylesheet" href="./assets/CSS/index-navigation.css">
     <link rel="stylesheet" href="./assets/CSS/background.css">
+    <link rel="stylesheet" href="./assets/CSS/index-hero.css">
+    <link rel="stylesheet" href="./assets/CSS/byte-invaders.css">
 
     <!-- Fonts -->
-    <link id="inter-fonts" href="https://fonts.bunny.net/css?family=inter:700" rel="stylesheet" />
+    <link id="inter-fonts" href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800" rel="stylesheet" />
 
     <!-- Favicon -->
     <link rel="icon" href="" type="image/svg+xml">
@@ -97,7 +99,7 @@
     </div>
 
     <header>
-        <!-- Navigation principale -->
+        <!-- Navigation existante : conservée telle quelle -->
         <nav class="navbar fixed-top" aria-label="Navigation principale">
             <div class="navbar-container">
                 <div class="navbar-identity">
@@ -129,32 +131,88 @@
 
     <main>
         <!-- Hero -->
-        <section id="accueil">
+        <section id="accueil" class="hero-section" aria-labelledby="hero-title">
+            <div class="hero-inner">
+                <div class="hero-copy">
+                    <p class="hero-eyebrow"><span class="hero-status-dot" aria-hidden="true"></span> PORTFOLIO · DÉVELOPPEMENT & CRÉATION NUMÉRIQUE</p>
+                    <h1 id="hero-title">Je transforme des idées en <span>expériences numériques.</span></h1>
+                    <p class="hero-description">
+                        Étudiant en MMI, j’explore le développement, le jeu vidéo et la création numérique
+                        pour concevoir des expériences utiles, vivantes et soignées.
+                    </p>
+                    <div class="hero-actions">
+                        <a class="hero-button hero-button-primary" href="#projects">
+                            Découvrir mes projets <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
+                        </a>
+                        <a class="hero-button hero-button-secondary" href="./assets/documents/CV-Enzo-Camilo.pdf" download>
+                            Télécharger mon CV <i class="bi bi-download" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <aside class="arcade-card" aria-label="Mini-jeu BYTE INVADERS">
+                    <div class="arcade-topbar">
+                        <div class="arcade-brand">
+                            <span class="arcade-mark" aria-hidden="true">▰</span>
+                            <div>
+                                <p class="arcade-title">BYTE INVADERS</p>
+                                <p class="arcade-subtitle">ARCADE SYSTEM · 001</p>
+                            </div>
+                        </div>
+                        <span class="arcade-status"><span aria-hidden="true"></span> <span id="arcade-status-text">READY</span></span>
+                    </div>
+                    <div class="arcade-scorebar" aria-live="polite">
+                        <div><span class="arcade-label">SCORE</span><strong id="arcade-score">0000</strong></div>
+                        <div><span class="arcade-label">RECORD</span><strong id="arcade-best">0000</strong></div>
+                        <div><span class="arcade-label">VIES</span><strong id="arcade-lives" aria-label="3 vies">♥ ♥ ♥</strong></div>
+                    </div>
+                    <div class="arcade-screen" id="arcade-screen">
+                        <canvas id="byte-invaders-canvas" aria-label="Jeu spatial BYTE INVADERS. Déplacez le vaisseau avec les flèches ou A et D, tirez avec espace." role="img"></canvas>
+                        <div class="arcade-overlay" id="arcade-overlay">
+                            <div class="arcade-overlay-mark" aria-hidden="true">✦</div>
+                            <p class="arcade-overlay-title" id="arcade-overlay-title">READY, PLAYER ONE?</p>
+                            <p class="arcade-overlay-copy" id="arcade-overlay-copy">Élimine les vagues de données ennemies.</p>
+                            <button class="arcade-start" id="arcade-start" type="button">PRESS TO START <span aria-hidden="true">↗</span></button>
+                        </div>
+                        <div class="arcade-scanlines" aria-hidden="true"></div>
+                    </div>
+                    <div class="arcade-controls">
+                        <span><kbd>←</kbd><kbd>→</kbd> DÉPLACER</span>
+                        <span><kbd>SPACE</kbd> TIRER</span>
+                    </div>
+                    <div class="arcade-mobile-controls" aria-label="Commandes tactiles">
+                        <button type="button" data-game-control="left" aria-label="Déplacer à gauche">←</button>
+                        <button type="button" data-game-control="shoot" aria-label="Tirer">FIRE</button>
+                        <button type="button" data-game-control="right" aria-label="Déplacer à droite">→</button>
+                    </div>
+                </aside>
+            </div>
+
+            <a class="hero-scroll" href="#projects" aria-label="Faire défiler vers les projets">
+                <span class="hero-scroll-mouse" aria-hidden="true"><span></span></span>
+            </a>
         </section>
 
-        <!-- Projets -->
-        <section id="projects">
-        </section>
+        <!-- Projets : contenu existant à compléter ultérieurement -->
+        <section id="projects" aria-label="Projets"></section>
 
-        <!-- Parcours -->
-        <section id="parcours">
-        </section>
+        <!-- Parcours : contenu existant à compléter ultérieurement -->
+        <section id="parcours" aria-label="Parcours"></section>
     </main>
 
-    <!-- Contact -->
-    <footer id="contact">
-    </footer>
+    <!-- Contact : contenu existant à compléter ultérieurement -->
+    <footer id="contact"></footer>
 
     <!-- Bootstrap JS -->
     <script id="bootstrap-js" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"
-        defer>
-        </script>
+        defer></script>
 
     <!-- JavaScript -->
     <script src="./assets/JS/fallback.js"></script>
     <script src="./assets/JS/privacy-popup.js"></script>
     <script src="./assets/JS/navigation-bar.js"></script>
+    <script src="./assets/JS/byte-invaders.js" defer></script>
     <script type="module" src="./assets/JS/background.js"></script>
 </body>
 
