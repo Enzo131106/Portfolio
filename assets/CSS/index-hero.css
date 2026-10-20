@@ -144,7 +144,8 @@
     height: 45px;
     align-items: center;
     justify-content: center;
-    transform: translateX(-50%);
+    margin-left: 0;
+    transform: translate3d(-50%, 0, 0);
     text-decoration: none;
 }
 
@@ -155,7 +156,7 @@
     align-items: flex-start;
     justify-content: center;
     padding-top: 6px;
-    border: 1px solid rgba(174, 208, 245, .52);
+    border: 2px solid rgba(255, 255, 255, .92);
     border-radius: 12px;
 }
 
@@ -163,7 +164,7 @@
     width: 2px;
     height: 7px;
     border-radius: 2px;
-    background: #72d9ff;
+    background: #fff;
     animation: hero-scroll-wheel 1.5s ease-in-out infinite;
 }
 
