@@ -1,6 +1,7 @@
 "use strict";
 
 (() => {
+    // Récupérer les éléments de l'interface utilisés par le jeu.
     const canvas = document.getElementById("byte-invaders-canvas");
     const screen = document.getElementById("arcade-screen");
     const overlay = document.getElementById("arcade-overlay");
@@ -16,6 +17,7 @@
     const ctx = canvas && canvas.getContext("2d");
     if (!canvas || !ctx || !screen) return;
 
+    // Centraliser les commandes et l’état courant de la partie.
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const keys = new Set();
     const pointerControls = new Set();
@@ -32,7 +34,9 @@
     try { best = Number(localStorage.getItem("byteInvadersBest")) || 0; } catch (_) { /* stockage facultatif */ }
     bestText.textContent = formatScore(best);
 
+    // Afficher les scores comme des nombres entiers, sans zéros superflus.
     function formatScore(value) { return String(Math.max(0, Math.floor(Number(value) || 0))); }
+    // Adapter la résolution du canvas à sa taille réelle et à l’écran.
     function resize() {
         const rect = screen.getBoundingClientRect();
         if (!rect.width || !rect.height) return;
@@ -50,12 +54,14 @@
             draw();
         }
     }
+    // Synchroniser les informations visibles avec l’état de la partie.
     function updateHud() {
         scoreText.textContent = formatScore(state.score);
         livesText.textContent = state.lives > 0 ? Array.from({ length: state.lives }, () => "♥").join(" ") : "—";
         livesText.setAttribute("aria-label", state.lives + (state.lives > 1 ? " vies" : " vie"));
         bestText.textContent = formatScore(best);
     }
+    // Créer une formation d’ennemis pour la vague en cours.
     function createWave() {
         state.enemies = [];
         const cols = Math.max(5, Math.min(9, Math.floor(width / 47)));
@@ -75,6 +81,7 @@
         state.enemySpeed = 19 + state.wave * 3;
         state.enemyFireTimer = Math.max(.45, 1.25 - state.wave * .06);
     }
+    // Remettre à zéro les données nécessaires à une nouvelle partie.
     function resetGame() {
         state.score = 0; state.lives = 3; state.wave = 1;
         state.bullets = []; state.particles = [];
@@ -83,6 +90,7 @@
         state.invulnerable = 0; state.gameOver = false;
         createWave(); updateHud();
     }
+    // Démarrer la partie et lancer la boucle d’animation.
     function startGame() {
         if (state.running) return;
         resetGame();
@@ -97,6 +105,7 @@
         state.animationId = requestAnimationFrame(loop);
         canvas.focus({ preventScroll: true });
     }
+    // Arrêter la partie, afficher le résultat et sauvegarder le record.
     function endGame(wonWave = false) {
         state.running = false;
         state.gameOver = true;
@@ -115,6 +124,7 @@
         }
         updateHud();
     }
+    // Ajouter des particules lors d’une collision ou d’un événement visuel.
     function addBurst(x, y, color, amount = 8) {
         for (let i = 0; i < amount; i++) {
             const angle = Math.random() * Math.PI * 2;
@@ -126,11 +136,13 @@
             });
         }
     }
+    // Tirer si la partie est active et si le délai entre deux tirs est écoulé.
     function shoot() {
         if (!state.running || state.player.cooldown > 0) return;
         state.bullets.push({ x: state.player.x, y: state.player.y - 9, vy: -390, friendly: true });
         state.player.cooldown = .23;
     }
+    // Mettre à jour les déplacements, tirs, collisions et progression.
     function update(dt) {
         const player = state.player;
         const left = keys.has("ArrowLeft") || keys.has("a") || keys.has("q") || pointerControls.has("left");
@@ -209,6 +221,7 @@
         }
         updateHud();
     }
+    // Dessiner le vaisseau du joueur sur le canvas.
     function drawShip(x, y) {
         const w = state.player.width;
         ctx.save();
@@ -228,6 +241,7 @@
         ctx.fill(); ctx.stroke();
         ctx.restore();
     }
+    // Dessiner un ennemi selon sa rangée et sa couleur.
     function drawEnemy(enemy) {
         const s = Math.max(8, Math.min(13, width * .023));
         const color = enemy.row === 0 ? "#a5a3ff" : enemy.row === 1 ? "#63b8ff" : "#4de0ee";
@@ -246,6 +260,7 @@
         ctx.fillRect(s * .18, -s * .12, s * .16, s * .17);
         ctx.restore();
     }
+    // Redessiner le fond, les entités et les effets visuels.
     function draw() {
         ctx.clearRect(0, 0, width, height);
         ctx.fillStyle = "#040b18";
@@ -284,6 +299,7 @@
             drawShip(width / 2 + Math.sin(t * .8) * width * .08, height * .82);
         }
     }
+    // Boucle principale : calculer le temps écoulé, mettre à jour puis dessiner.
     function loop(now) {
         if (!state.running) return;
         const dt = Math.min((now - state.lastTime) / 1000 || 0, .035);
@@ -294,9 +310,11 @@
     }
 
 
+    // Préparer le texte à copier ou à partager avec le score obtenu.
     function getScoreShareText() {
         return "J’ai marqué " + formatScore(state.score) + " points sur BYTE INVADERS ! Tu peux battre mon score ?\n" + window.location.href;
     }
+    // Générer une image PNG du score pour le partage ou le téléchargement.
     function createScoreImageBlob() {
         return new Promise(resolve => {
             const exportCanvas = document.createElement("canvas");
@@ -337,6 +355,7 @@
             exportCanvas.toBlob(resolve, "image/png");
         });
     }
+    // Copier le texte du score avec une solution de repli pour les navigateurs anciens.
     async function copyScoreText(text) {
         // Clipboard API first, then a compatibility fallback for browsers that block it.
         if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
@@ -361,6 +380,7 @@
         return copied;
     }
 
+    // Partager le score : copie sur ordinateur, partage natif si disponible sur mobile.
     async function shareScore() {
         const text = getScoreShareText();
         const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -408,6 +428,7 @@
             window.prompt("La copie automatique est bloquée. Sélectionne puis copie ce texte :", text);
         }
     }
+    // Télécharger la carte du score au format PNG.
     async function downloadScore() {
         const blob = await createScoreImageBlob();
         if (!blob) return;
@@ -421,9 +442,11 @@
         window.setTimeout(() => URL.revokeObjectURL(url), 1000);
     }
 
+    // Relier les boutons de l’interface aux actions correspondantes.
     if (shareScoreButton) shareScoreButton.addEventListener("click", shareScore);
     if (downloadScoreButton) downloadScoreButton.addEventListener("click", downloadScore);
     startButton.addEventListener("click", startGame);
+    // Gérer les commandes clavier et empêcher le défilement pendant le jeu.
     window.addEventListener("keydown", event => {
         const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
         if (["ArrowLeft", "ArrowRight", " ", "ArrowUp", "ArrowDown"].includes(key)) event.preventDefault();
@@ -438,6 +461,7 @@
     document.addEventListener("visibilitychange", () => {
         if (document.hidden && state.running) { keys.clear(); pointerControls.clear(); }
     });
+    // Gérer les commandes tactiles via les événements de pointeur.
     document.querySelectorAll("[data-game-control]").forEach(button => {
         const control = button.dataset.gameControl;
         const down = event => { event.preventDefault(); pointerControls.add(control); };
@@ -448,6 +472,7 @@
         button.addEventListener("pointerleave", up);
         button.addEventListener("contextmenu", event => event.preventDefault());
     });
+    // Redimensionner le canvas puis afficher l’aperçu initial.
     window.addEventListener("resize", resize);
     if ("ResizeObserver" in window) new ResizeObserver(resize).observe(screen);
     resize();
