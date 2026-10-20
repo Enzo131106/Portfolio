@@ -81,6 +81,17 @@
     margin-top: 31px;
 }
 
+/* Boutons : libellés et icônes nets et cohérents. */
+.hero-button {
+    font-weight: 700;
+}
+
+.hero-button i {
+    font-size: 1.12em;
+    font-weight: 700;
+    -webkit-text-stroke: .25px currentColor;
+}
+
 .hero-button {
     display: inline-flex;
     min-height: 47px;
