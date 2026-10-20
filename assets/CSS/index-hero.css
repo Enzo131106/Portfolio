@@ -2,10 +2,10 @@
 :root {
     --hero-text: #f4f7ff;
     --hero-muted: rgba(220, 231, 249, .76);
-    --hero-accent: #68cfff;
     --hero-focus: #8eeaff;
     --hero-motion: 180ms ease;
 }
+
 .hero-section {
     position: relative;
     display: flex;
@@ -105,7 +105,7 @@
     border: 1px solid transparent;
     border-radius: 11px;
     font-size: 12px;
-    font-weight: 700;
+    font-weight: 650;
     line-height: 1.2;
     text-align: center;
     text-decoration: none;
