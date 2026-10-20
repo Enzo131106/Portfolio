@@ -74,56 +74,53 @@
     <!-- Pop-up de confidentialité -->
     <div id="privacy-popup" class="privacy-popup">
         <div class="privacy-box p-4 p-md-5">
-
-            <!-- Icône -->
             <div class="privacy-icon mb-3">
                 <i class="bi bi-shield-lock" aria-hidden="true"></i>
             </div>
-
-            <!-- Titre -->
-            <h2 class="privacy-title mb-3">
-                Votre confidentialité
-            </h2>
-
-            <!-- Message principal -->
+            <h2 class="privacy-title mb-3">Votre confidentialité</h2>
             <p class="privacy-text mb-3">
                 Ce site n'utilise aucun cookie de suivi et ne collecte
                 aucune donnée personnelle à des fins de suivi ou de publicité.
             </p>
-
-            <!-- Informations complémentaires -->
             <p class="privacy-details mb-4">
                 Les ressources nécessaires au fonctionnement du site
                 peuvent être chargées depuis des CDN externes.
                 En cas d'indisponibilité, des versions locales des librairies sont utilisées.
             </p>
-
-            <!-- Boutons -->
             <div class="privacy-actions">
-
-                <button id="privacy-button" class="privacy-button">
-                    Compris
-                </button>
-
+                <button id="privacy-button" class="privacy-button">Compris</button>
                 <a href="./privacy.html" class="privacy-more" target="_blank" rel="noopener noreferrer">
                     En savoir plus
                 </a>
-
             </div>
-
         </div>
     </div>
 
     <header>
-        <!-- Navigation -->
-        <nav class="navbar navbar-expand-lg fixed-top">
+        <!-- Navigation principale -->
+        <nav class="navbar fixed-top" aria-label="Navigation principale">
             <div class="navbar-container">
-                <!-- Navigation centrale -->
+                <a class="navbar-brand" href="#accueil" aria-label="Enzo Camilo, accueil">
+                    <span class="brand-mark" aria-hidden="true">EC</span>
+                    <span class="brand-name">ENZO <span>CAMILO</span></span>
+                </a>
+
                 <div class="navbar-nav">
-                    <a href="#accueil" class="nav-link">Accueil</a>
-                    <a href="#projects" class="nav-link">Projets</a>
-                    <a href="#parcours" class="nav-link">Parcours</a>
-                    <a href="#contact" class="nav-link">Contact</a>
+                    <a href="#accueil" class="nav-link"><span class="nav-index">01</span>Accueil</a>
+                    <a href="#projects" class="nav-link"><span class="nav-index">02</span>Projets</a>
+                    <a href="#parcours" class="nav-link"><span class="nav-index">03</span>Parcours</a>
+                    <a href="#contact" class="nav-link"><span class="nav-index">04</span>Contact</a>
+                </div>
+
+                <div class="navbar-socials" aria-label="Réseaux sociaux">
+                    <a class="social-link" href="https://www.linkedin.com/" target="_blank"
+                        rel="noopener noreferrer" aria-label="LinkedIn (ouvrir le site)" title="LinkedIn">
+                        <i class="bi bi-linkedin" aria-hidden="true"></i>
+                    </a>
+                    <a class="social-link" href="https://github.com/Enzo131106" target="_blank"
+                        rel="noopener noreferrer" aria-label="Profil GitHub" title="GitHub">
+                        <i class="bi bi-github" aria-hidden="true"></i>
+                    </a>
                 </div>
             </div>
         </nav>
@@ -132,23 +129,19 @@
     <main>
         <!-- Hero -->
         <section id="accueil">
-            
         </section>
 
         <!-- Projets -->
         <section id="projects">
-
         </section>
 
         <!-- Parcours -->
         <section id="parcours">
-
         </section>
     </main>
 
     <!-- Contact -->
     <footer id="contact">
-
     </footer>
 
     <!-- Bootstrap JS -->
