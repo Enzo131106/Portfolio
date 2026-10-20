@@ -363,6 +363,24 @@
 
     async function shareScore() {
         const text = getScoreShareText();
+        const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+        // Sur ordinateur, le bouton PARTAGER doit copier directement le texte.
+        // Éviter navigator.share ici : il ouvre une fenêtre de partage et ne copie rien.
+        if (!isMobile) {
+            const copied = await copyScoreText(text);
+            if (copied) {
+                shareScoreButton.innerHTML = '<i class="bi bi-check2" aria-hidden="true"></i> COPIÉ !';
+                window.setTimeout(() => {
+                    shareScoreButton.innerHTML = '<i class="bi bi-share" aria-hidden="true"></i> PARTAGER';
+                }, 1800);
+            } else {
+                window.prompt("La copie automatique est bloquée. Fais Ctrl+C pour copier ce texte :", text);
+            }
+            return;
+        }
+
+        // Sur mobile, utiliser la feuille de partage native si elle existe.
         if (navigator.share) {
             try {
                 const blob = await createScoreImageBlob();
@@ -373,13 +391,13 @@
                         return;
                     }
                 }
-                // Ne pas fournir url séparément : certaines applis n'envoient alors que le lien.
                 await navigator.share({ title: "BYTE INVADERS — " + formatScore(state.score) + " points", text });
                 return;
             } catch (error) {
                 if (error && error.name === "AbortError") return;
             }
         }
+
         const copied = await copyScoreText(text);
         if (copied) {
             shareScoreButton.innerHTML = '<i class="bi bi-check2" aria-hidden="true"></i> COPIÉ !';
@@ -387,7 +405,6 @@
                 shareScoreButton.innerHTML = '<i class="bi bi-share" aria-hidden="true"></i> PARTAGER';
             }, 1800);
         } else {
-            // Dernier recours : afficher le texte sélectionnable, sans prétendre qu'il a été copié.
             window.prompt("La copie automatique est bloquée. Sélectionne puis copie ce texte :", text);
         }
     }
