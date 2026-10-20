@@ -142,7 +142,7 @@
     justify-content: center;
     padding: clamp(16px, 3vw, 26px);
     text-align: center;
-    background: rgba(5, 11, 23, .48);
+    background: #050b17;
     transition: opacity 180ms ease, visibility 180ms ease;
 }
 
@@ -254,6 +254,17 @@
     .arcade-topbar { padding-inline: 14px; }
     .arcade-scorebar { padding-inline: 14px; }
     .arcade-controls { padding-inline: 14px; }
+}
+
+/* Actions du hero : libellés et icônes plus nets, sans augmenter les boutons. */
+.hero-button {
+    font-weight: 700;
+}
+
+.hero-button i {
+    font-size: 1.12em;
+    font-weight: 700;
+    -webkit-text-stroke: .25px currentColor;
 }
 
 @media (max-width: 760px) {
