@@ -337,6 +337,30 @@
             exportCanvas.toBlob(resolve, "image/png");
         });
     }
+    async function copyScoreText(text) {
+        // Clipboard API first, then a compatibility fallback for browsers that block it.
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+            try {
+                await navigator.clipboard.writeText(text);
+                return true;
+            } catch (_) { /* essayer la méthode de compatibilité */ }
+        }
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.setAttribute("readonly", "");
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        textarea.style.pointerEvents = "none";
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        textarea.setSelectionRange(0, textarea.value.length);
+        let copied = false;
+        try { copied = document.execCommand("copy"); } catch (_) { copied = false; }
+        textarea.remove();
+        return copied;
+    }
+
     async function shareScore() {
         const text = getScoreShareText();
         if (navigator.share) {
@@ -356,14 +380,15 @@
                 if (error && error.name === "AbortError") return;
             }
         }
-        try {
-            await navigator.clipboard.writeText(text);
+        const copied = await copyScoreText(text);
+        if (copied) {
             shareScoreButton.innerHTML = '<i class="bi bi-check2" aria-hidden="true"></i> COPIÉ !';
             window.setTimeout(() => {
                 shareScoreButton.innerHTML = '<i class="bi bi-share" aria-hidden="true"></i> PARTAGER';
             }, 1800);
-        } catch (_) {
-            window.prompt("Copie ton score pour le partager :", text);
+        } else {
+            // Dernier recours : afficher le texte sélectionnable, sans prétendre qu'il a été copié.
+            window.prompt("La copie automatique est bloquée. Sélectionne puis copie ce texte :", text);
         }
     }
     async function downloadScore() {
