@@ -35,32 +35,12 @@
     min-width: 0;
 }
 
-.arcade-mark {
-    display: grid;
-    width: 30px;
-    height: 30px;
-    flex: 0 0 30px;
-    place-items: center;
-    border: 1px solid rgba(145, 183, 230, .18);
-    border-radius: 8px;
-    color: #9bdde8;
-    background: rgba(155, 221, 232, .06);
-    font-size: 14px;
-}
-
 .arcade-title {
     margin: 0;
     color: #f2f6ff;
     font-size: 12px;
     font-weight: 700;
     letter-spacing: .075em;
-}
-
-.arcade-subtitle {
-    margin: 3px 0 0;
-    color: #879bb8;
-    font-size: 10px;
-    letter-spacing: .015em;
 }
 
 .arcade-status {
@@ -128,10 +108,6 @@
     height: 100%;
 }
 
-.arcade-scanlines {
-    display: none;
-}
-
 .arcade-overlay {
     position: absolute;
     z-index: 2;
@@ -150,12 +126,6 @@
     visibility: hidden;
     opacity: 0;
     pointer-events: none;
-}
-
-.arcade-overlay-mark {
-    margin-bottom: 7px;
-    color: #9bdde8;
-    font-size: 21px;
 }
 
 .arcade-overlay-title {
@@ -254,17 +224,6 @@
     .arcade-topbar { padding-inline: 14px; }
     .arcade-scorebar { padding-inline: 14px; }
     .arcade-controls { padding-inline: 14px; }
-}
-
-/* Actions du hero : libellés et icônes plus nets, sans augmenter les boutons. */
-.hero-button {
-    font-weight: 700;
-}
-
-.hero-button i {
-    font-size: 1.12em;
-    font-weight: 700;
-    -webkit-text-stroke: .25px currentColor;
 }
 
 @media (max-width: 760px) {
