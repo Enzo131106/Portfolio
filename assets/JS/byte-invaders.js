@@ -21,7 +21,7 @@
         running: false, gameOver: false, score: 0, lives: 3, wave: 1,
         player: { x: 0.5, y: 0.88, width: 22, height: 16, speed: 300, cooldown: 0 },
         bullets: [], enemies: [], particles: [], lastTime: 0, enemyDirection: 1,
-        enemySpeed: 20, spawnTimer: 0, invulnerable: 0, animationId: 0
+        enemySpeed: 20, enemyFireTimer: 1.1, invulnerable: 0, animationId: 0
     };
     let width = 600;
     let height = 340;
@@ -67,11 +67,13 @@
         }
         state.enemyDirection = 1;
         state.enemySpeed = 19 + state.wave * 3;
+        state.enemyFireTimer = Math.max(.45, 1.25 - state.wave * .06);
     }
     function resetGame() {
         state.score = 0; state.lives = 3; state.wave = 1;
         state.bullets = []; state.particles = [];
         state.player.x = width / 2; state.player.cooldown = 0;
+        state.enemyFireTimer = 1.1;
         state.invulnerable = 0; state.gameOver = false;
         createWave(); updateHud();
     }
@@ -133,6 +135,14 @@
         state.bullets.forEach(bullet => { bullet.y += bullet.vy * dt; });
         state.bullets = state.bullets.filter(bullet => bullet.y > -12 && bullet.y < height + 12);
 
+        state.enemyFireTimer -= dt;
+        if (state.enemyFireTimer <= 0 && state.enemies.length) {
+            const shooters = state.enemies.filter(enemy => !state.enemies.some(other => other.col === enemy.col && other.y > enemy.y));
+            const shooter = shooters[Math.floor(Math.random() * shooters.length)];
+            if (shooter) state.bullets.push({ x: shooter.x, y: shooter.y + 8, vy: 155 + state.wave * 8, friendly: false });
+            state.enemyFireTimer = Math.max(.38, 1.15 - state.wave * .055) + Math.random() * .45;
+        }
+
         let edgeHit = false;
         for (const enemy of state.enemies) {
             enemy.x += state.enemyDirection * state.enemySpeed * dt;
@@ -144,9 +154,23 @@
             for (const enemy of state.enemies) enemy.y += 9;
         }
 
+        for (let j = state.bullets.length - 1; j >= 0; j--) {
+            const bullet = state.bullets[j];
+            if (!bullet.friendly && state.invulnerable <= 0 && Math.abs(bullet.x - player.x) < 12 && Math.abs(bullet.y - player.y) < 13) {
+                state.bullets.splice(j, 1);
+                state.lives--;
+                state.invulnerable = 1.25;
+                addBurst(player.x, player.y, "#75ddff", 12);
+                if (state.lives <= 0) { updateHud(); endGame(); return; }
+                updateHud();
+            }
+        }
+
         for (let i = state.enemies.length - 1; i >= 0; i--) {
             const enemy = state.enemies[i];
             if (enemy.y > player.y - 17) {
+                state.lives = 0;
+                updateHud();
                 endGame();
                 return;
             }
