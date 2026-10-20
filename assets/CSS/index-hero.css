@@ -1,4 +1,11 @@
-/* Hero : le vortex Three.js existant reste le fond de toute la section. */
+/* Hero : le vortex Three.js reste le fond de la section. */
+:root {
+    --hero-text: #f4f7ff;
+    --hero-muted: rgba(220, 231, 249, .76);
+    --hero-accent: #68cfff;
+    --hero-focus: #8eeaff;
+    --hero-motion: 180ms ease;
+}
 .hero-section {
     position: relative;
     display: flex;
@@ -6,7 +13,7 @@
     align-items: center;
     padding: 132px 5.5vw 92px;
     isolation: isolate;
-    color: #f4f7ff;
+    color: var(--hero-text);
 }
 
 .hero-inner {
@@ -48,7 +55,7 @@
 .hero-copy h1 {
     max-width: 680px;
     margin: 0;
-    color: #f6f8ff;
+    color: var(--hero-text);
     font-size: clamp(42px, 5.1vw, 72px);
     font-weight: 800;
     letter-spacing: -.055em;
@@ -67,7 +74,7 @@
 .hero-description {
     max-width: 530px;
     margin: 25px 0 0;
-    color: rgba(220, 231, 249, .76);
+    color: var(--hero-muted);
     font-size: clamp(14px, 1.15vw, 16px);
     font-weight: 400;
     line-height: 1.85;
@@ -81,11 +88,7 @@
     margin-top: 31px;
 }
 
-/* Boutons : libellés et icônes nets et cohérents. */
-.hero-button {
-    font-weight: 700;
-}
-
+/* Boutons d'action du hero. */
 .hero-button i {
     font-size: 1.12em;
     font-weight: 700;
@@ -102,12 +105,12 @@
     border: 1px solid transparent;
     border-radius: 11px;
     font-size: 12px;
-    font-weight: 650;
+    font-weight: 700;
     line-height: 1.2;
     text-align: center;
     text-decoration: none;
     white-space: nowrap;
-    transition: transform 180ms ease, border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+    transition: transform var(--hero-motion), border-color var(--hero-motion), background var(--hero-motion), box-shadow var(--hero-motion);
 }
 
 .hero-button:hover {
@@ -117,7 +120,7 @@
 .hero-button:focus-visible,
 .hero-scroll:focus-visible,
 .arcade-card button:focus-visible {
-    outline: 2px solid #8eeaff;
+    outline: 2px solid var(--hero-focus);
     outline-offset: 4px;
 }
 
@@ -186,6 +189,7 @@
     75% { opacity: 1; transform: translate(-50%, 8px); }
     100% { opacity: 0; transform: translate(-50%, 10px); }
 }
+
 
 @media (max-width: 1050px) {
     .hero-section { padding-inline: 4vw; }
@@ -260,6 +264,7 @@
         font-size: 10px;
     }
 }
+
 
 @media (prefers-reduced-motion: reduce) {
     .hero-scroll-mouse span { animation: none; }
