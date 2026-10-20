@@ -184,27 +184,68 @@
 
 @media (max-width: 760px) {
     .hero-section {
-        min-height: auto;
-        padding: 138px 22px 90px;
+        min-height: 100svh;
+        padding: 142px 22px 86px;
+        justify-content: center;
     }
     .hero-inner {
         grid-template-columns: minmax(0, 1fr);
-        gap: 38px;
+        gap: 0;
         width: min(560px, 100%);
     }
-    .hero-copy h1 { max-width: 600px; font-size: clamp(40px, 10vw, 60px); }
-    .hero-description { margin-top: 18px; }
-    .hero-actions { gap: 10px; margin-top: 24px; }
-    .hero-button { min-height: 45px; padding-inline: 14px; font-size: 11px; }
-    .hero-scroll { bottom: 22px; }
+    .hero-copy {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        text-align: center;
+    }
+    .hero-eyebrow {
+        justify-content: center;
+        margin-bottom: 22px;
+        font-size: 10px;
+    }
+    .hero-copy h1 {
+        max-width: 600px;
+        margin-inline: auto;
+        font-size: clamp(40px, 9vw, 60px);
+    }
+    .hero-description {
+        max-width: 490px;
+        margin: 22px auto 0;
+        font-size: 15px;
+        line-height: 1.8;
+    }
+    .hero-actions {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 30px;
+    }
+    .hero-button {
+        min-height: 47px;
+        padding-inline: 15px;
+        font-size: 11px;
+    }
+    .hero-scroll { bottom: 20px; }
 }
 
 @media (max-width: 420px) {
-    .hero-section { padding-inline: 16px; }
-    .hero-eyebrow { font-size: 9px; letter-spacing: .09em; }
-    .hero-copy h1 { font-size: clamp(36px, 9.5vw, 42px); }
-    .hero-actions { gap: 7px; }
-    .hero-button { min-height: 43px; gap: 6px; padding-inline: 10px; font-size: 10px; }
+    .hero-section { padding: 132px 18px 82px; }
+    .hero-eyebrow {
+        gap: 7px;
+        margin-bottom: 19px;
+        font-size: 9px;
+        letter-spacing: .07em;
+    }
+    .hero-copy h1 { font-size: clamp(35px, 9.3vw, 42px); }
+    .hero-description { margin-top: 19px; font-size: 14px; }
+    .hero-actions { gap: 9px; margin-top: 25px; }
+    .hero-button {
+        min-height: 45px;
+        gap: 6px;
+        padding-inline: 12px;
+        font-size: 10px;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
