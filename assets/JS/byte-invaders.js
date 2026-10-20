@@ -100,7 +100,7 @@
         statusText.textContent = "GAME OVER";
         overlayTitle.textContent = wonWave ? "WAVE CLEARED!" : "GAME OVER";
         overlayCopy.textContent = "Score : " + formatScore(state.score) + " · Relance une partie pour battre ton record.";
-        startButton.innerHTML = "PLAY AGAIN <span aria-hidden=\"true\">↻</span>";
+        startButton.textContent = "PLAY AGAIN";
         overlay.classList.remove("is-hidden");
         if (state.score > best) {
             best = state.score;
