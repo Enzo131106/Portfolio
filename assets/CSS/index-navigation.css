@@ -170,11 +170,11 @@
 
 @media (max-width: 650px) {
     .navbar {
-        padding: 8px 0 0;
-        background: linear-gradient(to bottom, rgba(5, 11, 26, .92), rgba(5, 11, 26, .72)) !important;
-        -webkit-backdrop-filter: blur(16px);
-        backdrop-filter: blur(16px);
-        border-bottom: 1px solid rgba(145, 183, 230, .14);
+        padding: 10px 12px 0;
+        background: transparent !important;
+        border-bottom: 0;
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
     }
 
     .navbar-container {
@@ -183,13 +183,13 @@
         gap: 7px 12px;
         width: 100%;
         max-width: 560px;
-        padding: 4px 16px 8px;
-        border: 0;
-        border-radius: 0;
-        background: transparent;
-        box-shadow: none;
-        -webkit-backdrop-filter: none;
-        backdrop-filter: none;
+        padding: 7px 12px 9px;
+        border: 1px solid rgba(145, 183, 230, .2);
+        border-radius: 15px;
+        background: rgba(7, 14, 32, .88);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, .22);
+        -webkit-backdrop-filter: blur(16px);
+        backdrop-filter: blur(16px);
     }
 
     .navbar-identity {
