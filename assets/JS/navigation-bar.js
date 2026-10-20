@@ -1,15 +1,15 @@
-/*"use strict";
+"use strict";
 
-// Récupération des liens de navigation
-const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
+// Seuls les liens d'ancrage de la navigation participent au suivi des sections.
+const navLinks = document.querySelectorAll('.navbar-nav .nav-link[href^="#"]');
 
-// Récupération des sections ciblées par les liens
 const sections = [...navLinks]
     .map(link => document.querySelector(link.getAttribute('href')))
     .filter(section => section !== null);
 
-// Détection de la section visible au défilement
 function updateActiveSection() {
+    if (!sections.length) return;
+
     const screenPosition = window.innerHeight * 0.4;
     let currentSection = sections[0];
 
@@ -19,16 +19,18 @@ function updateActiveSection() {
         }
     });
 
-    // Mise à jour du lien actif
     navLinks.forEach(link => {
-        const isActive = currentSection &&
-            link.getAttribute('href') === `#${currentSection.id}`;
-
+        const isActive = link.getAttribute('href') === `#${currentSection.id}`;
         link.classList.toggle('active', isActive);
+
+        if (isActive) {
+            link.setAttribute('aria-current', 'location');
+        } else {
+            link.removeAttribute('aria-current');
+        }
     });
 }
 
-// Actualisation au scroll et au chargement
 window.addEventListener('scroll', updateActiveSection, { passive: true });
 window.addEventListener('load', updateActiveSection);
-updateActiveSection();*/
+updateActiveSection();
