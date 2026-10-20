@@ -140,18 +140,19 @@
     bottom: 28px;
     left: 50%;
     display: flex;
-    width: 34px;
+    width: 23px;
     height: 45px;
     align-items: center;
     justify-content: center;
-    margin-left: -17px;
+    margin-left: -11.5px;
     text-decoration: none;
 }
 
 .hero-scroll-mouse {
     display: flex;
-    width: 19px;
-    height: 31px;
+    box-sizing: border-box;
+    width: 23px;
+    height: 35px;
     align-items: flex-start;
     justify-content: center;
     padding-top: 6px;
