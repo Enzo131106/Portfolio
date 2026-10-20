@@ -30,7 +30,7 @@
     border-radius: 18px;
     background: rgba(9, 14, 32, 0.88);
     -webkit-backdrop-filter: blur(14px);
-    backdrop-filter: blur(18px) saturate(145%);
+    backdrop-filter: blur(14px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
     transition: border-color var(--nav-motion);
 }
@@ -63,7 +63,6 @@
     object-position: center;
     border: 1px solid rgba(190, 205, 235, 0.25);
     border-radius: 50%;
-    
 }
 
 .navbar__name {
@@ -94,7 +93,7 @@
     align-items: center;
     justify-content: center;
     padding: 9px 11px !important;
-    border-radius: 999px;
+    border-radius: 10px;
     color: var(--nav-text) !important;
     font-size: 12px;
     font-weight: 650;
