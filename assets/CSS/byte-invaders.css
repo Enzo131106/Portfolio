@@ -1,4 +1,4 @@
-/* BYTE INVADERS : une interface sobre, lisible et souple selon la taille disponible. */
+/* Carte principale et structure générale du mini-jeu. */
 .arcade-card {
     position: relative;
     z-index: 1;
@@ -13,8 +13,10 @@
     backdrop-filter: blur(14px);
 }
 
+/* Alignement commun des barres d'information et des commandes. */
 .arcade-topbar,
 .arcade-scorebar,
+/* Rappel des commandes clavier sous la zone de jeu. */
 .arcade-controls {
     display: flex;
     align-items: center;
@@ -43,6 +45,7 @@
     letter-spacing: .075em;
 }
 
+/* Indicateur d'état : prêt, en cours ou fin de partie. */
 .arcade-status {
     display: inline-flex;
     flex: 0 0 auto;
@@ -60,6 +63,7 @@
     background: #83d9b4;
 }
 
+/* Tableau de score, record et vies. */
 .arcade-scorebar {
     gap: 12px;
     padding: 12px 17px;
@@ -94,6 +98,7 @@
     white-space: nowrap;
 }
 
+/* Zone de jeu : le canvas occupe toute la surface disponible. */
 .arcade-screen {
     position: relative;
     height: clamp(190px, 22vw, 260px);
@@ -108,6 +113,7 @@
     height: 100%;
 }
 
+/* Écran d'accueil et écran de fin superposés au canvas. */
 .arcade-overlay {
     position: absolute;
     z-index: 2;
@@ -196,6 +202,7 @@
     text-align: center;
 }
 
+/* Boutons tactiles disponibles si leur affichage est activé. */
 .arcade-mobile-controls {
     display: none;
     grid-template-columns: 1fr 1fr 1fr;
@@ -220,24 +227,27 @@
     background: rgba(155, 221, 232, .12);
 }
 
+/* Réduire les marges internes sur les écrans intermédiaires. */
 @media (max-width: 1050px) {
     .arcade-topbar { padding-inline: 14px; }
     .arcade-scorebar { padding-inline: 14px; }
     .arcade-controls { padding-inline: 14px; }
 }
 
+/* Le mini-jeu est masqué sur les petits écrans. */
 @media (max-width: 760px) {
     /* Le mini-jeu reste réservé aux écrans où il est réellement confortable. */
     .arcade-card { display: none; }
 }
 
+/* Respecter la préférence système de réduction des animations. */
 @media (prefers-reduced-motion: reduce) {
     .arcade-overlay,
     .arcade-start { transition: none; }
 }
 
 
-/* État de fin de partie : alerte rouge et actions de score. */
+/* État de fin de partie : alerte visuelle et actions liées au score. */
 .arcade-status.is-game-over {
     color: #ff6b78;
 }
@@ -247,6 +257,7 @@
     box-shadow: 0 0 9px rgba(255, 77, 94, .65);
 }
 
+/* Actions de partage et de téléchargement affichées en fin de partie. */
 .arcade-result-actions {
     display: none;
     flex-wrap: wrap;
@@ -287,6 +298,7 @@
     font-size: 12px;
 }
 
+/* Ajuster les actions de score sur les très petits écrans. */
 @media (max-width: 430px) {
     .arcade-result-actions { gap: 6px; }
     .arcade-result-button { padding-inline: 9px; font-size: 9px; }
