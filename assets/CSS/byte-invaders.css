@@ -56,9 +56,7 @@
 .arcade-mobile-controls button[data-game-control="shoot"] { color: #071326; border-color: transparent; background: #69d7ff; }
 
 @media (max-width: 760px) {
-    .arcade-card { width: 100%; }
-    .arcade-screen { height: clamp(220px, 58vw, 300px); }
-    .arcade-mobile-controls { display: grid; }
-    .arcade-controls { display: none; }
+    /* Le mini-jeu reste réservé aux écrans où il est réellement confortable. */
+    .arcade-card { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .arcade-overlay { transition: none; } }
