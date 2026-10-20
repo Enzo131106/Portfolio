@@ -1,121 +1,166 @@
-/* Variables globales */
+/* Navigation harmonisée avec le fond 3D bleu nuit, cyan et violet. */
 :root {
-    --navigation-gap: 4px;
+    --navigation-gap: 6px;
     --navigation-padding-x: 24px;
-    --navigation-padding-y: 20px;
+    --navigation-padding-y: 18px;
+    --navigation-text: rgba(238, 246, 255, 0.82);
+    --navigation-text-hover: #ffffff;
+    --navigation-accent: #45e7ff;
+    --navigation-glass: rgba(5, 10, 27, 0.72);
 }
 
-/* Barre de navigation */
+/* La barre reste transparente : seul le bloc central crée un point d'ancrage. */
 .navbar {
     position: fixed;
-    top: 0;
-    left: 0;
-
+    inset: 0 0 auto;
     width: 100%;
     padding: var(--navigation-padding-y) var(--navigation-padding-x);
-
     background: transparent !important;
-
     z-index: 1000;
 }
 
-/* Conteneur de la navigation */
+/* Verre sombre et discret, accordé au background Three.js. */
 .navbar-container {
     display: flex;
     align-items: center;
     justify-content: center;
-
     width: fit-content;
     max-width: 100%;
-
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(5px) saturate(180%);
-    -webkit-backdrop-filter: blur(5px) saturate(180%);
-    border-radius: 50px;
-    border: 1px solid rgba(255, 255, 255, 0);
-    box-shadow: 0 8px 80px -5px rgba(0, 0, 0, 0.5);
-    padding: 3px 10px;
-
-    margin: auto;
+    margin: 0 auto;
+    padding: 5px;
+    background: var(--navigation-glass);
+    -webkit-backdrop-filter: blur(16px) saturate(145%);
+    backdrop-filter: blur(16px) saturate(145%);
+    border: 1px solid rgba(115, 190, 255, 0.18);
+    border-radius: 999px;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.24),
+        inset 0 1px 0 rgba(255, 255, 255, 0.045);
 }
 
-/* Navigation */
+/* Liens alignés sans changement de largeur au survol. */
 .navbar-nav {
     display: flex !important;
     flex-direction: row !important;
     flex-wrap: nowrap;
     align-items: center;
     justify-content: center;
-
     gap: var(--navigation-gap);
 }
 
-/* liens de navigation */
-.nav-link {
-    transform: scale(1);
-    margin-left: 0;
-    margin-right: 0;
-
+.navbar .nav-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 17px !important;
+    margin: 0;
+    border-radius: 999px;
+    color: var(--navigation-text) !important;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.2;
+    text-decoration: none;
+    white-space: nowrap;
+    background: transparent;
+    transform: translateY(0);
     transition:
-        transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
-        color 0.25s ease,
-        text-shadow 0.3s ease,
-        margin 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        color 180ms ease,
+        background-color 180ms ease,
+        box-shadow 180ms ease,
+        transform 180ms ease;
 }
 
-/* Survol : agrandissement et décalage des voisins */
-.nav-link:hover {
-    transform: scale(1.1);
-    margin-left: 4px;
-    margin-right: 4px;
-
-    color: rgba(255, 255, 255, 0.8) !important;
-    text-shadow: 0 0 12px rgba(255, 255, 255, 0.25);
+/* Survol : une lueur cyan légère plutôt qu'un agrandissement qui décale les voisins. */
+.navbar .nav-link:hover,
+.navbar .nav-link:focus-visible {
+    color: var(--navigation-text-hover) !important;
+    background: rgba(69, 231, 255, 0.09);
+    box-shadow: inset 0 0 0 1px rgba(69, 231, 255, 0.10);
+    transform: translateY(-1px);
 }
 
-/* Section active : reste agrandie */
-.nav-link.active {
-    transform: scale(1.1);
-    margin-left: 4px;
-    margin-right: 4px;
+/* État actif : fond subtil et petit repère cyan. */
+.navbar .nav-link.active {
+    color: #ffffff !important;
+    background: rgba(69, 231, 255, 0.11);
+    box-shadow: inset 0 0 0 1px rgba(69, 231, 255, 0.14);
 }
 
-/* Clic : contraction temporaire */
-.nav-link:active {
-    transform: scale(0.97);
-    transition-duration: 0.1s;
+.navbar .nav-link.active::after {
+    content: "";
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    width: 14px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--navigation-accent);
+    box-shadow: 0 0 8px rgba(69, 231, 255, 0.65);
+    transform: translateX(-50%);
 }
 
-/* Format tablette */
+.navbar .nav-link:active {
+    transform: scale(0.98);
+    transition-duration: 100ms;
+}
+
+/* Tablettes */
 @media screen and (max-width: 1199px) {
     :root {
-        --navigation-padding-x: 20px;
-        --navigation-padding-y: 16px;
-        --navigation-gap: 4px;
+        --navigation-padding-x: 18px;
+        --navigation-padding-y: 14px;
+        --navigation-gap: 3px;
     }
 
-    .nav-link {
-        padding: 9px 12px !important;
-        font-size: 15px;
+    .navbar .nav-link {
+        padding: 9px 13px !important;
+        font-size: 13px;
     }
 }
 
-/* Format téléphone */
+/* Mobiles : conserver une capsule compacte sans faire déborder les liens. */
 @media screen and (max-width: 767px) {
     :root {
         --navigation-padding-x: 8px;
-        --navigation-padding-y: 12px;
-        --navigation-gap: 0px;
+        --navigation-padding-y: 10px;
+        --navigation-gap: 1px;
+    }
+
+    .navbar-container {
+        width: max-content;
+        max-width: 100%;
+        padding: 4px;
     }
 
     .navbar-nav {
-        width: 100%;
-        justify-content: center;
-        gap: 2px;
+        width: auto;
+        max-width: 100%;
+        gap: var(--navigation-gap);
     }
 
-    .nav-link {
+    .navbar .nav-link {
+        padding: 9px 10px !important;
+        font-size: 12px;
+        letter-spacing: -0.02em;
+    }
+
+    .navbar .nav-link.active::after {
+        bottom: 3px;
+        width: 11px;
+    }
+}
+
+@media screen and (max-width: 360px) {
+    .navbar .nav-link {
         padding: 8px 7px !important;
-        font-size: 13px;
+        font-size: 11px;
+    }
+}
+
+/* Respecter les préférences d'accessibilité. */
+@media (prefers-reduced-motion: reduce) {
+    .navbar .nav-link {
+        transition: none;
     }
 }
