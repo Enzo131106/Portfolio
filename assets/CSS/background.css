@@ -14,3 +14,12 @@ body {
 
     z-index: -1;
 }
+
+/* Masque la barre de défilement native sans désactiver le scroll. */
+html {
+    scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+    display: none;
+}
