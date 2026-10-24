@@ -34,8 +34,10 @@ const camera = new THREE.PerspectiveCamera(
     1000
 );
 
-// Place la caméra légèrement en arrière de la scène.
-camera.position.z = 5;
+// Commence un peu plus loin, puis avance vers le cadrage habituel du hero.
+const cameraStartZ = isMobile ? 7.5 : 8.5;
+const cameraHeroZ = 5;
+camera.position.z = cameraStartZ;
 
 // Initialise le moteur de rendu WebGL.
 const renderer = new THREE.WebGLRenderer({
@@ -663,6 +665,22 @@ const frameInterval = 1000 / 30;
 // Indique au loader que le fond Three.js a produit sa première image.
 let hasSignaledBackgroundReady = false;
 
+// Prépare l'approche automatique de la caméra après la disparition du loader.
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const cameraApproachDuration = isMobile ? 900 : 1100;
+let cameraApproachStarted = false;
+let cameraApproachStartTime = 0;
+
+if (prefersReducedMotion) {
+    camera.position.z = cameraHeroZ;
+} else {
+    window.addEventListener("portfolio-loader-hidden", () => {
+        if (cameraApproachStarted) return;
+        cameraApproachStarted = true;
+        cameraApproachStartTime = performance.now();
+    }, { once: true });
+}
+
 // Fonction principale exécutée à chaque image.
 function animate(currentTime) {
 
@@ -694,6 +712,21 @@ function animate(currentTime) {
 
     material.uniforms.uTime.value =
         elapsedTime;
+
+    // Fait avancer la caméra en douceur jusqu'au cadrage normal du hero.
+    if (cameraApproachStarted) {
+        const elapsed = currentTime - cameraApproachStartTime;
+        const progress = Math.min(elapsed / cameraApproachDuration, 1);
+        const easedProgress = 1 - Math.pow(1 - progress, 3);
+
+        camera.position.z =
+            cameraStartZ + (cameraHeroZ - cameraStartZ) * easedProgress;
+
+        if (progress >= 1) {
+            cameraApproachStarted = false;
+            camera.position.z = cameraHeroZ;
+        }
+    }
 
     // Dessine la scène depuis le point de vue de la caméra.
     renderer.render(
