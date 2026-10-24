@@ -38,7 +38,10 @@
         window.setTimeout(() => {
             loader.classList.add("is-hidden");
             loader.setAttribute("aria-hidden", "true");
-            window.setTimeout(() => loader.remove(), 460);
+            window.setTimeout(() => {
+                loader.remove();
+                window.dispatchEvent(new Event("portfolio-loader-hidden"));
+            }, 460);
         }, 180);
     }
 
