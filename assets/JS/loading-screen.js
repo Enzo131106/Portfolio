@@ -24,7 +24,7 @@
 
     function setProgress(value) {
         const safeValue = Math.max(0, Math.min(100, value));
-        progressBar.style.width = safeValue + "%";
+        progressBar.classList.toggle("is-complete", safeValue >= 100);
         progress?.setAttribute("aria-valuenow", String(Math.round(safeValue)));
     }
 
@@ -78,9 +78,8 @@
     // Secours en cas d'échec WebGL ou d'initialisation du fond.
     window.setTimeout(() => {
         if (finished) return;
-        if (pageLoaded) {
-            backgroundReady = true;
-            finishLoading();
-        }
+        // En cas de souci WebGL, on attend toujours window.load, mais on ne bloque pas ensuite.
+        backgroundReady = true;
+        finishLoading();
     }, 8000);
 })();
