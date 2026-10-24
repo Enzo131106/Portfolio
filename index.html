@@ -64,6 +64,7 @@
     <link rel="stylesheet" href="./assets/CSS/background.css">
     <link rel="stylesheet" href="./assets/CSS/index-hero.css">
     <link rel="stylesheet" href="./assets/CSS/byte-invaders.css">
+    <link rel="stylesheet" href="./assets/CSS/loading-screen.css">
 
     <!-- Fonts -->
     <link id="inter-fonts" href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800" rel="stylesheet" />
@@ -73,6 +74,18 @@
 </head>
 
 <body>
+    <!-- Écran de chargement : le logo peut être ajouté dans assets/icon/logo.svg. -->
+    <div id="loading-screen" class="loading-screen" role="status" aria-live="polite" aria-label="Chargement du portfolio">
+        <div class="loading-content">
+            <img id="loading-logo" class="loading-logo" src="./assets/icon/logo.svg" alt="Logo du portfolio" width="120" height="120">
+            <p class="loading-title">ENZO CAMILO - PORTFOLIO</p>
+            <div class="loading-progress" role="progressbar" aria-label="Chargement de la page" aria-valuemin="0" aria-valuemax="100" aria-valuenow="8">
+                <span class="loading-progress-bar"></span>
+            </div>
+            <p class="loading-caption">Chargement en cours...</p>
+        </div>
+    </div>
+
     <!-- Pop-up de confidentialité -->
     <div id="privacy-popup" class="privacy-popup">
         <div class="privacy-box p-4 p-md-5">
@@ -207,11 +220,12 @@
         defer></script>
 
     <!-- JavaScript -->
+    <script src="./assets/JS/loading-screen.js" defer></script>
     <script src="./assets/JS/fallback.js"></script>
     <script src="./assets/JS/privacy-popup.js"></script>
     <script src="./assets/JS/navigation-bar.js"></script>
     <script src="./assets/JS/byte-invaders.js" defer></script>
-    <script type="module" src="./assets/JS/background.js"></script>
+    <script id="three-background-script" type="module" src="./assets/JS/background.js"></script>
 </body>
 
 </html>
