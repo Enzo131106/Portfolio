@@ -1,0 +1,110 @@
+/* Écran de chargement du portfolio */
+.loading-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: #07090d;
+    color: #dce5ef;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 420ms ease, visibility 420ms ease;
+}
+
+.loading-screen.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.loading-content {
+    display: flex;
+    width: min(100%, 360px);
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.loading-logo {
+    display: block;
+    width: 120px;
+    height: 120px;
+    margin: 0 0 24px;
+    object-fit: contain;
+}
+
+/* Le logo est masqué proprement tant que le fichier personnel n'est pas ajouté. */
+.loading-logo.is-unavailable {
+    display: none;
+}
+
+.loading-title {
+    margin: 0;
+    color: #dce5ef;
+    font-family: Inter, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: .12em;
+    line-height: 1.5;
+}
+
+.loading-progress {
+    position: relative;
+    overflow: hidden;
+    width: min(176px, 70vw);
+    height: 2px;
+    margin-top: 23px;
+    border-radius: 999px;
+    background: #17232f;
+}
+
+.loading-progress-bar {
+    display: block;
+    width: 8%;
+    height: 100%;
+    border-radius: inherit;
+    background: #42b9ff;
+    box-shadow: 0 0 7px rgba(66, 185, 255, .35);
+    transition: width 220ms ease;
+}
+
+.loading-screen.is-loading .loading-progress-bar {
+    animation: loading-progress-pulse 1.8s ease-in-out infinite alternate;
+}
+
+.loading-caption {
+    margin: 10px 0 0;
+    color: #718295;
+    font-family: Inter, sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: .025em;
+}
+
+@keyframes loading-progress-pulse {
+    from { width: 8%; }
+    to { width: 72%; }
+}
+
+@media (max-width: 480px) {
+    .loading-logo {
+        width: 104px;
+        height: 104px;
+        margin-bottom: 22px;
+    }
+
+    .loading-title {
+        font-size: 11px;
+        letter-spacing: .09em;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .loading-screen,
+    .loading-progress-bar {
+        transition: none;
+        animation: none !important;
+    }
+}
