@@ -44,6 +44,11 @@
     <meta name="twitter:image" content="">
 
     <!-- Connexions anticipées aux CDN -->
+    <!-- Précharge le logo du loader pour l’afficher au plus tôt -->
+    <link rel="preload" as="image" href="./assets/icon/logo.svg" fetchpriority="high">
+
+    <!-- Feuille de style prioritaire : écran de chargement -->
+
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="preconnect" href="https://fonts.bunny.net">
 
