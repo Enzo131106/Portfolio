@@ -660,6 +660,9 @@ let lastFrameTime = 0;
 // Définit l'intervalle entre deux images pour viser environ 30 FPS.
 const frameInterval = 1000 / 30;
 
+// Indique au loader que le fond Three.js a produit sa première image.
+let hasSignaledBackgroundReady = false;
+
 // Fonction principale exécutée à chaque image.
 function animate(currentTime) {
 
@@ -697,6 +700,13 @@ function animate(currentTime) {
         scene,
         camera
     );
+
+    // Signale une seule fois que le fond est réellement rendu à l'écran.
+    if (!hasSignaledBackgroundReady) {
+        hasSignaledBackgroundReady = true;
+        window.__portfolioBackgroundReady = true;
+        window.dispatchEvent(new Event("portfolio-background-ready"));
+    }
 }
 
 // Détecte lorsque l'utilisateur quitte ou revient sur l'onglet.
