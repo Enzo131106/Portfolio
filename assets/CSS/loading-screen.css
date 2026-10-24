@@ -6,7 +6,7 @@
     display: grid;
     place-items: center;
     padding: 24px;
-    background: #07090d;
+    background: rgba(10, 15, 30, 0.94);
     color: #dce5ef;
     opacity: 1;
     visibility: visible;
