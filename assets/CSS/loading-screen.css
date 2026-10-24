@@ -74,6 +74,10 @@
     animation: loading-progress-pulse 1.8s ease-in-out infinite alternate;
 }
 
+.loading-progress-bar.is-complete {
+    width: 100%;
+}
+
 .loading-caption {
     margin: 10px 0 0;
     color: #718295;
