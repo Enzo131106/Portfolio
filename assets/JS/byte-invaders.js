@@ -38,11 +38,14 @@
     function formatScore(value) { return String(Math.max(0, Math.floor(Number(value) || 0))); }
     // Adapter la résolution du canvas à sa taille réelle et à l’écran.
     function resize() {
-        const rect = screen.getBoundingClientRect();
-        if (!rect.width || !rect.height) return;
+        // offsetWidth/offsetHeight ignorent le scale CSS du travelling : le jeu conserve
+        // ses vraies dimensions même pendant l’introduction du hero.
+        const layoutWidth = screen.offsetWidth;
+        const layoutHeight = screen.offsetHeight;
+        if (!layoutWidth || !layoutHeight) return;
         dpr = Math.min(window.devicePixelRatio || 1, 2);
-        width = rect.width;
-        height = rect.height;
+        width = layoutWidth;
+        height = layoutHeight;
         canvas.width = Math.round(width * dpr);
         canvas.height = Math.round(height * dpr);
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
