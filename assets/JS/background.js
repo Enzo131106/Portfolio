@@ -689,13 +689,14 @@ if (prefersReducedMotion) {
         if (cameraApproachStarted) return;
         cameraApproachStarted = true;
         cameraApproachStartTime = performance.now();
-        material.uniforms.uOpacity.value = 0;
+        // Le vortex est déjà visible quand le loader disparaît : pas de fondu depuis un écran vide.
+        material.uniforms.uOpacity.value = 1;
 
         // Le vrai contenu se rapproche avec la caméra, sans maquette intermédiaire.
         if (heroInner) {
             heroInner.style.transformOrigin = "center center";
             heroInner.style.transform = "scale(0.18)";
-            heroInner.style.opacity = "0.35";
+            heroInner.style.opacity = "1";
             heroInner.style.willChange = "transform, opacity";
         }
         if (heroScroll) {
@@ -754,9 +755,8 @@ function animate(currentTime) {
         // Agrandit le vrai hero selon la progression du travelling : proportions et mise en page inchangées.
         if (heroInner) {
             const heroScale = 0.18 + 0.82 * easedProgress;
-            const heroOpacity = 0.35 + 0.65 * Math.min(elapsed / 420, 1);
             heroInner.style.transform = `scale(${heroScale})`;
-            heroInner.style.opacity = String(heroOpacity);
+            heroInner.style.opacity = "1";
         }
         if (heroScroll) {
             heroScroll.style.opacity = String(Math.min(easedProgress / 0.35, 1));
@@ -764,7 +764,7 @@ function animate(currentTime) {
         }
 
         // Les particules entrent progressivement dans le champ au début du travelling.
-        material.uniforms.uOpacity.value = Math.min(elapsed / 480, 1);
+        material.uniforms.uOpacity.value = 1;
 
         if (progress >= 1) {
             cameraApproachStarted = false;
