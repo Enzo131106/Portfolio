@@ -22,6 +22,7 @@
 }
 
 .hero-inner {
+    position: relative;
     display: grid;
     grid-template-columns: minmax(0, 1.03fr) minmax(340px, 0.87fr);
     align-items: center;
@@ -160,7 +161,7 @@
 .hero-scroll {
     position: absolute;
     z-index: 1;
-    bottom: 28px;
+    bottom: -64px;
     left: 50%;
     display: block;
     width: 22px;
