@@ -272,60 +272,25 @@
 }
 
 
-/* Approche 3D du hero : la perspective donne une vraie profondeur au contenu DOM.
-   La navbar reste hors de cette scène et conserve son affichage normal. */
-.hero-section {
-    perspective: 1600px;
-    perspective-origin: 50% 48%;
-}
-
-.hero-inner {
-    transform-style: preserve-3d;
-    transform-origin: center center;
-    backface-visibility: hidden;
-}
-
-@keyframes hero-scene-approach {
-    0% {
-        opacity: 0.15;
-        transform: translate3d(0, 0, -1250px) scale(.5);
-        filter: blur(12px);
-    }
-    55% {
-        opacity: 1;
-        filter: blur(2px);
-    }
-    100% {
-        opacity: 1;
-        transform: translate3d(0, 0, 0) scale(1);
-        filter: blur(0);
-    }
-}
-
-@keyframes hero-scroll-approach {
-    0% {
-        opacity: 0;
-        transform: translate3d(-50%, 0, -900px) scale(.6);
-        filter: blur(7px);
-    }
-    100% {
-        opacity: 1;
-        transform: translate3d(-50%, 0, 0) scale(1);
-        filter: blur(0);
-    }
-}
-
+/* Le travelling est réalisé par la caméra Three.js.
+   Le DOM reste caché pendant l'approche puis apparaît à l'arrivée.
+   La navbar est volontairement exclue de cette transition. */
 .hero-section.hero-intro-preparing .hero-inner,
 .hero-section.hero-intro-preparing .hero-scroll {
     opacity: 0;
 }
 
 .hero-section.hero-intro-arriving .hero-inner {
-    animation: hero-scene-approach 1400ms cubic-bezier(.16, 1, .3, 1) both;
+    animation: hero-arrival-fade 420ms ease-out both;
 }
 
 .hero-section.hero-intro-arriving .hero-scroll {
-    animation: hero-scroll-approach 1000ms cubic-bezier(.16, 1, .3, 1) 250ms both;
+    animation: hero-arrival-fade 360ms ease-out 80ms both;
+}
+
+@keyframes hero-arrival-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
