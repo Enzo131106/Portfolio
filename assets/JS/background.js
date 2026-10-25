@@ -759,14 +759,14 @@ function animate(currentTime) {
             heroInner.style.opacity = "1";
         }
         if (heroScroll) {
-            heroScroll.style.opacity = String(Math.min(easedProgress / 0.35, 1));
+            // Déplace la souris entière vers le bas avec exactement la progression de la caméra.
+            // Elle s'efface à l'approche de l'arrivée pour éviter un retour visuel brusque.
+            const scrollCueOpacity =
+                Math.min(progress / 0.06, 1) *
+                Math.min((1 - progress) / 0.18, 1);
+            heroScroll.style.opacity = String(Math.max(0, scrollCueOpacity));
+            heroScroll.style.transform = `translate(-50%, ${easedProgress * 44}px)`;
             heroScroll.style.setProperty("--hero-travel-progress", String(easedProgress));
-            const scrollDot = heroScroll.querySelector(".hero-scroll-mouse span");
-            if (scrollDot) {
-                const dotOpacity = Math.min(progress / 0.08, 1) * Math.min((1 - progress) / 0.12, 1);
-                scrollDot.style.opacity = String(Math.max(0, dotOpacity));
-                scrollDot.style.transform = `translate(-50%, ${easedProgress * 10}px)`;
-            }
         }
 
         // Les particules entrent progressivement dans le champ au début du travelling.
@@ -788,6 +788,7 @@ function animate(currentTime) {
             }
             if (heroScroll) {
                 heroScroll.style.opacity = "1";
+                heroScroll.style.removeProperty("transform");
                 heroScroll.style.removeProperty("--hero-travel-progress");
                 const scrollDot = heroScroll.querySelector(".hero-scroll-mouse span");
                 if (scrollDot) {
