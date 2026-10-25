@@ -4,6 +4,13 @@
     if (!section) return;
 
     const panels = Array.from(section.querySelectorAll(".scroll-test-panel"));
+    // Les panneaux servent de repères dans Projets ; Parcours et Contact sont aussi
+    // des étapes du trajet et peuvent recevoir le snap discret après une pause.
+    const anchors = [
+        ...panels,
+        document.querySelector("#parcours"),
+        document.querySelector("#contact")
+    ].filter(Boolean);
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const idleDelay = 360;
     const snapRange = 150;
@@ -55,7 +62,7 @@
     const findNearestAnchor = () => {
         let nearest = null;
         let nearestDistance = Infinity;
-        panels.forEach((panel) => {
+        anchors.forEach((panel) => {
             const targetY = window.scrollY + panel.getBoundingClientRect().top - 94;
             const distance = Math.abs(targetY - window.scrollY);
             if (distance < nearestDistance) {
