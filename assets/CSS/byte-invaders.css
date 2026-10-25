@@ -7,10 +7,10 @@
     border: 1px solid rgba(145, 183, 230, .2);
     border-radius: 15px;
     color: #eaf2ff;
-    background: rgba(7, 14, 32, .88);
+    background: #070e20;
     box-shadow: 0 12px 34px rgba(0, 0, 0, .2);
-    -webkit-backdrop-filter: blur(14px);
-    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
 }
 
 /* Alignement commun des barres d'information et des commandes. */
@@ -67,7 +67,7 @@
 .arcade-scorebar {
     gap: 12px;
     padding: 12px 17px;
-    background: rgba(255, 255, 255, .018);
+    background: #0a1428;
 }
 
 .arcade-scorebar > div {
@@ -196,7 +196,7 @@
     border: 1px solid rgba(145, 183, 230, .18);
     border-radius: 5px;
     color: #d2deef;
-    background: rgba(255, 255, 255, .035);
+    background: #111d33;
     font-family: inherit;
     font-size: 10px;
     text-align: center;
@@ -215,7 +215,7 @@
     border: 1px solid rgba(145, 183, 230, .2);
     border-radius: 8px;
     color: #d2deef;
-    background: rgba(255, 255, 255, .04);
+    background: #111d33;
     font-family: inherit;
     font-weight: 600;
     touch-action: manipulation;
@@ -224,7 +224,7 @@
 .arcade-mobile-controls button[data-game-control="shoot"] {
     border-color: rgba(155, 221, 232, .3);
     color: #e5fbff;
-    background: rgba(155, 221, 232, .12);
+    background: #123047;
 }
 
 /* Réduire les marges internes sur les écrans intermédiaires. */
