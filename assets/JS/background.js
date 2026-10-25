@@ -741,7 +741,7 @@ function animate(currentTime) {
     material.uniforms.uTime.value =
         elapsedTime;
 
-    // Travelling 3D : accélération, traversée du vortex, puis arrivée contrôlée.
+    // Travelling d'introduction : conserve exactement le mouvement déclenché après le loader.
     if (cameraApproachStarted) {
         const elapsed = currentTime - cameraApproachStartTime;
         const progress = Math.min(elapsed / cameraApproachDuration, 1);
@@ -806,6 +806,18 @@ function animate(currentTime) {
                 window.dispatchEvent(new Event("portfolio-hero-arrived"));
             }
         }
+    }
+
+    // Après l'intro, le scroll pilote directement la profondeur de la caméra.
+    // Le début de la page reste à la position d'arrivée du hero ; en descendant,
+    // la caméra traverse progressivement le nuage de particules, et remonte si l'on remonte.
+    if (!cameraApproachStarted && !prefersReducedMotion) {
+        const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+        const scrollProgress = Math.max(0, Math.min(1, window.scrollY / maxScroll));
+        const vortexDepth = 27;
+        camera.position.z = cameraHeroZ - scrollProgress * vortexDepth;
+    } else if (!cameraApproachStarted) {
+        camera.position.z = cameraHeroZ;
     }
 
     // Dessine la scène depuis le point de vue de la caméra.
