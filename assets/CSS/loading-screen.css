@@ -112,3 +112,12 @@
         animation: none !important;
     }
 }
+
+
+/* Aucun défilement pendant l'introduction et le travelling initial du hero. */
+html:has(body.hero-intro-pending),
+body.hero-intro-pending {
+    overflow: hidden !important;
+    overscroll-behavior: none;
+    touch-action: none;
+}
