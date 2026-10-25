@@ -8,7 +8,7 @@
     perspective-origin: 50% 52%;
     transform-style: preserve-3d;
 }
-.scroll-test-wrap { width: min(1040px, 100%); margin: 0 auto; }
+.scroll-test-wrap { width: min(1040px, 100%); margin: 0 auto; perspective: 900px; transform-style: preserve-3d; }
 .scroll-test-kicker { margin: 0 0 14px; color: #79dfff; font: 700 11px/1.5 monospace; letter-spacing: .16em; text-transform: uppercase; }
 .scroll-test-title { max-width: 760px; margin: 0; color: #f4f7ff; font-size: clamp(34px, 5vw, 60px); font-weight: 800; letter-spacing: -.045em; line-height: 1.06; }
 .scroll-test-title span { color: #70d8ff; }
@@ -21,7 +21,7 @@
     border: 1px solid rgba(150,185,230,.22); border-radius: 22px;
     background: linear-gradient(125deg, rgba(18,32,58,.96), rgba(8,14,31,.92));
     scroll-margin-top: 94px;
-    transform: translate3d(0, var(--travel-y, 0px), var(--travel-z, -260px)) rotateX(var(--travel-rotate-x, 0deg)) scale(var(--travel-scale, .62));
+    transform: translate3d(0, var(--travel-y, 0px), var(--travel-z, -900px)) rotateX(var(--travel-rotate-x, 0deg)) scale(var(--travel-scale, .28));
     transform-origin: center center;
     opacity: var(--travel-opacity, .42);
     will-change: transform, opacity, filter;
