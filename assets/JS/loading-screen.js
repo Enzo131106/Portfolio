@@ -8,6 +8,20 @@
     const progress = loader.querySelector(".loading-progress");
     const progressBar = loader.querySelector(".loading-progress-bar");
     const backgroundScript = document.getElementById("three-background-script");
+    const heroSection = document.querySelector(".hero-section");
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // Prépare l'apparition du contenu derrière le loader, sans toucher à la navbar.
+    if (heroSection && !prefersReducedMotion) {
+        heroSection.classList.add("hero-intro-preparing");
+        window.addEventListener("portfolio-loader-hidden", () => {
+            heroSection.classList.remove("hero-intro-preparing");
+            heroSection.classList.add("hero-intro-arriving");
+            window.setTimeout(() => {
+                heroSection.classList.remove("hero-intro-arriving");
+            }, 1500);
+        }, { once: true });
+    }
 
     let pageLoaded = document.readyState === "complete";
     let backgroundReady = window.__portfolioBackgroundReady === true;
