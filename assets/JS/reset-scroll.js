@@ -1,24 +1,19 @@
 "use strict";
 
-/*
- * Réinitialise la position uniquement lors d'un rechargement explicite.
- * Le script est isolé des animations et des autres fonctionnalités.
- */
+/* Réinitialise la page en haut uniquement lors d'un rechargement explicite. */
 (() => {
-    if (!("scrollRestoration" in history)) return;
-
-    history.scrollRestoration = "manual";
-
     const navigation = performance.getEntriesByType("navigation")[0];
     const isReload = navigation ? navigation.type === "reload" : false;
-
     if (!isReload) return;
 
+    if ("scrollRestoration" in history) {
+        history.scrollRestoration = "manual";
+    }
+
     const resetToTop = () => {
-        window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+        window.scrollTo(0, 0);
     };
 
-    // Avant le rendu normal, puis après pageshow pour couvrir le retour du cache BFCache.
     resetToTop();
     window.addEventListener("pageshow", resetToTop, { once: true });
 })();
