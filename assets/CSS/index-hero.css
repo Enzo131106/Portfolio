@@ -199,6 +199,18 @@
     animation-play-state: running;
 }
 
+.hero-scroll.is-travelling .hero-scroll-mouse span {
+    animation: hero-scroll-travel var(--hero-travel-duration, 2500ms) cubic-bezier(.22, .7, .2, 1) both;
+    animation-play-state: running;
+}
+
+@keyframes hero-scroll-travel {
+    0% { opacity: 0; transform: translate(-50%, 0); }
+    18% { opacity: 1; }
+    82% { opacity: 1; transform: translate(-50%, 8px); }
+    100% { opacity: 0; transform: translate(-50%, 10px); }
+}
+
 @keyframes hero-scroll-wheel {
     0% { opacity: 0; transform: translate(-50%, 0); }
     25% { opacity: 1; }
@@ -284,6 +296,7 @@
 
 @media (prefers-reduced-motion: reduce) {
     .hero-scroll-mouse span { animation: none; animation-play-state: paused; }
+    .hero-scroll.is-travelling .hero-scroll-mouse span { animation: none; }
     .hero-button { transition: none; }
 }
 
