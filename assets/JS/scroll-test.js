@@ -65,9 +65,9 @@
             // Le panneau arrive depuis la profondeur, se redresse au centre,
             // puis repart en perspective. Le signe conserve le sens haut/bas.
             const scale = reducedMotion ? 1 : 0.28 + proximity * 0.72;
-            const translateY = reducedMotion ? 0 : Math.max(-180, Math.min(180, signedDistance * 115));
-            const rotateX = reducedMotion ? 0 : Math.max(-38, Math.min(38, signedDistance * 42));
-            const translateZ = reducedMotion ? 0 : -900 * (1 - proximity);
+            const translateY = 0; // L'approche se fait depuis le centre en profondeur, pas depuis le bas de l'écran.
+            const rotateX = reducedMotion ? 0 : Math.max(-32, Math.min(32, signedDistance * 34));
+            const translateZ = reducedMotion ? 0 : -1100 * (1 - proximity);
             const opacity = reducedMotion ? 1 : 0.58 + proximity * 0.42;
             const blur = reducedMotion ? 0 : (1 - proximity) * 1.2;
 
