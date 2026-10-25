@@ -70,6 +70,7 @@
     <link rel="stylesheet" href="./assets/CSS/background.css">
     <link rel="stylesheet" href="./assets/CSS/index-hero.css?v=20261025-6">
     <link rel="stylesheet" href="./assets/CSS/byte-invaders.css">
+    <link rel="stylesheet" href="./assets/CSS/scroll-test.css?v=1">
 
     <!-- Fonts -->
     <link id="inter-fonts" href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800" rel="stylesheet" />
@@ -211,8 +212,40 @@
 
         </section>
 
-        <!-- Projets : contenu existant à compléter ultérieurement -->
-        <section id="projects" aria-label="Projets"></section>
+        <!-- DÉMO TEMPORAIRE DU SCROLL : retirer ce bloc et les deux assets scroll-test pour annuler le test. -->
+        <section id="projects" class="scroll-test-section" aria-labelledby="scroll-test-title">
+            <div class="scroll-test-wrap">
+                <p class="scroll-test-kicker">ZONE DE TEST · SCROLL LIBRE</p>
+                <h2 id="scroll-test-title" class="scroll-test-title">Le mouvement doit rester <span>entre tes mains.</span></h2>
+                <p class="scroll-test-intro">Cette section est provisoire : elle sert uniquement à tester le défilement avant de construire les vrais projets. Fais défiler à ta vitesse, arrête-toi où tu veux, puis observe le léger réalignement seulement si tu es déjà proche d'un repère.</p>
+                <div class="scroll-test-hint">Pas de verrouillage · pas de saut forcé</div>
+
+                <article class="scroll-test-panel" data-step="01">
+                    <div class="scroll-test-panel-content">
+                        <p class="scroll-test-number">TEST 01 — DÉFILEMENT LIBRE</p>
+                        <h3>Prends ton temps.</h3>
+                        <p>Tu gardes le contrôle du scroll. Le site ne cherche pas à t'emmener automatiquement vers la section suivante et tu peux t'arrêter au milieu de ce bloc.</p>
+                    </div>
+                </article>
+
+                <article class="scroll-test-panel" data-step="02">
+                    <div class="scroll-test-panel-content">
+                        <p class="scroll-test-number">TEST 02 — RÉALIGNEMENT DISCRET</p>
+                        <h3>Tout près, juste un petit ajustement.</h3>
+                        <p>Si tu relâches le scroll à quelques pixels du début d'un repère, la page peut s'y placer rapidement. Si tu es plus loin, elle ne fait rien.</p>
+                    </div>
+                </article>
+
+                <article class="scroll-test-panel" data-step="03">
+                    <div class="scroll-test-panel-content">
+                        <p class="scroll-test-number">TEST 03 — INTERRUPTION IMMÉDIATE</p>
+                        <h3>Tu changes d'avis ? Continue.</h3>
+                        <p>Un nouveau geste de souris, de tactile ou de clavier reprend la priorité. Ce comportement est limité à cette zone de test, pas au reste du site.</p>
+                    </div>
+                </article>
+                <p class="scroll-test-footer">Zone expérimentale temporaire — le hero et le mini-jeu ne sont pas modifiés.</p>
+            </div>
+        </section>
 
         <!-- Parcours : contenu existant à compléter ultérieurement -->
         <section id="parcours" aria-label="Parcours"></section>
@@ -232,6 +265,7 @@
     <script src="./assets/JS/privacy-popup.js"></script>
     <script src="./assets/JS/navigation-bar.js"></script>
     <script src="./assets/JS/byte-invaders.js" defer></script>
+    <script src="./assets/JS/scroll-test.js" defer></script>
     <script id="three-background-script" type="module" src="./assets/JS/background.js?v=20261025-6"></script>
 </body>
 
