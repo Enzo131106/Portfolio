@@ -788,7 +788,9 @@ function animate(currentTime) {
             }
             if (heroScroll) {
                 heroScroll.style.opacity = "1";
-                heroScroll.style.removeProperty("transform");
+                // Conserve la position finale du travelling : retirer le transform ici
+                // ferait remonter la souris d'un coup au dernier frame.
+                heroScroll.style.transform = "translate(-50%, 44px)";
                 heroScroll.style.removeProperty("--hero-travel-progress");
                 const scrollDot = heroScroll.querySelector(".hero-scroll-mouse span");
                 if (scrollDot) {
