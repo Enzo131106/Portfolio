@@ -808,16 +808,34 @@ function animate(currentTime) {
         }
     }
 
-    // Après l'intro, le scroll pilote directement la profondeur de la caméra.
-    // Le début de la page reste à la position d'arrivée du hero ; en descendant,
-    // la caméra traverse progressivement le nuage de particules, et remonte si l'on remonte.
+    // Le scroll devient un vrai déplacement dans un tunnel sans fin.
+    // La distance dépend directement du scroll : aucun plafond de profondeur,
+    // donc le voyage ne s'arrête pas après quelques sections.
     if (!cameraApproachStarted && !prefersReducedMotion) {
-        const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-        const scrollProgress = Math.max(0, Math.min(1, window.scrollY / maxScroll));
-        const vortexDepth = 27;
-        camera.position.z = cameraHeroZ - scrollProgress * vortexDepth;
+        const travelPerPixel = isMobile ? 0.014 : 0.018;
+        camera.position.z = cameraHeroZ - window.scrollY * travelPerPixel;
+
+        // Le fond reste derrière la caméra pendant toute la traversée.
+        background.position.z = camera.position.z - 45;
+
+        // Réutilise un nombre fixe de particules : celles qui viennent de passer
+        // la caméra sont replacées loin devant elle, comme si le vortex se
+        // générait dans le lointain et disparaissait derrière nous. La mémoire GPU
+        // ne grossit donc jamais avec la longueur du scroll.
+        const positionAttribute = geometry.attributes.position;
+        const positionArray = positionAttribute.array;
+        let recycledParticles = false;
+        for (let i = 0; i < particleCount; i++) {
+            const zIndex = i * 3 + 2;
+            if (positionArray[zIndex] > camera.position.z - 2) {
+                positionArray[zIndex] = camera.position.z - 28 - Math.random() * 12;
+                recycledParticles = true;
+            }
+        }
+        if (recycledParticles) positionAttribute.needsUpdate = true;
     } else if (!cameraApproachStarted) {
         camera.position.z = cameraHeroZ;
+        background.position.z = camera.position.z - 45;
     }
 
     // Dessine la scène depuis le point de vue de la caméra.
