@@ -44,8 +44,8 @@
             const progress = Math.max(0, Math.min(1,
                 (-heroRect.top) / Math.max(1, hero.offsetHeight * 0.82)
             ));
-            const zoom = 1 + progress * 1.25;
-            const opacity = Math.max(0, 1 - Math.max(0, progress - 0.28) / 0.72);
+            const zoom = 1 + progress * 2.4;
+            const opacity = Math.max(0, 1 - Math.max(0, progress - 0.62) / 0.38);
             heroInner.style.transformOrigin = "center center";
             heroInner.style.transform = `scale(${zoom.toFixed(3)})`;
             heroInner.style.opacity = opacity.toFixed(3);
@@ -64,11 +64,11 @@
             const proximity = Math.max(0, Math.min(1, 1 - distance));
             // Le panneau arrive depuis la profondeur, se redresse au centre,
             // puis repart en perspective. Le signe conserve le sens haut/bas.
-            const scale = reducedMotion ? 1 : 0.62 + proximity * 0.38;
-            const translateY = reducedMotion ? 0 : Math.max(-90, Math.min(90, signedDistance * 70));
-            const rotateX = reducedMotion ? 0 : Math.max(-24, Math.min(24, signedDistance * 26));
-            const translateZ = reducedMotion ? 0 : -260 * (1 - proximity);
-            const opacity = reducedMotion ? 1 : 0.18 + proximity * 0.82;
+            const scale = reducedMotion ? 1 : 0.28 + proximity * 0.72;
+            const translateY = reducedMotion ? 0 : Math.max(-180, Math.min(180, signedDistance * 115));
+            const rotateX = reducedMotion ? 0 : Math.max(-38, Math.min(38, signedDistance * 42));
+            const translateZ = reducedMotion ? 0 : -900 * (1 - proximity);
+            const opacity = reducedMotion ? 1 : 0.58 + proximity * 0.42;
             const blur = reducedMotion ? 0 : (1 - proximity) * 1.2;
 
             panel.style.setProperty("--travel-scale", scale.toFixed(4));
