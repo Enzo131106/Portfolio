@@ -1,24 +1,26 @@
-/* Le travelling est appliqué à la section entière, jamais aux cartes individuelles. */
+/* Perspective de section : le bloc complet arrive de loin au centre, comme le hero. */
 #projects.scroll-test-section {
     position: relative;
     min-height: 100svh;
     padding: clamp(110px, 14vh, 150px) 5.5vw 90px;
     color: #f4f7ff;
     scroll-margin-top: 84px;
+    perspective: 1200px;
+    perspective-origin: 50% 50%;
+    transform-style: preserve-3d;
     overflow: clip;
 }
 .scroll-test-wrap {
     width: min(1040px, 100%);
     margin: 0 auto;
     transform-origin: center center;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
 }
 .scroll-test-kicker { margin: 0 0 14px; color: #79dfff; font: 700 11px/1.5 monospace; letter-spacing: .16em; text-transform: uppercase; }
 .scroll-test-title { max-width: 760px; margin: 0; color: #f4f7ff; font-size: clamp(34px, 5vw, 60px); font-weight: 800; letter-spacing: -.045em; line-height: 1.06; }
 .scroll-test-title span { color: #70d8ff; }
 .scroll-test-intro { max-width: 650px; margin: 20px 0 38px; color: rgba(220,231,249,.76); font-size: 15px; line-height: 1.8; }
-.scroll-test-hint { display: inline-flex; align-items: center; gap: 10px; padding: 10px 13px; border: 1px solid rgba(112,216,255,.22); border-radius: 10px; color: #c7e9ff; background: rgba(18,35,62,.85); font-size: 12px; }
-.scroll-test-hint::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #70dfff; box-shadow: 0 0 12px #70dfff; }
-.scroll-test-footer { margin: 24px 0 0; color: rgba(220,231,249,.55); font-size: 12px; line-height: 1.7; }
 @media (max-width: 760px) {
     #projects.scroll-test-section { padding: 120px 20px 70px; }
     .scroll-test-intro { margin-bottom: 28px; font-size: 14px; }
