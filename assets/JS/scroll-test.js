@@ -73,15 +73,17 @@
             const centerY = getLayoutTop(panel) + panel.offsetHeight / 2 - window.scrollY;
             const signedDistance = (centerY - focusY) / (viewportHeight * 0.85);
             const distance = Math.abs(signedDistance);
+            // Le panneau est placé sur l'axe central de l'écran, puis s'approche
+            // frontalement en Z. Sa position de mise en page reste inchangée :
+            // le scroll contrôle uniquement le travelling visuel, dans les deux sens.
             const proximity = Math.max(0, Math.min(1, 1 - distance));
-            // Le panneau arrive depuis la profondeur, se redresse au centre,
-            // puis repart en perspective. Le signe conserve le sens haut/bas.
-            const scale = reducedMotion ? 1 : 0.28 + proximity * 0.72;
-            const translateY = reducedMotion ? 0 : -signedDistance * viewportHeight * (1 - proximity * 0.15);
-            const rotateX = reducedMotion ? 0 : Math.max(-32, Math.min(32, signedDistance * 34));
-            const translateZ = reducedMotion ? 0 : -1100 * (1 - proximity);
-            const opacity = reducedMotion ? 1 : 0.58 + proximity * 0.42;
-            const blur = reducedMotion ? 0 : (1 - proximity) * 1.2;
+            const approach = proximity * proximity * (3 - 2 * proximity);
+            const scale = reducedMotion ? 1 : 0.16 + approach * 0.84;
+            const translateY = reducedMotion ? 0 : focusY - centerY;
+            const rotateX = reducedMotion ? 0 : Math.max(-18, Math.min(18, signedDistance * 18));
+            const translateZ = reducedMotion ? 0 : -1450 * (1 - approach);
+            const opacity = reducedMotion ? 1 : 0.08 + approach * 0.92;
+            const blur = reducedMotion ? 0 : (1 - approach) * 1.5;
 
             panel.style.setProperty("--travel-scale", scale.toFixed(4));
             panel.style.setProperty("--travel-y", translateY.toFixed(2) + "px");
