@@ -88,7 +88,8 @@
     function resetGame() {
         state.score = 0; state.lives = 3; state.wave = 1;
         state.bullets = []; state.particles = [];
-        state.player.x = width / 2; state.player.cooldown = 0;
+        // Recalibrer les deux coordonnées à partir des dimensions actuelles du canvas.
+        state.player.x = width / 2; state.player.y = height * 0.88; state.player.cooldown = 0;
         state.enemyFireTimer = 1.1;
         state.invulnerable = 0; state.gameOver = false;
         createWave(); updateHud();
@@ -96,6 +97,8 @@
     // Démarrer la partie et lancer la boucle d’animation.
     function startGame() {
         if (state.running) return;
+        // Le hero peut avoir été transformé pendant le travelling : relire la taille de layout avant la partie.
+        resize();
         resetGame();
         state.running = true;
         state.lastTime = performance.now();
