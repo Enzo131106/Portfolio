@@ -831,7 +831,7 @@ function animate(currentTime) {
         for (let i = 0; i < particleCount; i++) {
             const i3 = i * 3;
             const baseZ = initialParticleDepths[i];
-            const relativeDepth = ((baseZ - scrollDepth + 18) % 36 + 36) % 36 - 18;
+            const relativeDepth = ((baseZ + scrollDepth + 18) % 36 + 36) % 36 - 18;
             positionArray[i3 + 2] = camera.position.z + relativeDepth;
         }
         positionAttribute.needsUpdate = true;
