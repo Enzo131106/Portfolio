@@ -276,7 +276,8 @@
         padding-inline: 15px;
         font-size: 11px;
     }
-    .hero-scroll { bottom: 20px; }
+    /* Garde la souris sous les boutons, même après le décalage final du travelling. */
+    .hero-scroll { bottom: -50px; }
 }
 
 @media (max-width: 420px) {
