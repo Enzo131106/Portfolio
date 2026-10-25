@@ -16,6 +16,11 @@
     color: var(--hero-text);
 }
 
+.hero-intro-pending .hero-inner {
+    opacity: 0;
+    transform: scale(0.18);
+}
+
 .hero-inner {
     display: grid;
     grid-template-columns: minmax(0, 1.03fr) minmax(340px, 0.87fr);
@@ -148,6 +153,10 @@
     background: rgba(23, 45, 75, .8);
 }
 
+.hero-intro-pending .hero-scroll {
+    opacity: 0;
+}
+
 .hero-scroll {
     position: absolute;
     z-index: 1;
@@ -159,6 +168,8 @@
     margin: 0;
     transform: translateX(-50%);
     text-decoration: none;
+    opacity: 1;
+    transition: opacity 250ms ease;
 }
 
 .hero-scroll-mouse {
@@ -181,6 +192,11 @@
     background: #fff;
     transform: translateX(-50%);
     animation: hero-scroll-wheel 1.5s ease-in-out infinite;
+    animation-play-state: paused;
+}
+
+.hero-scroll.is-ready .hero-scroll-mouse span {
+    animation-play-state: running;
 }
 
 @keyframes hero-scroll-wheel {
@@ -267,7 +283,7 @@
 
 
 @media (prefers-reduced-motion: reduce) {
-    .hero-scroll-mouse span { animation: none; }
+    .hero-scroll-mouse span { animation: none; animation-play-state: paused; }
     .hero-button { transition: none; }
 }
 
