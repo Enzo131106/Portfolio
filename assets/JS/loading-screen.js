@@ -40,6 +40,9 @@
         setProgress(100);
 
         window.setTimeout(() => {
+            // Préviens le fond au début du fondu : le travelling commence derrière le loader,
+            // afin que la caméra soit déjà en mouvement quand le vortex se découvre.
+            window.dispatchEvent(new Event("portfolio-loader-hiding"));
             loader.classList.add("is-hidden");
             loader.setAttribute("aria-hidden", "true");
             window.setTimeout(() => {
