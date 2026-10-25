@@ -34,8 +34,8 @@ const camera = new THREE.PerspectiveCamera(
     1000
 );
 
-// Commence un peu plus loin, puis avance vers le cadrage habituel du hero.
-const cameraStartZ = isMobile ? 7.5 : 8.5;
+// La caméra démarre loin du hero, puis traverse réellement le vortex.
+const cameraStartZ = isMobile ? 30 : 34;
 const cameraHeroZ = 5;
 camera.position.z = cameraStartZ;
 
@@ -653,6 +653,132 @@ const particles = new THREE.Points(
 // Ajoute le vortex numérique à la scène.
 scene.add(particles);
 
+// Maquette visuelle du hero placée dans la scène 3D.
+// Elle sert uniquement pendant le travelling : le vrai DOM réapparaît à l'arrivée.
+const heroPreviewCanvas = document.createElement("canvas");
+const heroPreviewContext = heroPreviewCanvas.getContext("2d");
+heroPreviewCanvas.width = isMobile ? 900 : 1600;
+heroPreviewCanvas.height = isMobile ? 1600 : 900;
+
+function roundRect(ctx, x, y, width, height, radius) {
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.closePath();
+}
+
+function drawHeroPreview() {
+    const ctx = heroPreviewContext;
+    const w = heroPreviewCanvas.width;
+    const h = heroPreviewCanvas.height;
+    ctx.clearRect(0, 0, w, h);
+
+    const halo = ctx.createRadialGradient(w * 0.5, h * 0.5, 10, w * 0.5, h * 0.5, w * 0.58);
+    halo.addColorStop(0, "rgba(20, 100, 210, 0.2)");
+    halo.addColorStop(1, "rgba(5, 9, 20, 0)");
+    ctx.fillStyle = halo;
+    ctx.fillRect(0, 0, w, h);
+
+    const pad = isMobile ? 65 : 95;
+    const copyWidth = isMobile ? w - pad * 2 : w * 0.56;
+    let y = isMobile ? 135 : 165;
+    ctx.textAlign = "left";
+    ctx.textBaseline = "top";
+    ctx.fillStyle = "#80dcff";
+    ctx.font = isMobile ? "600 23px Arial" : "600 25px Arial";
+    ctx.fillText("ENZO CAMILO  ·  ÉTUDIANT MMI", pad, y);
+    y += isMobile ? 62 : 76;
+
+    ctx.font = isMobile ? "800 59px Arial" : "800 72px Arial";
+    const titleLines = isMobile
+        ? ["Entre création", "web et jeu", "vidéo,", "je construis", "mon univers."]
+        : ["Entre création web", "et jeu vidéo,", "je construis", "mon univers."];
+    for (const line of titleLines) {
+        const gradient = ctx.createLinearGradient(pad, y, pad + copyWidth, y + 70);
+        gradient.addColorStop(0, "#f4f7ff");
+        gradient.addColorStop(1, "#75caff");
+        ctx.fillStyle = gradient;
+        ctx.fillText(line, pad, y, copyWidth);
+        y += isMobile ? 72 : 80;
+    }
+
+    y += isMobile ? 20 : 18;
+    ctx.fillStyle = "rgba(220, 231, 249, 0.82)";
+    ctx.font = isMobile ? "25px Arial" : "23px Arial";
+    const desc = isMobile
+        ? ["Développement web, création", "numérique et découverte de", "Unity : j'explore ces univers", "en cours et dans mes projets."]
+        : ["Développement web, création numérique et découverte de Unity :", "j'explore ces univers en cours et dans mes projets personnels."];
+    for (const line of desc) {
+        ctx.fillText(line, pad, y, copyWidth);
+        y += isMobile ? 42 : 38;
+    }
+
+    const buttonY = y + 25;
+    ctx.fillStyle = "rgba(47, 137, 255, 0.92)";
+    roundRect(ctx, pad, buttonY, isMobile ? 340 : 300, isMobile ? 65 : 58, 13);
+    ctx.fill();
+    ctx.fillStyle = "#ffffff";
+    ctx.font = isMobile ? "bold 21px Arial" : "bold 19px Arial";
+    ctx.fillText("DÉCOUVRIR MES PROJETS", pad + 18, buttonY + 19);
+
+    const cardW = isMobile ? w - pad * 2 : w * 0.31;
+    const cardH = isMobile ? 285 : 500;
+    const cardX = isMobile ? pad : w - pad - cardW;
+    const cardY = isMobile ? h - cardH - 100 : h * 0.22;
+    ctx.fillStyle = "rgba(7, 17, 39, 0.92)";
+    ctx.strokeStyle = "rgba(73, 190, 255, 0.85)";
+    ctx.lineWidth = 3;
+    roundRect(ctx, cardX, cardY, cardW, cardH, 24);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#a6eaff";
+    ctx.font = isMobile ? "bold 28px Arial" : "bold 32px Arial";
+    ctx.fillText("BYTE INVADERS", cardX + 26, cardY + 32);
+    ctx.strokeStyle = "rgba(70, 180, 255, 0.28)";
+    ctx.lineWidth = 1;
+    for (let i = 1; i < 7; i++) {
+        ctx.beginPath();
+        ctx.moveTo(cardX + 25, cardY + 95 + i * (cardH - 140) / 7);
+        ctx.lineTo(cardX + cardW - 25, cardY + 95 + i * (cardH - 140) / 7);
+        ctx.stroke();
+    }
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#4de4ff";
+    ctx.font = isMobile ? "bold 45px monospace" : "bold 54px monospace";
+    ctx.fillText("✦ 0 1 ✦", cardX + cardW / 2, cardY + cardH * 0.43);
+    ctx.fillStyle = "#7b9dff";
+    ctx.font = isMobile ? "bold 60px monospace" : "bold 70px monospace";
+    ctx.fillText("▲", cardX + cardW / 2, cardY + cardH * 0.68);
+    ctx.textAlign = "left";
+}
+
+drawHeroPreview();
+const heroPreviewTexture = new THREE.CanvasTexture(heroPreviewCanvas);
+heroPreviewTexture.colorSpace = THREE.SRGBColorSpace;
+const heroPreviewMaterial = new THREE.MeshBasicMaterial({
+    map: heroPreviewTexture,
+    transparent: true,
+    opacity: 0,
+    depthWrite: false,
+    side: THREE.DoubleSide
+});
+const previewHeight = 2 * cameraHeroZ * Math.tan(THREE.MathUtils.degToRad(75 / 2)) * 0.92;
+const previewWidth = previewHeight * (window.innerWidth / window.innerHeight) * 0.92;
+const heroPreview = new THREE.Mesh(
+    new THREE.PlaneGeometry(previewWidth, previewHeight),
+    heroPreviewMaterial
+);
+heroPreview.position.set(0, 0, 0);
+heroPreview.renderOrder = 2;
+scene.add(heroPreview);
+
 // Indique si l'animation doit être mise en pause.
 let isAnimationPaused = false;
 
@@ -665,19 +791,22 @@ const frameInterval = 1000 / 30;
 // Indique au loader que le fond Three.js a produit sa première image.
 let hasSignaledBackgroundReady = false;
 
-// Prépare l'approche automatique de la caméra après la disparition du loader.
+// Le travelling démarre après le loader et respecte la préférence de mouvement réduit.
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const cameraApproachDuration = isMobile ? 900 : 1100;
+const cameraApproachDuration = isMobile ? 2200 : 2500;
 let cameraApproachStarted = false;
 let cameraApproachStartTime = 0;
+let heroArrivalDispatched = false;
 
 if (prefersReducedMotion) {
     camera.position.z = cameraHeroZ;
+    heroPreviewMaterial.opacity = 0;
 } else {
     window.addEventListener("portfolio-loader-hidden", () => {
         if (cameraApproachStarted) return;
         cameraApproachStarted = true;
         cameraApproachStartTime = performance.now();
+        heroPreviewMaterial.opacity = 1;
     }, { once: true });
 }
 
@@ -713,18 +842,30 @@ function animate(currentTime) {
     material.uniforms.uTime.value =
         elapsedTime;
 
-    // Fait avancer la caméra en douceur jusqu'au cadrage normal du hero.
+    // Travelling 3D : accélération, traversée du vortex, puis arrivée contrôlée.
     if (cameraApproachStarted) {
         const elapsed = currentTime - cameraApproachStartTime;
         const progress = Math.min(elapsed / cameraApproachDuration, 1);
-        const easedProgress = 1 - Math.pow(1 - progress, 3);
+        const easedProgress = progress < 0.72
+            ? 0.5 * Math.pow(progress / 0.72, 1.65) * 0.92
+            : 0.46 + 0.54 * (1 - Math.pow(1 - (progress - 0.72) / 0.28, 3));
 
         camera.position.z =
             cameraStartZ + (cameraHeroZ - cameraStartZ) * easedProgress;
 
+        // La maquette distante s'efface dans la dernière partie du travelling.
+        heroPreviewMaterial.opacity = progress > 0.82
+            ? Math.max(0, 1 - (progress - 0.82) / 0.18)
+            : 1;
+
         if (progress >= 1) {
             cameraApproachStarted = false;
             camera.position.z = cameraHeroZ;
+            heroPreviewMaterial.opacity = 0;
+            if (!heroArrivalDispatched) {
+                heroArrivalDispatched = true;
+                window.dispatchEvent(new Event("portfolio-hero-arrived"));
+            }
         }
     }
 
@@ -765,11 +906,16 @@ function handleResize() {
 
     camera.updateProjectionMatrix();
 
-    // Met à jour les dimensions du canvas.
+    // Met à jour les dimensions du canvas et le cadrage du hero distant.
     renderer.setSize(
         window.innerWidth,
         window.innerHeight
     );
+
+    const nextPreviewHeight = 2 * cameraHeroZ * Math.tan(THREE.MathUtils.degToRad(75 / 2)) * 0.92;
+    const nextPreviewWidth = nextPreviewHeight * (window.innerWidth / window.innerHeight) * 0.92;
+    heroPreview.geometry.dispose();
+    heroPreview.geometry = new THREE.PlaneGeometry(nextPreviewWidth, nextPreviewHeight);
 
     // Recalcule le pixel ratio selon la largeur de l'écran.
     const currentPixelRatio =
