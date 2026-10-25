@@ -11,15 +11,16 @@
     const heroSection = document.querySelector(".hero-section");
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    // Prépare l'apparition du contenu derrière le loader, sans toucher à la navbar.
+    // Le vrai hero reste masqué pendant le travelling 3D.
+    // Il apparaît à l'arrivée de la caméra, sans animer la navbar.
     if (heroSection && !prefersReducedMotion) {
         heroSection.classList.add("hero-intro-preparing");
-        window.addEventListener("portfolio-loader-hidden", () => {
+        window.addEventListener("portfolio-hero-arrived", () => {
             heroSection.classList.remove("hero-intro-preparing");
             heroSection.classList.add("hero-intro-arriving");
             window.setTimeout(() => {
                 heroSection.classList.remove("hero-intro-arriving");
-            }, 1500);
+            }, 500);
         }, { once: true });
     }
 
