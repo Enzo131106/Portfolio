@@ -28,7 +28,12 @@
 @media (prefers-reduced-motion: reduce) {
     .scroll-test-wrap { transform: none !important; opacity: 1 !important; will-change: auto; }
 }
-html, body { max-width: 100%; overflow-x: clip; overscroll-behavior-y: none; }
+html, body {
+    max-width: 100%;
+    overflow-x: clip;
+    /* Laisse le navigateur mobile déclencher l'actualisation par glissement depuis le haut. */
+    overscroll-behavior-y: auto;
+}
 #projects.scroll-test-section, .scroll-test-wrap { max-width: 100%; }
 
 
