@@ -4,6 +4,13 @@
     if (!section) return;
 
     const panels = Array.from(section.querySelectorAll(".scroll-test-panel"));
+    const hero = document.querySelector("#accueil");
+    const heroInner = hero?.querySelector(".hero-inner");
+    let introFinished = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.addEventListener("portfolio-hero-arrived", () => {
+        introFinished = true;
+        scheduleTravelVisual();
+    }, { once: true });
     // Les panneaux servent de repères dans Projets ; Parcours et Contact sont aussi
     // des étapes du trajet et peuvent recevoir le snap discret après une pause.
     const anchors = [
@@ -29,6 +36,25 @@
         visualFrame = 0;
         const viewportHeight = window.innerHeight;
         const focusY = viewportHeight * 0.52;
+
+        // Le hero avance vers la caméra au scroll, puis s'efface comme si
+        // l'utilisateur le traversait. À la remontée, il retrouve sa taille.
+        if (hero && heroInner && introFinished && !reducedMotion) {
+            const heroRect = hero.getBoundingClientRect();
+            const progress = Math.max(0, Math.min(1,
+                (hero.offsetHeight - Math.max(0, heroRect.top)) / Math.max(1, hero.offsetHeight * 0.82)
+            ));
+            const zoom = 1 + progress * 1.25;
+            const opacity = Math.max(0, 1 - Math.max(0, progress - 0.28) / 0.72);
+            heroInner.style.transformOrigin = "center center";
+            heroInner.style.transform = `scale(${zoom.toFixed(3)})`;
+            heroInner.style.opacity = opacity.toFixed(3);
+            heroInner.style.willChange = "transform, opacity";
+        } else if (heroInner && reducedMotion) {
+            heroInner.style.transform = "";
+            heroInner.style.opacity = "";
+            heroInner.style.willChange = "";
+        }
 
         panels.forEach((panel) => {
             const rect = panel.getBoundingClientRect();
