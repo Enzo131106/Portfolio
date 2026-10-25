@@ -734,10 +734,12 @@ function animate(currentTime) {
 
         // Les particules entrent progressivement dans le champ au début du travelling.
         material.uniforms.uOpacity.value = Math.min(elapsed / 480, 1);
-if (progress >= 1) {
+
+        if (progress >= 1) {
             cameraApproachStarted = false;
             camera.position.z = cameraHeroZ;
             material.uniforms.uOpacity.value = 1;
+
             if (!heroArrivalDispatched) {
                 heroArrivalDispatched = true;
                 window.dispatchEvent(new Event("portfolio-hero-arrived"));
