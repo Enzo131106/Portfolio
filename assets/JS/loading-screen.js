@@ -8,21 +8,10 @@
     const progress = loader.querySelector(".loading-progress");
     const progressBar = loader.querySelector(".loading-progress-bar");
     const backgroundScript = document.getElementById("three-background-script");
-    const heroSection = document.querySelector(".hero-section");
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    // Le vrai hero reste masqué pendant le travelling 3D.
-    // Il apparaît à l'arrivée de la caméra, sans animer la navbar.
-    if (heroSection && !prefersReducedMotion) {
-        heroSection.classList.add("hero-intro-preparing");
-        window.addEventListener("portfolio-hero-arrived", () => {
-            heroSection.classList.remove("hero-intro-preparing");
-            heroSection.classList.add("hero-intro-arriving");
-            window.setTimeout(() => {
-                heroSection.classList.remove("hero-intro-arriving");
-            }, 500);
-        }, { once: true });
-    }
+    // Le hero HTML reste visible pendant le travelling : texte et mini-jeu conservent
+    // exactement leur mise en page réelle, sans maquette intermédiaire.
 
     let pageLoaded = document.readyState === "complete";
     let backgroundReady = window.__portfolioBackgroundReady === true;
