@@ -682,6 +682,8 @@ let heroArrivalDispatched = false;
 if (prefersReducedMotion) {
     camera.position.z = cameraHeroZ;
     material.uniforms.uOpacity.value = 1;
+    document.body.classList.remove("hero-intro-pending");
+    if (heroScroll) heroScroll.classList.add("is-ready");
 } else {
     window.addEventListener("portfolio-loader-hidden", () => {
         if (cameraApproachStarted) return;
@@ -699,6 +701,7 @@ if (prefersReducedMotion) {
         if (heroScroll) {
             heroScroll.style.opacity = "0";
         }
+        document.body.classList.remove("hero-intro-pending");
     }, { once: true });
 }
 
@@ -771,7 +774,10 @@ function animate(currentTime) {
                 heroInner.style.transformOrigin = "";
                 heroInner.style.willChange = "";
             }
-            if (heroScroll) heroScroll.style.opacity = "";
+            if (heroScroll) {
+                heroScroll.style.opacity = "";
+                heroScroll.classList.add("is-ready");
+            }
 
             if (!heroArrivalDispatched) {
                 heroArrivalDispatched = true;
