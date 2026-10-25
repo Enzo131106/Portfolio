@@ -291,6 +291,9 @@ const positions = new Float32Array(
     particleCount * 3
 );
 
+// Conserve la profondeur initiale pour rendre le travelling parfaitement réversible.
+const initialParticleDepths = new Float32Array(particleCount);
+
 // Stocke la couleur de chaque caractère.
 const colors = new Float32Array(
     particleCount * 3
@@ -353,7 +356,8 @@ for (let i = 0; i < particleCount; i++) {
         Math.sin(angle) *
         (radius + variation);
 
-    // Enregistre la profondeur.
+    // Enregistre la profondeur d'origine et la position courante.
+    initialParticleDepths[i] = z;
     positions[i3 + 2] = z;
 
     // Sélectionne une couleur de néon.
@@ -811,34 +815,23 @@ function animate(currentTime) {
     // Le scroll pilote un travelling réversible, borné à la position du hero
     // en haut de page. Le ratio réduit évite de traverser le vortex trop vite.
     if (!cameraApproachStarted && !prefersReducedMotion) {
-        const travelPerPixel = isMobile ? 0.0045 : 0.0055;
+        // La caméra reste dans une plage cohérente. Le champ de particules est
+        // recalculé depuis ses positions d'origine, et non recyclé aléatoirement :
+        // revenir en arrière restitue donc exactement le vortex déjà traversé.
+        const travelPerPixel = isMobile ? 0.0018 : 0.0022;
         const scrollDepth = Math.max(0, window.scrollY) * travelPerPixel;
-        camera.position.z = Math.min(cameraHeroZ, cameraHeroZ - scrollDepth);
-
-        // Le fond reste derrière la caméra, y compris lors du retour vers le hero.
+        camera.position.z = Math.max(cameraHeroZ - 8, cameraHeroZ - scrollDepth);
         background.position.z = camera.position.z - 45;
 
-        // Pool fixe et fenêtre de profondeur autour de la caméra : les particules
-        // trop proches/derrière sont recyclées devant, et celles devenues trop
-        // lointaines lors du scroll inverse sont replacées derrière. Aucun nouvel
-        // objet GPU n'est créé et le mouvement reste cohérent dans les deux sens.
         const positionAttribute = geometry.attributes.position;
         const positionArray = positionAttribute.array;
-        let recycledParticles = false;
-        const frontLimit = camera.position.z - 2;
-        const farLimit = camera.position.z - 42;
         for (let i = 0; i < particleCount; i++) {
             const i3 = i * 3;
-            const zIndex = i3 + 2;
-            if (positionArray[zIndex] > frontLimit) {
-                positionArray[zIndex] = camera.position.z - 28 - Math.random() * 12;
-                recycledParticles = true;
-            } else if (positionArray[zIndex] < farLimit) {
-                positionArray[zIndex] = camera.position.z + 4 + Math.random() * 8;
-                recycledParticles = true;
-            }
+            const baseZ = initialParticleDepths[i];
+            const relativeDepth = ((baseZ - scrollDepth + 18) % 36 + 36) % 36 - 18;
+            positionArray[i3 + 2] = camera.position.z + relativeDepth;
         }
-        if (recycledParticles) positionAttribute.needsUpdate = true;
+        positionAttribute.needsUpdate = true;
     } else if (!cameraApproachStarted) {
         camera.position.z = cameraHeroZ;
         background.position.z = camera.position.z - 45;
