@@ -776,7 +776,8 @@ const heroPreview = new THREE.Mesh(
     heroPreviewMaterial
 );
 heroPreview.position.set(0, 0, 0);
-heroPreview.renderOrder = 2;
+// Laisse les particules se dessiner devant la maquette pour renforcer la profondeur.
+heroPreview.renderOrder = -0.5;
 scene.add(heroPreview);
 
 // Indique si l'animation doit être mise en pause.
