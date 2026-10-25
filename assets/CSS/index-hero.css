@@ -272,35 +272,3 @@
 }
 
 
-/* Le travelling est réalisé par la caméra Three.js.
-   Le DOM reste caché pendant l'approche puis apparaît à l'arrivée.
-   La navbar est volontairement exclue de cette transition. */
-.hero-section.hero-intro-preparing .hero-inner,
-.hero-section.hero-intro-preparing .hero-scroll {
-    opacity: 0;
-}
-
-.hero-section.hero-intro-arriving .hero-inner {
-    animation: hero-arrival-fade 420ms ease-out both;
-}
-
-.hero-section.hero-intro-arriving .hero-scroll {
-    animation: hero-arrival-fade 360ms ease-out 80ms both;
-}
-
-@keyframes hero-arrival-fade {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .hero-section.hero-intro-preparing .hero-inner,
-    .hero-section.hero-intro-preparing .hero-scroll {
-        opacity: 1;
-    }
-
-    .hero-section.hero-intro-arriving .hero-inner,
-    .hero-section.hero-intro-arriving .hero-scroll {
-        animation: none;
-    }
-}
