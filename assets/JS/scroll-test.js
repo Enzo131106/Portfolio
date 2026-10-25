@@ -42,7 +42,7 @@
         if (hero && heroInner && introFinished && !reducedMotion) {
             const heroRect = hero.getBoundingClientRect();
             const progress = Math.max(0, Math.min(1,
-                (hero.offsetHeight - Math.max(0, heroRect.top)) / Math.max(1, hero.offsetHeight * 0.82)
+                (-heroRect.top) / Math.max(1, hero.offsetHeight * 0.82)
             ));
             const zoom = 1 + progress * 1.25;
             const opacity = Math.max(0, 1 - Math.max(0, progress - 0.28) / 0.72);
