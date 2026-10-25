@@ -38,12 +38,17 @@
             }
 
             const rect = scene.getBoundingClientRect();
+            const atPageTop = window.scrollY <= 0;
+            // Ignore l'élasticité du navigateur en haut de page : elle ne doit pas
+            // déplacer visuellement la scène tant que le scroll réel reste à zéro.
             // Le contenu est d'abord loin, réduit et aligné sur le centre de l'écran.
             // En avançant dans la section, il grandit jusqu'à l'échelle normale.
             const travel = clamp01((vh * 0.92 - rect.top) / Math.max(vh * 0.9, rect.height * 0.72));
             const progress = smooth(travel);
             const scale = 0.18 + progress * 0.82;
-            const centerY = rect.top + rect.height / 2;
+            const centerY = atPageTop
+                ? scene.offsetTop + scene.offsetHeight / 2
+                : rect.top + rect.height / 2;
             const translateY = vh * 0.5 - centerY;
             const translateZ = -1200 * (1 - progress);
             const reveal = clamp01((progress - 0.06) / 0.28);
