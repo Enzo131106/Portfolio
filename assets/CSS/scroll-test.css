@@ -1,10 +1,10 @@
-/* Démo temporaire : travelling visuel lié au scroll, sans verrouiller le défilement. */
+/* Les panneaux grossissent nettement à l'approche du centre, comme le zoom du hero à l'intro. */
 #projects.scroll-test-section {
     position: relative;
     padding: clamp(110px, 14vh, 150px) 5.5vw 90px;
     color: #f4f7ff;
     scroll-margin-top: 84px;
-    perspective: 1000px;
+    perspective: 1200px;
 }
 .scroll-test-wrap { width: min(1040px, 100%); margin: 0 auto; }
 .scroll-test-kicker { margin: 0 0 14px; color: #79dfff; font: 700 11px/1.5 monospace; letter-spacing: .16em; text-transform: uppercase; }
@@ -12,19 +12,20 @@
 .scroll-test-title span { color: #70d8ff; }
 .scroll-test-intro { max-width: 650px; margin: 20px 0 38px; color: rgba(220,231,249,.76); font-size: 15px; line-height: 1.8; }
 .scroll-test-hint { display: inline-flex; align-items: center; gap: 10px; padding: 10px 13px; border: 1px solid rgba(112,216,255,.22); border-radius: 10px; color: #c7e9ff; background: rgba(18,35,62,.55); font-size: 12px; }
-.scroll-test-hint::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #70d8ff; box-shadow: 0 0 12px #70d8ff; }
+.scroll-test-hint::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #70dfff; box-shadow: 0 0 12px #70dfff; }
 .scroll-test-panel {
     position: relative; display: flex; min-height: 58svh; align-items: center;
-    margin-top: 28px; padding: clamp(24px, 5vw, 56px); overflow: hidden;
-    border: 1px solid rgba(150,185,230,.18); border-radius: 22px;
-    background: linear-gradient(125deg, rgba(18,32,58,.92), rgba(8,14,31,.82));
+    margin: 28px 0 0; padding: clamp(24px, 5vw, 56px); overflow: hidden;
+    border: 1px solid rgba(150,185,230,.22); border-radius: 22px;
+    background: linear-gradient(125deg, rgba(18,32,58,.96), rgba(8,14,31,.92));
     scroll-margin-top: 94px;
-    transform: translate3d(0, var(--travel-y, 0px), 0) scale(var(--travel-scale, 1));
-    opacity: var(--travel-opacity, 1);
+    transform: translate3d(0, var(--travel-y, 0px), 0) scale(var(--travel-scale, .72));
     transform-origin: center center;
+    opacity: var(--travel-opacity, .42);
     will-change: transform, opacity;
+    box-shadow: 0 25px 80px rgba(0,0,0,.22);
 }
-.scroll-test-panel::after { content: attr(data-step); position: absolute; right: 22px; bottom: -38px; color: rgba(112,216,255,.055); font-size: clamp(120px, 24vw, 260px); font-weight: 800; line-height: 1; pointer-events: none; }
+.scroll-test-panel::after { content: attr(data-step); position: absolute; right: 22px; bottom: -38px; color: rgba(112,216,255,.07); font-size: clamp(120px, 24vw, 260px); font-weight: 800; line-height: 1; pointer-events: none; }
 .scroll-test-panel-content { position: relative; z-index: 1; max-width: 600px; }
 .scroll-test-number { margin: 0 0 12px; color: #86a9d5; font: 600 11px/1.5 monospace; letter-spacing: .14em; }
 .scroll-test-panel h3 { margin: 0 0 15px; color: #f4f7ff; font-size: clamp(26px, 4vw, 42px); font-weight: 750; letter-spacing: -.035em; }
