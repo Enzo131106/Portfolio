@@ -307,3 +307,11 @@
 }
 
 
+/* Sur mobile, évite que le paragraphe du hero se comporte comme une sélection de texte pendant le scroll. */
+@media (max-width: 760px) {
+    .hero-description {
+        -webkit-user-select: none;
+        user-select: none;
+        touch-action: pan-y;
+    }
+}
