@@ -44,3 +44,16 @@
 @media (prefers-reduced-motion: reduce) {
     .scroll-test-panel { transform: none; opacity: 1; filter: none; will-change: auto; }
 }
+
+/* Empêche tout débordement horizontal sans couper le scroll vertical. */
+html,
+body {
+    max-width: 100%;
+    overflow-x: clip;
+}
+
+/* Le travelling 3D reste contenu dans la largeur de la fenêtre. */
+#projects.scroll-test-section,
+.scroll-test-wrap {
+    max-width: 100%;
+}
