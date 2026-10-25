@@ -685,7 +685,7 @@ if (prefersReducedMotion) {
     document.body.classList.remove("hero-intro-pending");
     if (heroScroll) heroScroll.classList.add("is-ready");
 } else {
-    window.addEventListener("portfolio-loader-hidden", () => {
+    window.addEventListener("portfolio-loader-hiding", () => {
         if (cameraApproachStarted) return;
         cameraApproachStarted = true;
         cameraApproachStartTime = performance.now();
@@ -761,6 +761,12 @@ function animate(currentTime) {
         if (heroScroll) {
             heroScroll.style.opacity = String(Math.min(easedProgress / 0.35, 1));
             heroScroll.style.setProperty("--hero-travel-progress", String(easedProgress));
+            const scrollDot = heroScroll.querySelector(".hero-scroll-mouse span");
+            if (scrollDot) {
+                const dotOpacity = Math.min(progress / 0.08, 1) * Math.min((1 - progress) / 0.12, 1);
+                scrollDot.style.opacity = String(Math.max(0, dotOpacity));
+                scrollDot.style.transform = `translate(-50%, ${easedProgress * 10}px)`;
+            }
         }
 
         // Les particules entrent progressivement dans le champ au début du travelling.
@@ -783,6 +789,11 @@ function animate(currentTime) {
             if (heroScroll) {
                 heroScroll.style.opacity = "1";
                 heroScroll.style.removeProperty("--hero-travel-progress");
+                const scrollDot = heroScroll.querySelector(".hero-scroll-mouse span");
+                if (scrollDot) {
+                    scrollDot.style.removeProperty("opacity");
+                    scrollDot.style.removeProperty("transform");
+                }
                 heroScroll.classList.remove("is-travelling");
                 heroScroll.classList.add("is-ready");
             }
