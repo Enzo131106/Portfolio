@@ -121,3 +121,9 @@ body.hero-intro-pending {
     overscroll-behavior: none;
     touch-action: none;
 }
+
+/* Une fois l'intro terminée, réautorise explicitement le geste vertical sur mobile. */
+html:not(:has(body.hero-intro-pending)),
+body:not(.hero-intro-pending) {
+    touch-action: pan-y;
+}
