@@ -808,27 +808,33 @@ function animate(currentTime) {
         }
     }
 
-    // Le scroll devient un vrai déplacement dans un tunnel sans fin.
-    // La distance dépend directement du scroll : aucun plafond de profondeur,
-    // donc le voyage ne s'arrête pas après quelques sections.
+    // Le scroll pilote un travelling réversible, borné à la position du hero
+    // en haut de page. Le ratio réduit évite de traverser le vortex trop vite.
     if (!cameraApproachStarted && !prefersReducedMotion) {
-        const travelPerPixel = isMobile ? 0.014 : 0.018;
-        camera.position.z = cameraHeroZ - window.scrollY * travelPerPixel;
+        const travelPerPixel = isMobile ? 0.0045 : 0.0055;
+        const scrollDepth = Math.max(0, window.scrollY) * travelPerPixel;
+        camera.position.z = Math.min(cameraHeroZ, cameraHeroZ - scrollDepth);
 
-        // Le fond reste derrière la caméra pendant toute la traversée.
+        // Le fond reste derrière la caméra, y compris lors du retour vers le hero.
         background.position.z = camera.position.z - 45;
 
-        // Réutilise un nombre fixe de particules : celles qui viennent de passer
-        // la caméra sont replacées loin devant elle, comme si le vortex se
-        // générait dans le lointain et disparaissait derrière nous. La mémoire GPU
-        // ne grossit donc jamais avec la longueur du scroll.
+        // Pool fixe et fenêtre de profondeur autour de la caméra : les particules
+        // trop proches/derrière sont recyclées devant, et celles devenues trop
+        // lointaines lors du scroll inverse sont replacées derrière. Aucun nouvel
+        // objet GPU n'est créé et le mouvement reste cohérent dans les deux sens.
         const positionAttribute = geometry.attributes.position;
         const positionArray = positionAttribute.array;
         let recycledParticles = false;
+        const frontLimit = camera.position.z - 2;
+        const farLimit = camera.position.z - 42;
         for (let i = 0; i < particleCount; i++) {
-            const zIndex = i * 3 + 2;
-            if (positionArray[zIndex] > camera.position.z - 2) {
+            const i3 = i * 3;
+            const zIndex = i3 + 2;
+            if (positionArray[zIndex] > frontLimit) {
                 positionArray[zIndex] = camera.position.z - 28 - Math.random() * 12;
+                recycledParticles = true;
+            } else if (positionArray[zIndex] < farLimit) {
+                positionArray[zIndex] = camera.position.z + 4 + Math.random() * 8;
                 recycledParticles = true;
             }
         }
