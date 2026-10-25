@@ -33,14 +33,23 @@
         panels.forEach((panel) => {
             const rect = panel.getBoundingClientRect();
             const centerY = rect.top + rect.height / 2;
-            const distance = Math.abs(centerY - focusY) / (viewportHeight * 0.72);
+            const signedDistance = (centerY - focusY) / (viewportHeight * 0.85);
+            const distance = Math.abs(signedDistance);
             const proximity = Math.max(0, Math.min(1, 1 - distance));
-            const scale = reducedMotion ? 1 : 0.72 + proximity * 0.28;
-            const translateY = reducedMotion ? 0 : (centerY - focusY) * 0.10;
-            const opacity = reducedMotion ? 1 : 0.42 + proximity * 0.58;
+            // Le panneau arrive depuis la profondeur, se redresse au centre,
+            // puis repart en perspective. Le signe conserve le sens haut/bas.
+            const scale = reducedMotion ? 1 : 0.62 + proximity * 0.38;
+            const translateY = reducedMotion ? 0 : Math.max(-90, Math.min(90, signedDistance * 70));
+            const rotateX = reducedMotion ? 0 : Math.max(-24, Math.min(24, signedDistance * 26));
+            const translateZ = reducedMotion ? 0 : -260 * (1 - proximity);
+            const opacity = reducedMotion ? 1 : 0.18 + proximity * 0.82;
+            const blur = reducedMotion ? 0 : (1 - proximity) * 1.2;
 
             panel.style.setProperty("--travel-scale", scale.toFixed(4));
             panel.style.setProperty("--travel-y", translateY.toFixed(2) + "px");
+            panel.style.setProperty("--travel-rotate-x", rotateX.toFixed(2) + "deg");
+            panel.style.setProperty("--travel-z", translateZ.toFixed(2) + "px");
+            panel.style.setProperty("--travel-blur", blur.toFixed(2) + "px");
             panel.style.setProperty("--travel-opacity", opacity.toFixed(3));
         });
     };
