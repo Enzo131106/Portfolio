@@ -672,6 +672,8 @@ let hasSignaledBackgroundReady = false;
 
 // Le travelling démarre après le loader et respecte la préférence de mouvement réduit.
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const heroInner = document.querySelector(".hero-inner");
+const heroScroll = document.querySelector(".hero-scroll");
 const cameraApproachDuration = isMobile ? 2200 : 2500;
 let cameraApproachStarted = false;
 let cameraApproachStartTime = 0;
@@ -686,6 +688,17 @@ if (prefersReducedMotion) {
         cameraApproachStarted = true;
         cameraApproachStartTime = performance.now();
         material.uniforms.uOpacity.value = 0;
+
+        // Le vrai contenu se rapproche avec la caméra, sans maquette intermédiaire.
+        if (heroInner) {
+            heroInner.style.transformOrigin = "center center";
+            heroInner.style.transform = "scale(0.18)";
+            heroInner.style.opacity = "0.35";
+            heroInner.style.willChange = "transform, opacity";
+        }
+        if (heroScroll) {
+            heroScroll.style.opacity = "0";
+        }
     }, { once: true });
 }
 
@@ -732,6 +745,17 @@ function animate(currentTime) {
         camera.position.z =
             cameraStartZ + (cameraHeroZ - cameraStartZ) * easedProgress;
 
+        // Agrandit le vrai hero selon la progression du travelling : proportions et mise en page inchangées.
+        if (heroInner) {
+            const heroScale = 0.18 + 0.82 * easedProgress;
+            const heroOpacity = 0.35 + 0.65 * Math.min(elapsed / 420, 1);
+            heroInner.style.transform = `scale(${heroScale})`;
+            heroInner.style.opacity = String(heroOpacity);
+        }
+        if (heroScroll) {
+            heroScroll.style.opacity = String(Math.min(elapsed / 650, 1));
+        }
+
         // Les particules entrent progressivement dans le champ au début du travelling.
         material.uniforms.uOpacity.value = Math.min(elapsed / 480, 1);
 
@@ -739,6 +763,15 @@ function animate(currentTime) {
             cameraApproachStarted = false;
             camera.position.z = cameraHeroZ;
             material.uniforms.uOpacity.value = 1;
+
+            // Retire les styles temporaires pour rendre les interactions CSS normales.
+            if (heroInner) {
+                heroInner.style.transform = "";
+                heroInner.style.opacity = "";
+                heroInner.style.transformOrigin = "";
+                heroInner.style.willChange = "";
+            }
+            if (heroScroll) heroScroll.style.opacity = "";
 
             if (!heroArrivalDispatched) {
                 heroArrivalDispatched = true;
