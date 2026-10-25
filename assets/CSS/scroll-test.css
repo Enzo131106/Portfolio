@@ -19,11 +19,11 @@
     position: relative; display: flex; min-height: 58svh; align-items: center;
     margin: 28px 0 0; padding: clamp(24px, 5vw, 56px); overflow: hidden;
     border: 1px solid rgba(150,185,230,.22); border-radius: 22px;
-    background: linear-gradient(125deg, rgba(18,32,58,.96), rgba(8,14,31,.92));
+    background: linear-gradient(125deg, #12203a, #080e1f);
     scroll-margin-top: 94px;
-    transform: translate3d(0, var(--travel-y, 0px), var(--travel-z, -900px)) rotateX(var(--travel-rotate-x, 0deg)) scale(var(--travel-scale, .28));
+    transform: translate3d(0, var(--travel-y, 0px), var(--travel-z, -1450px)) rotateX(var(--travel-rotate-x, 0deg)) scale(var(--travel-scale, .16));
     transform-origin: center center;
-    opacity: var(--travel-opacity, .42);
+    opacity: var(--travel-opacity, .08);
     will-change: transform, opacity, filter;
     filter: blur(var(--travel-blur, 1.2px));
     backface-visibility: hidden;
