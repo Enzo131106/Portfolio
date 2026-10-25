@@ -1,4 +1,4 @@
-/* Zone de test : travelling visuel lié au scroll + snap uniquement après une pause proche d'un repère. */
+/* Démo temporaire : travelling de type intro, piloté en continu par le scroll, avec snap après une pause proche d'un repère. */
 (() => {
     const section = document.querySelector("#projects.scroll-test-section");
     if (!section) return;
@@ -16,19 +16,25 @@
     let programmaticScroll = false;
     let visualFrame = 0;
 
-    // Le contenu semble avancer vers l'utilisateur pendant qu'il traverse l'écran.
+    // Simule le travelling de l'intro : chaque panneau part plus petit et
+    // vient à l'échelle réelle au centre de l'écran, en fonction du scroll.
     const updateTravelVisual = () => {
         visualFrame = 0;
-        const viewportCenter = window.innerHeight * 0.52;
+        const viewportHeight = window.innerHeight;
+        const focusY = viewportHeight * 0.52;
+
         panels.forEach((panel) => {
             const rect = panel.getBoundingClientRect();
-            const panelCenter = rect.top + rect.height * 0.5;
-            const distance = (panelCenter - viewportCenter) / (window.innerHeight * 0.85);
-            const progress = Math.max(-1, Math.min(1, distance));
-            const depth = Math.abs(progress);
-            panel.style.setProperty("--travel-y", (progress * 34).toFixed(2) + "px");
-            panel.style.setProperty("--travel-scale", (1 - depth * 0.045).toFixed(4));
-            panel.style.setProperty("--travel-opacity", (1 - depth * 0.2).toFixed(3));
+            const centerY = rect.top + rect.height / 2;
+            const distance = Math.abs(centerY - focusY) / (viewportHeight * 0.72);
+            const proximity = Math.max(0, Math.min(1, 1 - distance));
+            const scale = reducedMotion ? 1 : 0.72 + proximity * 0.28;
+            const translateY = reducedMotion ? 0 : (centerY - focusY) * 0.10;
+            const opacity = reducedMotion ? 1 : 0.42 + proximity * 0.58;
+
+            panel.style.setProperty("--travel-scale", scale.toFixed(4));
+            panel.style.setProperty("--travel-y", translateY.toFixed(2) + "px");
+            panel.style.setProperty("--travel-opacity", opacity.toFixed(3));
         });
     };
 
