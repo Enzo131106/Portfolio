@@ -1,59 +1,30 @@
-/* Les panneaux grossissent nettement à l'approche du centre, comme le zoom du hero à l'intro. */
+/* Le travelling est appliqué à la section entière, jamais aux cartes individuelles. */
 #projects.scroll-test-section {
     position: relative;
+    min-height: 100svh;
     padding: clamp(110px, 14vh, 150px) 5.5vw 90px;
     color: #f4f7ff;
     scroll-margin-top: 84px;
-    perspective: 1000px;
-    perspective-origin: 50% 52%;
-    transform-style: preserve-3d;
+    overflow: clip;
 }
-.scroll-test-wrap { width: min(1040px, 100%); margin: 0 auto; perspective: 900px; transform-style: preserve-3d; }
+.scroll-test-wrap {
+    width: min(1040px, 100%);
+    margin: 0 auto;
+    transform-origin: center center;
+}
 .scroll-test-kicker { margin: 0 0 14px; color: #79dfff; font: 700 11px/1.5 monospace; letter-spacing: .16em; text-transform: uppercase; }
 .scroll-test-title { max-width: 760px; margin: 0; color: #f4f7ff; font-size: clamp(34px, 5vw, 60px); font-weight: 800; letter-spacing: -.045em; line-height: 1.06; }
 .scroll-test-title span { color: #70d8ff; }
 .scroll-test-intro { max-width: 650px; margin: 20px 0 38px; color: rgba(220,231,249,.76); font-size: 15px; line-height: 1.8; }
-.scroll-test-hint { display: inline-flex; align-items: center; gap: 10px; padding: 10px 13px; border: 1px solid rgba(112,216,255,.22); border-radius: 10px; color: #c7e9ff; background: rgba(18,35,62,.55); font-size: 12px; }
+.scroll-test-hint { display: inline-flex; align-items: center; gap: 10px; padding: 10px 13px; border: 1px solid rgba(112,216,255,.22); border-radius: 10px; color: #c7e9ff; background: rgba(18,35,62,.85); font-size: 12px; }
 .scroll-test-hint::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #70dfff; box-shadow: 0 0 12px #70dfff; }
-.scroll-test-panel {
-    position: relative; display: flex; min-height: 58svh; align-items: center;
-    margin: 28px 0 0; padding: clamp(24px, 5vw, 56px); overflow: hidden;
-    border: 1px solid rgba(150,185,230,.22); border-radius: 22px;
-    background: linear-gradient(125deg, #12203a, #080e1f);
-    scroll-margin-top: 94px;
-    transform: translate3d(0, var(--travel-y, 0px), var(--travel-z, -1450px)) rotateX(var(--travel-rotate-x, 0deg)) scale(var(--travel-scale, .16));
-    transform-origin: center center;
-    opacity: var(--travel-opacity, .08);
-    will-change: transform, opacity, filter;
-    filter: blur(var(--travel-blur, 1.2px));
-    backface-visibility: hidden;
-    box-shadow: 0 25px 80px rgba(0,0,0,.22);
-}
-.scroll-test-panel::after { content: attr(data-step); position: absolute; right: 22px; bottom: -38px; color: rgba(112,216,255,.07); font-size: clamp(120px, 24vw, 260px); font-weight: 800; line-height: 1; pointer-events: none; }
-.scroll-test-panel-content { position: relative; z-index: 1; max-width: 600px; }
-.scroll-test-number { margin: 0 0 12px; color: #86a9d5; font: 600 11px/1.5 monospace; letter-spacing: .14em; }
-.scroll-test-panel h3 { margin: 0 0 15px; color: #f4f7ff; font-size: clamp(26px, 4vw, 42px); font-weight: 750; letter-spacing: -.035em; }
-.scroll-test-panel p:last-child { max-width: 520px; margin: 0; color: rgba(220,231,249,.76); font-size: 15px; line-height: 1.8; }
 .scroll-test-footer { margin: 24px 0 0; color: rgba(220,231,249,.55); font-size: 12px; line-height: 1.7; }
 @media (max-width: 760px) {
     #projects.scroll-test-section { padding: 120px 20px 70px; }
     .scroll-test-intro { margin-bottom: 28px; font-size: 14px; }
-    .scroll-test-panel { min-height: 54svh; margin-top: 18px; padding: 25px 22px; border-radius: 17px; }
-    .scroll-test-panel p:last-child { font-size: 14px; }
 }
 @media (prefers-reduced-motion: reduce) {
-    .scroll-test-panel { transform: none; opacity: 1; filter: none; will-change: auto; }
+    .scroll-test-wrap { transform: none !important; opacity: 1 !important; will-change: auto; }
 }
-
-/* Empêche tout débordement horizontal sans couper le scroll vertical. */
-html,
-body {
-    max-width: 100%;
-    overflow-x: clip;
-}
-
-/* Le travelling 3D reste contenu dans la largeur de la fenêtre. */
-#projects.scroll-test-section,
-.scroll-test-wrap {
-    max-width: 100%;
-}
+html, body { max-width: 100%; overflow-x: clip; }
+#projects.scroll-test-section, .scroll-test-wrap { max-width: 100%; }
