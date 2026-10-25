@@ -8,7 +8,7 @@
     perspective: 1200px;
     perspective-origin: 50% 50%;
     transform-style: preserve-3d;
-    overflow: clip;
+    overflow: visible;
 }
 .scroll-test-wrap {
     width: min(1040px, 100%);
