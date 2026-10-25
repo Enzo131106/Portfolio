@@ -680,6 +680,7 @@ const heroInner = document.querySelector(".hero-inner");
 const heroScroll = document.querySelector(".hero-scroll");
 const cameraApproachDuration = isMobile ? 2200 : 2500;
 let cameraApproachStarted = false;
+let cameraApproachComplete = prefersReducedMotion;
 let cameraApproachStartTime = 0;
 let heroArrivalDispatched = false;
 
@@ -778,6 +779,7 @@ function animate(currentTime) {
 
         if (progress >= 1) {
             cameraApproachStarted = false;
+            cameraApproachComplete = true;
             camera.position.z = cameraHeroZ;
             material.uniforms.uOpacity.value = 1;
 
@@ -814,13 +816,14 @@ function animate(currentTime) {
 
     // Le scroll pilote un travelling réversible, borné à la position du hero
     // en haut de page. Le ratio réduit évite de traverser le vortex trop vite.
-    if (!cameraApproachStarted && !prefersReducedMotion) {
-        // La caméra reste dans une plage cohérente. Le champ de particules est
-        // recalculé depuis ses positions d'origine, et non recyclé aléatoirement :
-        // revenir en arrière restitue donc exactement le vortex déjà traversé.
+    if (cameraApproachComplete && !prefersReducedMotion) {
+        // La caméra avance vers le centre du vortex (z=0) sans le dépasser :
+        // dépasser ce point donnait l'impression de s'éloigner du tunnel.
+        // Les particules dépendent directement du scroll, donc le trajet est réversible.
         const travelPerPixel = isMobile ? 0.0018 : 0.0022;
         const scrollDepth = Math.max(0, window.scrollY) * travelPerPixel;
-        camera.position.z = Math.max(cameraHeroZ - 8, cameraHeroZ - scrollDepth);
+        const cameraTravel = Math.min(scrollDepth, cameraHeroZ);
+        camera.position.z = cameraHeroZ - cameraTravel;
         background.position.z = camera.position.z - 45;
 
         const positionAttribute = geometry.attributes.position;
@@ -832,7 +835,7 @@ function animate(currentTime) {
             positionArray[i3 + 2] = camera.position.z + relativeDepth;
         }
         positionAttribute.needsUpdate = true;
-    } else if (!cameraApproachStarted) {
+    } else if (cameraApproachComplete) {
         camera.position.z = cameraHeroZ;
         background.position.z = camera.position.z - 45;
     }
