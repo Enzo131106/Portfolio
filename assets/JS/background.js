@@ -700,6 +700,9 @@ if (prefersReducedMotion) {
         }
         if (heroScroll) {
             heroScroll.style.opacity = "0";
+            heroScroll.classList.remove("is-ready");
+            heroScroll.classList.add("is-travelling");
+            heroScroll.style.setProperty("--hero-travel-duration", `${cameraApproachDuration}ms`);
         }
         document.body.classList.remove("hero-intro-pending");
     }, { once: true });
@@ -756,7 +759,8 @@ function animate(currentTime) {
             heroInner.style.opacity = String(heroOpacity);
         }
         if (heroScroll) {
-            heroScroll.style.opacity = String(Math.min(elapsed / 650, 1));
+            heroScroll.style.opacity = String(Math.min(easedProgress / 0.35, 1));
+            heroScroll.style.setProperty("--hero-travel-progress", String(easedProgress));
         }
 
         // Les particules entrent progressivement dans le champ au début du travelling.
@@ -769,13 +773,17 @@ function animate(currentTime) {
 
             // Retire les styles temporaires pour rendre les interactions CSS normales.
             if (heroInner) {
-                heroInner.style.transform = "";
-                heroInner.style.opacity = "";
-                heroInner.style.transformOrigin = "";
+                // Garde une transformation neutre pour éviter le clignement lors du
+                // passage de l’animation JS aux styles CSS normaux.
+                heroInner.style.transform = "scale(1)";
+                heroInner.style.opacity = "1";
+                heroInner.style.transformOrigin = "center center";
                 heroInner.style.willChange = "";
             }
             if (heroScroll) {
-                heroScroll.style.opacity = "";
+                heroScroll.style.opacity = "1";
+                heroScroll.style.removeProperty("--hero-travel-progress");
+                heroScroll.classList.remove("is-travelling");
                 heroScroll.classList.add("is-ready");
             }
 
