@@ -30,6 +30,19 @@
     let programmaticScroll = false;
     let visualFrame = 0;
 
+    // offsetTop donne la position de mise en page, indépendamment des transforms 3D.
+    // Lire getBoundingClientRect() ici créerait une boucle : le transform influencerait
+    // la mesure utilisée pour calculer le transform suivant.
+    const getLayoutTop = (element) => {
+        let top = 0;
+        let current = element;
+        while (current) {
+            top += current.offsetTop || 0;
+            current = current.offsetParent;
+        }
+        return top;
+    };
+
     // Simule le travelling de l'intro : chaque panneau part plus petit et
     // vient à l'échelle réelle au centre de l'écran, en fonction du scroll.
     const updateTravelVisual = () => {
@@ -57,15 +70,14 @@
         }
 
         panels.forEach((panel) => {
-            const rect = panel.getBoundingClientRect();
-            const centerY = rect.top + rect.height / 2;
+            const centerY = getLayoutTop(panel) + panel.offsetHeight / 2 - window.scrollY;
             const signedDistance = (centerY - focusY) / (viewportHeight * 0.85);
             const distance = Math.abs(signedDistance);
             const proximity = Math.max(0, Math.min(1, 1 - distance));
             // Le panneau arrive depuis la profondeur, se redresse au centre,
             // puis repart en perspective. Le signe conserve le sens haut/bas.
             const scale = reducedMotion ? 1 : 0.28 + proximity * 0.72;
-            const translateY = reducedMotion ? 0 : -signedDistance * viewportHeight * 0.72 * (1 - proximity); // Recentre le panneau pendant son approche en profondeur.
+            const translateY = reducedMotion ? 0 : -signedDistance * viewportHeight * (1 - proximity * 0.15);
             const rotateX = reducedMotion ? 0 : Math.max(-32, Math.min(32, signedDistance * 34));
             const translateZ = reducedMotion ? 0 : -1100 * (1 - proximity);
             const opacity = reducedMotion ? 1 : 0.58 + proximity * 0.42;
@@ -98,7 +110,7 @@
         let nearest = null;
         let nearestDistance = Infinity;
         anchors.forEach((panel) => {
-            const targetY = window.scrollY + panel.getBoundingClientRect().top - 94;
+            const targetY = getLayoutTop(panel) - 94;
             const distance = Math.abs(targetY - window.scrollY);
             if (distance < nearestDistance) {
                 nearest = { targetY: Math.max(0, targetY), distance };
