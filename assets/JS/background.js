@@ -710,7 +710,6 @@ if (prefersReducedMotion) {
             heroScroll.classList.add("is-travelling");
             heroScroll.style.setProperty("--hero-travel-duration", `${cameraApproachDuration}ms`);
         }
-        document.body.classList.remove("hero-intro-pending");
     }, { once: true });
 }
 
@@ -810,6 +809,7 @@ function animate(currentTime) {
             if (!heroArrivalDispatched) {
                 heroArrivalDispatched = true;
                 window.dispatchEvent(new Event("portfolio-hero-arrived"));
+                document.body.classList.remove("hero-intro-pending");
             }
         }
     }
