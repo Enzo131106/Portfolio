@@ -46,7 +46,8 @@
             const centerY = rect.top + rect.height / 2;
             const translateY = vh * 0.5 - centerY;
             const translateZ = -1200 * (1 - progress);
-            const opacity = 0.08 + 0.92 * progress;
+            const reveal = clamp01((progress - 0.06) / 0.28);
+            const opacity = introFinished ? smooth(reveal) : 0;
 
             visual.style.transformOrigin = "center center";
             visual.style.transform = `translate3d(0, ${translateY.toFixed(1)}px, ${translateZ.toFixed(1)}px) scale(${scale.toFixed(3)})`;
