@@ -35,7 +35,7 @@ const camera = new THREE.PerspectiveCamera(
 );
 
 // La caméra démarre loin du hero, puis traverse réellement le vortex.
-const cameraStartZ = isMobile ? 30 : 34;
+const cameraStartZ = isMobile ? 20 : 22;
 const cameraHeroZ = 5;
 camera.position.z = cameraStartZ;
 
@@ -439,6 +439,9 @@ const material = new THREE.ShaderMaterial({
         },
         uTime: {
             value: 0
+        },
+        uOpacity: {
+            value: 1
         }
     },
 
@@ -496,6 +499,7 @@ const material = new THREE.ShaderMaterial({
     fragmentShader: `
         uniform sampler2D uGlyphTexture;
         uniform float uGlyphCount;
+        uniform float uOpacity;
 
         varying vec3 vColor;
         varying float vGlyph;
@@ -633,11 +637,11 @@ const material = new THREE.ShaderMaterial({
                 softGlow * 0.32,
                 0.0,
                 1.0
-            );
+            ) * uOpacity;
 
-            // Affiche le caractère lumineux.
+            // Fait apparaître les caractères progressivement, sans pop visuel.
             gl_FragColor = vec4(
-                finalColor,
+                finalColor * uOpacity,
                 alpha
             );
         }
@@ -769,10 +773,17 @@ const heroPreviewMaterial = new THREE.MeshBasicMaterial({
     depthWrite: false,
     side: THREE.DoubleSide
 });
-const previewHeight = 2 * cameraHeroZ * Math.tan(THREE.MathUtils.degToRad(75 / 2)) * 0.92;
-const previewWidth = previewHeight * (window.innerWidth / window.innerHeight) * 0.92;
+function getHeroPreviewSize() {
+    const visibleHeight = 2 * cameraHeroZ * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+    const visibleWidth = visibleHeight * camera.aspect;
+    const textureAspect = heroPreviewCanvas.width / heroPreviewCanvas.height;
+    const height = Math.min(visibleHeight * 0.92, (visibleWidth * 0.92) / textureAspect);
+    return { width: height * textureAspect, height };
+}
+
+const initialPreviewSize = getHeroPreviewSize();
 const heroPreview = new THREE.Mesh(
-    new THREE.PlaneGeometry(previewWidth, previewHeight),
+    new THREE.PlaneGeometry(initialPreviewSize.width, initialPreviewSize.height),
     heroPreviewMaterial
 );
 heroPreview.position.set(0, 0, 0);
@@ -802,12 +813,14 @@ let heroArrivalDispatched = false;
 if (prefersReducedMotion) {
     camera.position.z = cameraHeroZ;
     heroPreviewMaterial.opacity = 0;
+    material.uniforms.uOpacity.value = 1;
 } else {
     window.addEventListener("portfolio-loader-hidden", () => {
         if (cameraApproachStarted) return;
         cameraApproachStarted = true;
         cameraApproachStartTime = performance.now();
         heroPreviewMaterial.opacity = 1;
+        material.uniforms.uOpacity.value = 0;
     }, { once: true });
 }
 
@@ -854,6 +867,9 @@ function animate(currentTime) {
         camera.position.z =
             cameraStartZ + (cameraHeroZ - cameraStartZ) * easedProgress;
 
+        // Les particules entrent progressivement dans le champ au début du travelling.
+        material.uniforms.uOpacity.value = Math.min(elapsed / 480, 1);
+
         // La maquette distante s'efface dans la dernière partie du travelling.
         heroPreviewMaterial.opacity = progress > 0.82
             ? Math.max(0, 1 - (progress - 0.82) / 0.18)
@@ -863,6 +879,7 @@ function animate(currentTime) {
             cameraApproachStarted = false;
             camera.position.z = cameraHeroZ;
             heroPreviewMaterial.opacity = 0;
+            material.uniforms.uOpacity.value = 1;
             if (!heroArrivalDispatched) {
                 heroArrivalDispatched = true;
                 window.dispatchEvent(new Event("portfolio-hero-arrived"));
@@ -913,10 +930,9 @@ function handleResize() {
         window.innerHeight
     );
 
-    const nextPreviewHeight = 2 * cameraHeroZ * Math.tan(THREE.MathUtils.degToRad(75 / 2)) * 0.92;
-    const nextPreviewWidth = nextPreviewHeight * (window.innerWidth / window.innerHeight) * 0.92;
+    const nextPreviewSize = getHeroPreviewSize();
     heroPreview.geometry.dispose();
-    heroPreview.geometry = new THREE.PlaneGeometry(nextPreviewWidth, nextPreviewHeight);
+    heroPreview.geometry = new THREE.PlaneGeometry(nextPreviewSize.width, nextPreviewSize.height);
 
     // Recalcule le pixel ratio selon la largeur de l'écran.
     const currentPixelRatio =
