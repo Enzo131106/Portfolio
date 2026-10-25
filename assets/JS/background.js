@@ -832,7 +832,9 @@ function animate(currentTime) {
             const i3 = i * 3;
             const baseZ = initialParticleDepths[i];
             const relativeDepth = ((baseZ + scrollDepth + 18) % 36 + 36) % 36 - 18;
-            positionArray[i3 + 2] = camera.position.z + relativeDepth;
+            // À scroll nul, la position doit être exactement celle de l'intro :
+            // on applique le déplacement relatif à la caméra sans saut de profondeur.
+            positionArray[i3 + 2] = relativeDepth + camera.position.z - cameraHeroZ;
         }
         positionAttribute.needsUpdate = true;
     } else if (cameraApproachComplete) {
