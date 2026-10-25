@@ -199,9 +199,13 @@
     animation-play-state: running;
 }
 
+.hero-scroll.is-travelling {
+    transition: none;
+}
+
 .hero-scroll.is-travelling .hero-scroll-mouse span {
-    animation: hero-scroll-travel var(--hero-travel-duration, 2500ms) cubic-bezier(.22, .7, .2, 1) both;
-    animation-play-state: running;
+    animation: none;
+    transition: none;
 }
 
 @keyframes hero-scroll-travel {
