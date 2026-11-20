@@ -70,11 +70,7 @@
 }
 
 .hero-copy h1 span {
-    color: #68cfff;
-    background: linear-gradient(100deg, #70d8ff 0%, #579bff 48%, #a4a4ff 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #ABD2FA;
 }
 
 .hero-description {
@@ -132,7 +128,7 @@
 
 .hero-button-primary {
     color: #061225;
-    background: linear-gradient(110deg, #6bdcff, #80aaff);
+    background: #ABD2FA;
     box-shadow: 0 7px 28px rgba(38, 153, 255, .2);
 }
 
