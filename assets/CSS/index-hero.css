@@ -37,27 +37,6 @@
     max-width: 650px;
 }
 
-.hero-eyebrow {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 0 0 24px;
-    color: #9ab8d8;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: .13em;
-    line-height: 1.6;
-}
-
-.hero-status-dot {
-    width: 7px;
-    height: 7px;
-    flex: 0 0 7px;
-    border-radius: 50%;
-    background: #4bdcff;
-    box-shadow: 0 0 13px rgba(75, 220, 255, .8);
-}
-
 .hero-copy h1 {
     max-width: 680px;
     margin: 0;
@@ -205,13 +184,6 @@
     transition: none;
 }
 
-@keyframes hero-scroll-travel {
-    0% { opacity: 0; transform: translate(-50%, 0); }
-    18% { opacity: 1; }
-    82% { opacity: 1; transform: translate(-50%, 8px); }
-    100% { opacity: 0; transform: translate(-50%, 10px); }
-}
-
 @keyframes hero-scroll-wheel {
     0% { opacity: 0; transform: translate(-50%, 0); }
     25% { opacity: 1; }
@@ -245,57 +217,9 @@
         margin: 0 auto;
         text-align: center;
     }
-    .hero-eyebrow {
-        justify-content: center;
-        margin-bottom: 22px;
-        font-size: 10px;
-    }
-    .hero-copy h1 {
-        max-width: 600px;
-        margin-inline: auto;
-        font-size: clamp(40px, 9vw, 60px);
-    }
-    .hero-description {
-        max-width: 490px;
-        margin: 22px auto 0;
-        font-size: 15px;
-        line-height: 1.8;
-    }
-    .hero-actions {
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 30px;
-    }
-    .hero-button {
-        min-height: 47px;
-        padding-inline: 15px;
-        font-size: 11px;
-    }
-    /* Garde la souris sous les boutons, même après le décalage final du travelling. */
-    .hero-scroll { bottom: -50px; }
-}
-
-@media (max-width: 420px) {
+    @media (max-width: 420px) {
     .hero-section { padding: 132px 18px 82px; }
-    .hero-eyebrow {
-        gap: 7px;
-        margin-bottom: 19px;
-        font-size: 9px;
-        letter-spacing: .07em;
-    }
-    .hero-copy h1 { font-size: clamp(35px, 9.3vw, 42px); }
-    .hero-description { margin-top: 19px; font-size: 14px; }
-    .hero-actions { gap: 9px; margin-top: 25px; }
-    .hero-button {
-        min-height: 45px;
-        gap: 6px;
-        padding-inline: 12px;
-        font-size: 10px;
-    }
-}
-
-
+    
 @media (prefers-reduced-motion: reduce) {
     .hero-scroll-mouse span { animation: none; animation-play-state: paused; }
     .hero-scroll.is-travelling .hero-scroll-mouse span { animation: none; }
