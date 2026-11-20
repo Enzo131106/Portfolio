@@ -67,6 +67,7 @@
     justify-content: center;
     width: 100%;
     margin-top: 31px;
+    transform: translateX(-24px);
 }
 
 /* Boutons d'action du hero. */
@@ -220,6 +221,7 @@
     .hero-actions {
         width: 100%;
         margin: 30px auto 0;
+        transform: none;
     }
     .hero-button {
         min-height: 47px;
