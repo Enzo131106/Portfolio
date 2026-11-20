@@ -65,7 +65,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: min(100%, 530px);
+    width: 100%;
     margin-top: 31px;
 }
 
@@ -218,7 +218,7 @@
         line-height: 1.8;
     }
     .hero-actions {
-        width: min(100%, 490px);
+        width: 100%;
         margin: 30px auto 0;
     }
     .hero-button {
