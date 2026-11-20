@@ -61,13 +61,14 @@
     line-height: 1.85;
 }
 
-.hero-actions {
+.hero-copy .hero-actions {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     width: 100%;
-    margin-top: 31px;
-    padding-left: 0;
+    margin: 31px 0 0;
+    padding: 0;
+    text-align: left;
 }
 
 /* Boutons d'action du hero. */
@@ -218,11 +219,11 @@
         font-size: 15px;
         line-height: 1.8;
     }
-    .hero-actions {
+    .hero-copy .hero-actions {
         width: 100%;
         justify-content: center;
         margin: 30px auto 0;
-        padding-left: 0;
+        padding: 0;
     }
     .hero-button {
         min-height: 47px;
