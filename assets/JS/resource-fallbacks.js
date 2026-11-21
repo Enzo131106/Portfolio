@@ -90,3 +90,74 @@ if (interFonts) {
         }
     });
 }
+
+
+// GSAP doit être chargé avant ScrollTrigger, même si seul un CDN tombe en panne.
+// On ajoute les scripts dans cet ordre et on n'ouvre l'introduction qu'après les deux.
+function loadAnimationLibrary(cdn, local, isReady) {
+    return new Promise(resolve => {
+        const remote = document.createElement("script");
+        remote.src = cdn;
+
+        let finished = false;
+        let usingLocal = false;
+        let timeoutId;
+
+        function finish(success) {
+            if (finished) return;
+            finished = true;
+            window.clearTimeout(timeoutId);
+            resolve(success);
+        }
+
+        function useLocal() {
+            if (finished || usingLocal) return;
+            usingLocal = true;
+            window.clearTimeout(timeoutId);
+
+            // Un CDN bloqué ne doit pas laisser la page en chargement indéfiniment.
+            remote.onload = null;
+            remote.onerror = null;
+            remote.remove();
+
+            console.warn(`CDN indisponible : ${cdn}. Essai de ${local}.`);
+            const backup = document.createElement("script");
+            backup.src = local;
+            backup.onload = () => finish(isReady());
+            backup.onerror = () => {
+                console.error(`Impossible de charger ${local}.`);
+                finish(false);
+            };
+            document.head.appendChild(backup);
+        }
+
+        remote.onload = () => {
+            if (isReady()) finish(true);
+            else useLocal();
+        };
+        remote.onerror = useLocal;
+        // Après cinq secondes sans réponse, la copie locale prend le relais.
+        timeoutId = window.setTimeout(useLocal, 5000);
+        document.head.appendChild(remote);
+    });
+}
+
+const animationSources = document.currentScript?.dataset;
+window.__portfolioGsapReady = (async () => {
+    const gsapLoaded = await loadAnimationLibrary(
+        animationSources.gsapCdn,
+        "./vendor/gsap/gsap.min.js",
+        () => typeof window.gsap?.registerPlugin === "function"
+    );
+    if (!gsapLoaded) return false;
+
+    const scrollTriggerLoaded = await loadAnimationLibrary(
+        animationSources.scrolltriggerCdn,
+        "./vendor/gsap/ScrollTrigger.min.js",
+        () => typeof window.ScrollTrigger?.create === "function"
+    );
+    if (!scrollTriggerLoaded) return false;
+
+    window.gsap.registerPlugin(window.ScrollTrigger);
+    return true;
+})();
