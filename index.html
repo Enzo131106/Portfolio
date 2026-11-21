@@ -70,6 +70,7 @@
     <link rel="stylesheet" href="./assets/CSS/hero.css?v=20261121-6">
     <link rel="stylesheet" href="./assets/CSS/byte-invaders.css?v=3">
     <link rel="stylesheet" href="./assets/CSS/scroll-depth.css?v=19">
+    <link rel="stylesheet" href="./assets/CSS/projects-carousel.css?v=1">
 
     <!-- Fonts -->
     <link id="inter-fonts" href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800" rel="stylesheet" />
@@ -212,7 +213,70 @@
             <div class="scroll-test-wrap" data-scroll-scene-content>
                 <p class="scroll-test-kicker">PROJETS</p>
                 <h2 id="scroll-test-title" class="scroll-test-title">Des idées qui prennent <span>forme.</span></h2>
-                <p class="scroll-test-intro">Mes projets seront présentés ici. Le mouvement de profondeur est appliqué à la section entière, dans la continuité du hero, sans animation indépendante des cartes.</p>
+                <p class="scroll-test-intro">Un aperçu de mes réalisations. Les présentations détaillées seront ajoutées ici.</p>
+
+                <div class="projects-carousel" data-projects-carousel role="region" aria-label="Carrousel des projets">
+                    <div class="projects-carousel__scene" id="projects-carousel-scene" data-carousel-scene>
+                        <!-- Les visuels sont temporaires, en attendant les vrais projets. -->
+                        <article class="projects-carousel__card projects-carousel__card--web" data-carousel-card aria-label="Projet 01, développement web, à compléter">
+                            <div class="projects-carousel__visual" aria-hidden="true">
+                                <span class="projects-carousel__number">01</span>
+                                <span class="projects-carousel__placeholder">VISUEL À VENIR</span>
+                            </div>
+                            <div class="projects-carousel__details">
+                                <span class="projects-carousel__type">DÉVELOPPEMENT WEB</span>
+                                <h3>Projet 01</h3>
+                                <p>Présentation à venir</p>
+                            </div>
+                        </article>
+
+                        <article class="projects-carousel__card projects-carousel__card--game" data-carousel-card aria-label="Projet 02, jeu vidéo, à compléter">
+                            <div class="projects-carousel__visual" aria-hidden="true">
+                                <span class="projects-carousel__number">02</span>
+                                <span class="projects-carousel__placeholder">VISUEL À VENIR</span>
+                            </div>
+                            <div class="projects-carousel__details">
+                                <span class="projects-carousel__type">JEU VIDÉO</span>
+                                <h3>Projet 02</h3>
+                                <p>Présentation à venir</p>
+                            </div>
+                        </article>
+
+                        <article class="projects-carousel__card projects-carousel__card--mmi" data-carousel-card aria-label="Projet 03, création numérique, à compléter">
+                            <div class="projects-carousel__visual" aria-hidden="true">
+                                <span class="projects-carousel__number">03</span>
+                                <span class="projects-carousel__placeholder">VISUEL À VENIR</span>
+                            </div>
+                            <div class="projects-carousel__details">
+                                <span class="projects-carousel__type">CRÉATION NUMÉRIQUE</span>
+                                <h3>Projet 03</h3>
+                                <p>Présentation à venir</p>
+                            </div>
+                        </article>
+
+                        <article class="projects-carousel__card projects-carousel__card--lab" data-carousel-card aria-label="Projet 04, expérimentation, à compléter">
+                            <div class="projects-carousel__visual" aria-hidden="true">
+                                <span class="projects-carousel__number">04</span>
+                                <span class="projects-carousel__placeholder">VISUEL À VENIR</span>
+                            </div>
+                            <div class="projects-carousel__details">
+                                <span class="projects-carousel__type">EXPÉRIMENTATION</span>
+                                <h3>Projet 04</h3>
+                                <p>Présentation à venir</p>
+                            </div>
+                        </article>
+                    </div>
+
+                    <div class="projects-carousel__footer">
+                        <span class="projects-carousel__count" aria-hidden="true"><span data-carousel-current>01</span><span class="projects-carousel__separator">/</span>04</span>
+                        <span class="projects-carousel__note">Rotation automatique · navigation manuelle</span>
+                        <div class="projects-carousel__arrows">
+                            <button type="button" class="projects-carousel__arrow" data-carousel-prev aria-label="Projet précédent" aria-controls="projects-carousel-scene">←</button>
+                            <button type="button" class="projects-carousel__arrow" data-carousel-next aria-label="Projet suivant" aria-controls="projects-carousel-scene">→</button>
+                        </div>
+                    </div>
+                    <p class="projects-carousel__sr-only" aria-live="polite" aria-atomic="true" data-carousel-status></p>
+                </div>
             </div>
         </section>
 
@@ -238,6 +302,7 @@
     <script src="./assets/JS/navigation.js"></script>
     <script src="./assets/JS/byte-invaders.js" defer></script>
     <script src="./assets/JS/scroll-depth.js?v=24" defer></script>
+    <script src="./assets/JS/projects-carousel.js?v=1" defer></script>
     <script id="three-background-script" type="module" src="./assets/JS/background.js?v=20261121-2"></script>
 </body>
 
