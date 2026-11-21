@@ -47,3 +47,19 @@ html, body {
         pointer-events: none;
     }
 }
+
+/* Sections de projets sur grands écrans : largeur de lecture maîtrisée. */
+@media (min-width: 1920px) {
+    #projects.scroll-test-section { padding-top: clamp(160px, 12vh, 220px); padding-bottom: 120px; }
+    .scroll-test-wrap { width: min(1400px, 100%); }
+    .scroll-test-title { max-width: 980px; font-size: 76px; }
+    .scroll-test-intro { max-width: 780px; font-size: 18px; }
+    .scroll-test-kicker { font-size: 13px; }
+}
+@media (min-width: 3000px) {
+    #projects.scroll-test-section { padding-top: 250px; padding-bottom: 160px; }
+    .scroll-test-wrap { width: min(1700px, 100%); }
+    .scroll-test-title { max-width: 1200px; font-size: 94px; }
+    .scroll-test-intro { max-width: 960px; font-size: 22px; }
+    .scroll-test-kicker { font-size: 16px; }
+}
