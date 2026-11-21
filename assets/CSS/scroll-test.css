@@ -122,3 +122,36 @@ html, body {
     .depth-stage-panel > .hero-inner { width: min(100%, 1960px); }
     .depth-stage-panel > .scroll-test-wrap { width: min(100%, 1700px); }
 }
+
+/*
+ * Mobile tactile : les textes décoratifs du plateau 3D ne doivent pas
+ * capturer un glissement vertical ni déclencher une sélection par appui long.
+ * Les boutons et liens restent interactifs (CV, souris de scroll, etc.).
+ */
+@media (max-width: 760px) and (pointer: coarse) {
+    .depth-stage,
+    .depth-stage-panel,
+    .depth-stage-panel > .hero-inner,
+    .depth-stage-panel > .scroll-test-wrap,
+    .depth-stage-panel .hero-copy {
+        touch-action: pan-y pinch-zoom;
+    }
+
+    .depth-stage-panel .hero-copy h1,
+    .depth-stage-panel .hero-description,
+    .depth-stage-panel .scroll-test-kicker,
+    .depth-stage-panel .scroll-test-title,
+    .depth-stage-panel .scroll-test-intro {
+        pointer-events: none;
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+        touch-action: pan-y pinch-zoom;
+    }
+
+    .depth-stage-panel a,
+    .depth-stage-panel button {
+        pointer-events: auto;
+        touch-action: manipulation;
+    }
+}
