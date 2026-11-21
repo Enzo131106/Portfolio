@@ -13,6 +13,8 @@
     align-items: center;
     padding: 132px 5.5vw 92px;
     isolation: isolate;
+    perspective: 1400px;
+    perspective-origin: 50% 50%;
     color: var(--hero-text);
 }
 
