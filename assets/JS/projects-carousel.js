@@ -31,12 +31,19 @@
         ((angle + Math.PI) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2) - Math.PI;
     const projectIndex = index => ((index % cards.length) + cards.length) % cards.length;
 
+    // On mesure les cartes dans leur taille normale, sans le zoom de perspective.
+    // Refaire la mesure à chaque image ferait varier le rayon pendant la rotation.
+    let radius = 0;
+    let depth = 0;
+    function measureRing() {
+        const cardWidth = cards[0].offsetWidth || scene.clientWidth * 0.44;
+        radius = Math.min(scene.clientWidth * 0.42, Math.max(cardWidth * 0.84, scene.clientWidth * 0.29));
+        depth = Math.max(220, Math.min(550, cardWidth * 0.9));
+    }
+
     // Chaque carte tourne autour du même centre et regarde vers l'extérieur
     // de l'anneau : devant elle est lisible, sur les côtés elle apparaît de profil.
     function render() {
-        const cardWidth = cards[0].getBoundingClientRect().width || scene.clientWidth * 0.44;
-        const radius = Math.min(scene.clientWidth * 0.42, Math.max(cardWidth * 0.84, scene.clientWidth * 0.29));
-        const depth = Math.max(220, Math.min(550, cardWidth * 0.9));
         const front = projectIndex(Math.round(position / step));
 
         cards.forEach((card, index) => {
@@ -193,7 +200,8 @@
         if (document.hidden) stopLoop();
         else startLoop();
     });
-    window.addEventListener("resize", render, { passive: true });
+    window.addEventListener("resize", () => { measureRing(); render(); }, { passive: true });
+    measureRing();
     render();
     startLoop();
 })();
