@@ -51,9 +51,9 @@ renderer.setSize(
 
 // Définit la résolution du rendu selon le type d'appareil.
 const initialPixelRatio =
-    isMobile ? 1.25 :
-        isTablet ? 1.5 :
-            1.5;
+    window.innerWidth >= 3000 ? 1 :
+        window.innerWidth >= 1920 ? 1.2 :
+            isMobile ? 1.25 : 1.5;
 
 // Limite le pixel ratio pour préserver les performances.
 renderer.setPixelRatio(
@@ -444,6 +444,10 @@ const material = new THREE.ShaderMaterial({
         },
         uOpacity: {
             value: 1
+        },
+        // Avancée dans le vortex, synchronisée avec la timeline ScrollTrigger.
+        uTravel: {
+            value: 0
         }
     },
 
@@ -459,6 +463,7 @@ const material = new THREE.ShaderMaterial({
 
         uniform float uSize;
         uniform float uTime;
+        uniform float uTravel;
 
         void main() {
 
@@ -468,6 +473,11 @@ const material = new THREE.ShaderMaterial({
 
             // Prépare la position animée du caractère.
             vec3 animatedPosition = position;
+
+            // Les glyphes s'approchent de la caméra pendant le scroll.
+            // Recyclage au fond du tunnel, hors du champ proche, sans saut visible.
+            // À uTravel=0, les coordonnées de départ restent strictement identiques.
+            animatedPosition.z = mod(position.z + uTravel + 25.0, 40.0) - 25.0;
 
             // Anime doucement le mouvement horizontal.
             animatedPosition.x +=
@@ -659,20 +669,20 @@ const particles = new THREE.Points(
 // Ajoute le vortex numérique à la scène.
 scene.add(particles);
 
-// Le vrai hero HTML reste affiché pendant le travelling : sa mise en page reste exacte.
+// Le défilement est piloté par GSAP ; Three.js ne lit que sa progression.
 // Indique si l'animation doit être mise en pause.
 let isAnimationPaused = false;
 
 // Stocke le moment du dernier rendu.
 let lastFrameTime = 0;
 
-// Définit l'intervalle entre deux images pour viser environ 30 FPS.
-const frameInterval = 1000 / 30;
+// 60 FPS pour la fluidité du scroll ; 4K limité pour éviter de saturer le GPU.
+const frameInterval = 1000 / (window.innerWidth >= 3000 ? 35 : 60);
 
 // Indique au loader que le fond Three.js a produit sa première image.
 let hasSignaledBackgroundReady = false;
 
-// Three.js conserve uniquement le fond animé ; GSAP gère les mouvements de page.
+// Le même avancement que GSAP anime les caractères et la caméra.
 const cameraHeroZ = 5;
 camera.position.z = cameraHeroZ;
 material.uniforms.uOpacity.value = 1;
@@ -709,7 +719,11 @@ function animate(currentTime) {
     material.uniforms.uTime.value =
         elapsedTime;
 
-    // Le vortex reste un fond décoratif indépendant du scroll.
+    // Lecture de la progression amortie de GSAP : réversible dans les deux sens.
+    const progress = Math.max(0, Math.min(1, Number(window.__portfolioScrollProgress) || 0));
+    material.uniforms.uTravel.value = progress * 19;
+    camera.position.z = cameraHeroZ - progress * 3;
+    // Le dégradé reste à une profondeur constante derrière la caméra.
     background.position.z = camera.position.z - 45;
 
     // Dessine la scène depuis le point de vue de la caméra.
@@ -753,9 +767,9 @@ function handleResize() {
 
     // Recalcule le pixel ratio selon la largeur de l'écran.
     const currentPixelRatio =
-        window.innerWidth < 768 ? 1.25 :
-            window.innerWidth < 1024 ? 1.5 :
-                1.5;
+        window.innerWidth >= 3000 ? 1 :
+            window.innerWidth >= 1920 ? 1.2 :
+                window.innerWidth < 768 ? 1.25 : 1.5;
 
     // Applique le pixel ratio adapté.
     renderer.setPixelRatio(
