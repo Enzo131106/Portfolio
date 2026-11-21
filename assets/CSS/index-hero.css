@@ -136,8 +136,8 @@
     width: 22px;
     height: 36px;
     margin: 0;
-    /* La compensation est animée depuis le ScrollTrigger de l'accueil. */
-    transform: translate3d(-50%, var(--hero-cue-offset, 0px), 0);
+    /* Ancrée à l'accueil : le scroll natif l'emporte hors du viewport. */
+    transform: translateX(-50%);
     text-decoration: none;
     opacity: 1;
     transition: none;
