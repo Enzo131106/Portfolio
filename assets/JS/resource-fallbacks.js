@@ -1,6 +1,6 @@
 "use strict";
 
-// Charge une feuille CSS locale si la feuille CSS du CDN échoue.
+// Si un style distant échoue, on charge sa copie locale sans bloquer la page.
 function loadCSSWithFallback(element, local) {
 
     element.addEventListener("error", () => {
@@ -17,7 +17,7 @@ function loadCSSWithFallback(element, local) {
     });
 }
 
-// Charge un script JavaScript local si le script JavaScript du CDN échoue.
+// Même principe pour les scripts qui ont une version locale.
 function loadJSWithFallback(element, local) {
 
     element.addEventListener("error", () => {
@@ -34,8 +34,7 @@ function loadJSWithFallback(element, local) {
     });
 }
 
-// Bootstrap CSS
-// CDN en priorité → fichier local en cas d'échec.
+// Bootstrap et ses icônes utilisent le CDN tant qu'il répond.
 const bootstrapCSS = document.getElementById("bootstrap-css");
 
 if (bootstrapCSS) {
@@ -46,8 +45,6 @@ if (bootstrapCSS) {
     );
 }
 
-// Bootstrap Icons
-// CDN en priorité → fichier local en cas d'échec.
 const bootstrapIcons = document.getElementById("bootstrap-icons");
 
 if (bootstrapIcons) {
@@ -58,8 +55,6 @@ if (bootstrapIcons) {
     );
 }
 
-// Bootstrap JavaScript
-// CDN en priorité → fichier local en cas d'échec.
 const bootstrapJS = document.getElementById("bootstrap-js");
 
 if (bootstrapJS) {
@@ -70,10 +65,9 @@ if (bootstrapJS) {
     );
 }
 
-//Inter 700
-//Bunny Fonts en priorité → police locale en cas d'échec.
 const interFonts = document.getElementById("inter-fonts");
 
+// La classe CSS active la police locale quand Bunny Fonts ne fournit pas Inter.
 function activateLocalInter() {
     console.warn("Inter CDN indisponible : activation de la police locale.");
 
@@ -81,10 +75,9 @@ function activateLocalInter() {
 }
 
 if (interFonts) {
-    // La feuille CSS distante n'a pas pu être chargée.
     interFonts.addEventListener("error", activateLocalInter);
 
-    // La feuille CSS est chargée : on vérifie la police elle-même.
+    // Une feuille chargée ne garantit pas que la police soit vraiment disponible.
     interFonts.addEventListener("load", async () => {
         try {
             const faces = await document.fonts.load("700 16px Inter");

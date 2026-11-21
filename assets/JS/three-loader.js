@@ -1,6 +1,6 @@
 "use strict";
 
-// Charge Three.js depuis le CDN.
+// On essaie le CDN avant la copie locale pour rester utilisable hors connexion au CDN.
 let THREE;
 
 try {
@@ -18,9 +18,9 @@ try {
         "Chargement de Three.js depuis le fichier local."
     );
     THREE = await import(
-        "../vendor/three/three.module.js"
+        "../../vendor/three/three.module.js"
     );
 }
 
-// Rend Three.js disponible pour le fichier principal.
+// Le fond importe toujours le même module, quelle que soit la source retenue.
 export default THREE;

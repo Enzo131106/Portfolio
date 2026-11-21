@@ -1,6 +1,7 @@
 "use strict";
 
 (() => {
+    // Le chargement attend à la fois la page HTML et la première image de Three.js.
     const loader = document.getElementById("loading-screen");
     if (!loader) return;
 
@@ -10,14 +11,11 @@
     const backgroundScript = document.getElementById("three-background-script");
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    // Le hero HTML reste visible pendant le travelling : texte et mini-jeu conservent
-    // exactement leur mise en page réelle, sans maquette intermédiaire.
 
     let pageLoaded = document.readyState === "complete";
     let backgroundReady = window.__portfolioBackgroundReady === true;
     let finished = false;
 
-    // Masque le cadre du logo si le fichier n'a pas encore été ajouté.
     if (logo) {
         logo.addEventListener("error", () => {
             logo.classList.add("is-unavailable");
@@ -26,7 +24,7 @@
 
     loader.classList.add("is-loading");
 
-    // Verrouillage ferme du défilement pendant le loader ET le travelling d'introduction.
+    // On empêche le scroll jusqu'à la fin de l'intro pour ne pas commencer entre deux sections.
     const blockIntroScroll = (event) => {
         if (!document.body.classList.contains("hero-intro-pending")) return;
         if (event.cancelable) event.preventDefault();
@@ -53,6 +51,7 @@
         progress?.setAttribute("aria-valuenow", String(Math.round(safeValue)));
     }
 
+    // Le loader ne disparaît qu'une fois les deux signaux reçus ; l'intro démarre pendant son fondu.
     function finishLoading() {
         if (finished || !pageLoaded || !backgroundReady) return;
         finished = true;
@@ -61,8 +60,6 @@
         setProgress(100);
 
         window.setTimeout(() => {
-            // Préviens le fond au début du fondu : le travelling commence derrière le loader,
-            // afin que la caméra soit déjà en mouvement quand le vortex se découvre.
             window.dispatchEvent(new Event("portfolio-loader-hiding"));
             loader.classList.add("is-hidden");
             loader.setAttribute("aria-hidden", "true");
@@ -73,7 +70,7 @@
         }, 180);
     }
 
-    // La progression reste animée tant que les ressources ne sont pas prêtes.
+    // Le chargement de la page et celui du fond peuvent se terminer dans n'importe quel ordre.
     function onPageLoad() {
         pageLoaded = true;
         setProgress(88);
@@ -98,7 +95,7 @@
         window.addEventListener("portfolio-background-ready", onBackgroundReady, { once: true });
     }
 
-    // Si le module Three.js échoue, ne bloque pas indéfiniment le contenu du site.
+    // Si WebGL échoue, on libère quand même la page au lieu de laisser le loader indéfiniment.
     if (backgroundScript) {
         backgroundScript.addEventListener("error", () => {
             backgroundReady = true;
@@ -106,10 +103,8 @@
         }, { once: true });
     }
 
-    // Secours en cas d'échec WebGL ou d'initialisation du fond.
     window.setTimeout(() => {
         if (finished) return;
-        // En cas de souci WebGL, on attend toujours window.load, mais on ne bloque pas ensuite.
         backgroundReady = true;
         finishLoading();
     }, 8000);

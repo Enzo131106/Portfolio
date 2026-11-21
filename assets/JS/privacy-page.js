@@ -1,6 +1,6 @@
 "use strict";
 
-// Ferme la page et revient au portfolio
+// On tente de fermer l'onglet ; sinon le bouton ramène à l'accueil.
 const backButton = document.getElementById("privacy-back");
 
 backButton.addEventListener("click", () => {

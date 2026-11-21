@@ -1,7 +1,7 @@
 "use strict";
 
 (() => {
-    // Récupérer les éléments de l'interface utilisés par le jeu.
+    // Le mini-jeu travaille sur son propre canvas, séparé du fond Three.js.
     const canvas = document.getElementById("byte-invaders-canvas");
     const screen = document.getElementById("arcade-screen");
     const overlay = document.getElementById("arcade-overlay");
@@ -17,7 +17,6 @@
     const ctx = canvas && canvas.getContext("2d");
     if (!canvas || !ctx || !screen) return;
 
-    // Centraliser les commandes et l’état courant de la partie.
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const keys = new Set();
     const pointerControls = new Set();
@@ -34,12 +33,9 @@
     try { best = Number(localStorage.getItem("byteInvadersBest")) || 0; } catch (_) { /* stockage facultatif */ }
     bestText.textContent = formatScore(best);
 
-    // Afficher les scores comme des nombres entiers, sans zéros superflus.
     function formatScore(value) { return String(Math.max(0, Math.floor(Number(value) || 0))); }
-    // Adapter la résolution du canvas à sa taille réelle et à l’écran.
+    // On utilise la taille de mise en page, pas la taille transformée par le zoom GSAP.
     function resize() {
-        // offsetWidth/offsetHeight ignorent le scale CSS du travelling : le jeu conserve
-        // ses vraies dimensions même pendant l’introduction du hero.
         const layoutWidth = screen.offsetWidth;
         const layoutHeight = screen.offsetHeight;
         if (!layoutWidth || !layoutHeight) return;
@@ -57,14 +53,13 @@
             draw();
         }
     }
-    // Synchroniser les informations visibles avec l’état de la partie.
     function updateHud() {
         scoreText.textContent = formatScore(state.score);
         livesText.textContent = state.lives > 0 ? Array.from({ length: state.lives }, () => "♥").join(" ") : "—";
         livesText.setAttribute("aria-label", state.lives + (state.lives > 1 ? " vies" : " vie"));
         bestText.textContent = formatScore(best);
     }
-    // Créer une formation d’ennemis pour la vague en cours.
+    // Le nombre de colonnes dépend de la largeur disponible : les ennemis ne doivent pas déborder.
     function createWave() {
         state.enemies = [];
         const cols = Math.max(5, Math.min(9, Math.floor(width / 47)));
@@ -84,20 +79,17 @@
         state.enemySpeed = 19 + state.wave * 3;
         state.enemyFireTimer = Math.max(.45, 1.25 - state.wave * .06);
     }
-    // Remettre à zéro les données nécessaires à une nouvelle partie.
     function resetGame() {
         state.score = 0; state.lives = 3; state.wave = 1;
         state.bullets = []; state.particles = [];
-        // Recalibrer les deux coordonnées à partir des dimensions actuelles du canvas.
         state.player.x = width / 2; state.player.y = height * 0.88; state.player.cooldown = 0;
         state.enemyFireTimer = 1.1;
         state.invulnerable = 0; state.gameOver = false;
         createWave(); updateHud();
     }
-    // Démarrer la partie et lancer la boucle d’animation.
+    // On relit la taille du canvas au départ, car l'introduction a pu agrandir la carte.
     function startGame() {
         if (state.running) return;
-        // Le hero peut avoir été transformé pendant le travelling : relire la taille de layout avant la partie.
         resize();
         resetGame();
         state.running = true;
@@ -111,7 +103,7 @@
         state.animationId = requestAnimationFrame(loop);
         canvas.focus({ preventScroll: true });
     }
-    // Arrêter la partie, afficher le résultat et sauvegarder le record.
+    // Le record est enregistré à la fin, avant d'afficher les actions de résultat.
     function endGame(wonWave = false) {
         state.running = false;
         state.gameOver = true;
@@ -130,7 +122,6 @@
         }
         updateHud();
     }
-    // Ajouter des particules lors d’une collision ou d’un événement visuel.
     function addBurst(x, y, color, amount = 8) {
         for (let i = 0; i < amount; i++) {
             const angle = Math.random() * Math.PI * 2;
@@ -142,13 +133,13 @@
             });
         }
     }
-    // Tirer si la partie est active et si le délai entre deux tirs est écoulé.
+    // Un délai entre deux tirs évite de remplir l'écran de projectiles.
     function shoot() {
         if (!state.running || state.player.cooldown > 0) return;
         state.bullets.push({ x: state.player.x, y: state.player.y - 9, vy: -390, friendly: true });
         state.player.cooldown = .23;
     }
-    // Mettre à jour les déplacements, tirs, collisions et progression.
+    // Les déplacements utilisent le temps écoulé pour rester réguliers malgré les variations de FPS.
     function update(dt) {
         const player = state.player;
         const left = keys.has("ArrowLeft") || keys.has("a") || keys.has("q") || pointerControls.has("left");
@@ -227,7 +218,6 @@
         }
         updateHud();
     }
-    // Dessiner le vaisseau du joueur sur le canvas.
     function drawShip(x, y) {
         const w = state.player.width;
         ctx.save();
@@ -247,7 +237,6 @@
         ctx.fill(); ctx.stroke();
         ctx.restore();
     }
-    // Dessiner un ennemi selon sa rangée et sa couleur.
     function drawEnemy(enemy) {
         const s = Math.max(8, Math.min(13, width * .023));
         const color = enemy.row === 0 ? "#a5a3ff" : enemy.row === 1 ? "#63b8ff" : "#4de0ee";
@@ -266,7 +255,6 @@
         ctx.fillRect(s * .18, -s * .12, s * .16, s * .17);
         ctx.restore();
     }
-    // Redessiner le fond, les entités et les effets visuels.
     function draw() {
         ctx.clearRect(0, 0, width, height);
         ctx.fillStyle = "#040b18";
@@ -295,7 +283,6 @@
             ctx.globalAlpha = 1;
             if (state.invulnerable <= 0 || Math.floor(performance.now() / 90) % 2 === 0) drawShip(state.player.x, state.player.y);
         } else {
-            // Petit aperçu animé sans démarrer la partie.
             const t = reducedMotion ? 0 : performance.now() / 1000;
             for (let row = 0; row < 2; row++) {
                 for (let col = 0; col < 7; col++) {
@@ -305,7 +292,7 @@
             drawShip(width / 2 + Math.sin(t * .8) * width * .08, height * .82);
         }
     }
-    // Boucle principale : calculer le temps écoulé, mettre à jour puis dessiner.
+    // La boucle sépare les calculs du dessin pour garder le jeu prévisible.
     function loop(now) {
         if (!state.running) return;
         const dt = Math.min((now - state.lastTime) / 1000 || 0, .035);
@@ -316,11 +303,10 @@
     }
 
 
-    // Préparer le texte à copier ou à partager avec le score obtenu.
     function getScoreShareText() {
         return "J’ai marqué " + formatScore(state.score) + " points sur BYTE INVADERS ! Tu peux battre mon score ?\n" + window.location.href;
     }
-    // Générer une image PNG du score pour le partage ou le téléchargement.
+    // La carte de score est dessinée en image pour pouvoir être partagée ou enregistrée.
     function createScoreImageBlob() {
         return new Promise(resolve => {
             const exportCanvas = document.createElement("canvas");
@@ -361,9 +347,8 @@
             exportCanvas.toBlob(resolve, "image/png");
         });
     }
-    // Copier le texte du score avec une solution de repli pour les navigateurs anciens.
+    // Quand le presse-papiers moderne est bloqué, on garde une méthode compatible.
     async function copyScoreText(text) {
-        // Clipboard API first, then a compatibility fallback for browsers that block it.
         if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
             try {
                 await navigator.clipboard.writeText(text);
@@ -386,13 +371,11 @@
         return copied;
     }
 
-    // Partager le score : copie sur ordinateur, partage natif si disponible sur mobile.
+    // Sur ordinateur on copie le score ; sur mobile on utilise le partage natif s'il existe.
     async function shareScore() {
         const text = getScoreShareText();
         const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-        // Sur ordinateur, le bouton PARTAGER doit copier directement le texte.
-        // Éviter navigator.share ici : il ouvre une fenêtre de partage et ne copie rien.
         if (!isMobile) {
             const copied = await copyScoreText(text);
             if (copied) {
@@ -406,7 +389,6 @@
             return;
         }
 
-        // Sur mobile, utiliser la feuille de partage native si elle existe.
         if (navigator.share) {
             try {
                 const blob = await createScoreImageBlob();
@@ -434,7 +416,6 @@
             window.prompt("La copie automatique est bloquée. Sélectionne puis copie ce texte :", text);
         }
     }
-    // Télécharger la carte du score au format PNG.
     async function downloadScore() {
         const blob = await createScoreImageBlob();
         if (!blob) return;
@@ -448,11 +429,10 @@
         window.setTimeout(() => URL.revokeObjectURL(url), 1000);
     }
 
-    // Relier les boutons de l’interface aux actions correspondantes.
     if (shareScoreButton) shareScoreButton.addEventListener("click", shareScore);
     if (downloadScoreButton) downloadScoreButton.addEventListener("click", downloadScore);
     startButton.addEventListener("click", startGame);
-    // Gérer les commandes clavier et empêcher le défilement pendant le jeu.
+    // Les flèches et l'espace ne font pas défiler la page pendant une partie.
     window.addEventListener("keydown", event => {
         const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
         if (["ArrowLeft", "ArrowRight", " ", "ArrowUp", "ArrowDown"].includes(key)) event.preventDefault();
@@ -467,9 +447,9 @@
     document.addEventListener("visibilitychange", () => {
         if (document.hidden && state.running) { keys.clear(); pointerControls.clear(); }
     });
-    // Gérer les commandes tactiles via les événements de pointeur.
     document.querySelectorAll("[data-game-control]").forEach(button => {
         const control = button.dataset.gameControl;
+        // Ces boutons tactiles restent enfoncés jusqu'au relâchement du doigt.
         const down = event => { event.preventDefault(); pointerControls.add(control); };
         const up = event => { event.preventDefault(); pointerControls.delete(control); };
         button.addEventListener("pointerdown", down);
@@ -478,7 +458,6 @@
         button.addEventListener("pointerleave", up);
         button.addEventListener("contextmenu", event => event.preventDefault());
     });
-    // Redimensionner le canvas puis afficher l’aperçu initial.
     window.addEventListener("resize", resize);
     if ("ResizeObserver" in window) new ResizeObserver(resize).observe(screen);
     resize();

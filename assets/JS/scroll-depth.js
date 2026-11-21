@@ -1,11 +1,6 @@
 "use strict";
 
-/*
- * Scrollytelling 100 % profondeur :
- * un plateau fixe reste centré dans le viewport pendant le scroll.
- * GSAP anime uniquement scale / translateZ / opacité ; jamais X ou Y.
- * Les sections restent dans le flux pour garder les ancres et le scroll natif.
- */
+// Le scroll est natif ; GSAP ne déplace les plans que sur l'axe de profondeur.
 (() => {
     const hero = document.querySelector("#accueil");
     const heroInner = hero?.querySelector(".hero-inner");
@@ -18,7 +13,7 @@
     let introStarted = false;
     let released = false;
 
-    // L'objet partagé est également utilisé par la caméra du fond Three.js.
+    // Three.js utilise ce même objet pour faire avancer le vortex en rythme.
     const motion = window.__portfolioMotion || (window.__portfolioMotion = {
         intro: 0,
         scroll: 0
@@ -32,8 +27,7 @@
         window.dispatchEvent(new Event("portfolio-hero-arrived"));
     }
 
-    // Pas de mise en scène fixe lorsque GSAP est indisponible,
-    // lorsque le mouvement réduit est demandé ou sur un écran très bas.
+    // Sans GSAP ou avec le mouvement réduit, les contenus restent dans leur mise en page normale.
     if (!window.gsap || !window.ScrollTrigger || !hero || !heroInner ||
         !project || !projectInner || !main || reducedMotion || shortScreen) {
         motion.intro = 1;
@@ -44,10 +38,7 @@
 
     gsap.registerPlugin(ScrollTrigger);
 
-    // Déplace uniquement les contenus visuels, sans toucher aux sections
-    // #accueil et #projects : elles restent des repères de défilement natif.
-    // Le plateau est frère des sections, pas leur descendant : il n'est jamais
-    // entraîné vers le haut par le scroll ni par leur CSS perspective.
+    // Les contenus sont placés dans un plateau fixe : les sections restent dans le flux pour les ancres.
     const stage = document.createElement("div");
     stage.className = "depth-stage";
     const heroPanel = document.createElement("div");
@@ -55,15 +46,13 @@
     const projectPanel = document.createElement("div");
     projectPanel.className = "depth-stage-panel depth-stage-panel--project";
     heroPanel.appendChild(heroInner);
-    // Dans le même plan 3D que l'accueil : au départ près du bas,
-    // puis projetée vers la caméra jusqu'à sortir du viewport.
-    // On ne l'ancre pas au scroll natif : cela la ferait remonter verticalement.
+    // La souris partage le plan de l'accueil pour avancer vers la caméra, pas glisser vers le haut.
     if (cue) heroPanel.appendChild(cue);
     projectPanel.appendChild(projectInner);
     stage.append(heroPanel, projectPanel);
     main.appendChild(stage);
 
-    // Le contenu Projets ne peut pas surgir à l'écran avant le premier scroll.
+    // Les projets démarrent loin de la caméra pour ne pas apparaître avant le scroll.
     gsap.set(projectInner, {
         z: -850,
         scale: 0.32,
@@ -71,8 +60,8 @@
         transformOrigin: "center center"
     });
 
+    // Une seule timeline pilote les deux plans et la caméra ; remonter rejoue le même trajet à l'envers.
     function setupScroll() {
-        // Une seule timeline, une seule plage, et zéro translation verticale.
         const story = gsap.timeline({
             defaults: { ease: "none" },
             scrollTrigger: {
@@ -84,10 +73,9 @@
             }
         });
 
-        // Le vortex se déplace exactement au rythme des contenus.
         story.to(motion, { scroll: 1, duration: 1 }, 0);
 
-        // Accueil : le plan traverse la caméra en grossissant depuis le centre.
+        // L'accueil avance puis quitte le champ, sans translation verticale.
         story.fromTo(heroInner,
             { z: 0, scale: 1, autoAlpha: 1 },
             {
@@ -99,10 +87,8 @@
             }, 0
         );
 
-        // Même travelling en Z et même zoom que le bloc Accueil.
-        // La perspective du plateau projette la souris hors de l'écran
-        // PAR LE BAS, sans la remonter ou la masquer prématurément par opacité.
         if (cue) {
+            // La souris suit la profondeur de l'accueil et peut sortir du cadre par le bas.
             story.fromTo(cue,
                 { z: 0, scale: 1, autoAlpha: 1 },
                 {
@@ -115,7 +101,7 @@
             );
         }
 
-        // Projets : arrivée de loin, toujours au CENTRE du même viewport.
+        // Les projets arrivent du fond au centre de l'écran.
         story.to(projectInner, {
             z: 0,
             scale: 1,
@@ -123,18 +109,16 @@
             duration: 0.65
         }, 0.35);
 
-        // Quand on remonte, GSAP rejoue exactement la trajectoire inverse.
         ScrollTrigger.refresh();
     }
 
+    // L'intro démarre quand le loader commence à disparaître, pour laisser voir le mouvement du fond.
     function startIntro() {
         if (introStarted) return;
         introStarted = true;
 
-        // Le déplacement du vortex et l'apparition du hero ont même durée.
         gsap.timeline({
             onComplete() {
-                // Le plateau fixe conserve sa position, sans saut entre intro et scroll.
                 gsap.set(heroInner, { z: 0, scale: 1, autoAlpha: 1 });
                 release();
                 setupScroll();
