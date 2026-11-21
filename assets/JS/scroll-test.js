@@ -1,14 +1,23 @@
 "use strict";
 
-/* GSAP pilote l'introduction et les transitions réversibles entre sections. */
+/*
+ * Une seule progression GSAP / ScrollTrigger anime les deux sections
+ * et le vortex Three.js. Aucun scroll forcé, pin ou snap :
+ * le défilement natif reste entièrement réversible.
+ */
 (() => {
     const hero = document.querySelector("#accueil");
     const heroInner = hero?.querySelector(".hero-inner");
+    const project = document.querySelector("#projects");
+    const projectInner = project?.querySelector("[data-scroll-scene-content]");
     const cue = document.querySelector(".hero-scroll");
-    const scenes = Array.from(document.querySelectorAll("[data-scroll-scene-content]"));
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const mobile = window.matchMedia("(max-width: 760px)").matches;
+    let introStarted = false;
     let released = false;
-    let started = false;
+
+    // Lu par Three.js dans sa boucle de rendu, même si le module démarre après GSAP.
+    window.__portfolioScrollProgress = 0;
 
     function release() {
         if (released) return;
@@ -26,81 +35,98 @@
     gsap.registerPlugin(ScrollTrigger);
 
     function setupScroll() {
-        if (reduced) return;
-        // On n'installe les animations de scroll qu'après l'introduction :
-        // elles ne peuvent ainsi plus écraser l'état du hero au retour en haut.
-        gsap.matchMedia().add("(prefers-reduced-motion: no-preference)", () => {
-            if (hero && heroInner) {
-                gsap.fromTo(heroInner,
-                    { scale: 1, autoAlpha: 1, z: 0 },
-                    {
-                        scale: 2.7, autoAlpha: 0, z: 650, ease: "none",
-                        immediateRender: false,
-                        scrollTrigger: {
-                            trigger: hero,
-                            start: "top top",
-                            end: "bottom 25%",
-                            scrub: 0.65,
-                            invalidateOnRefresh: true,
-                            onLeaveBack: () => gsap.set(heroInner, { autoAlpha: 1 })
-                        }
-                    }
-                );
-            }
+        if (reducedMotion || !hero || !heroInner || !project || !projectInner) return;
 
-            scenes.forEach((visual) => {
-                const section = visual.closest("[data-scroll-scene]");
-                if (!section) return;
-                gsap.fromTo(visual,
-                    { scale: 0.18, z: -1100, autoAlpha: 0 },
-                    {
-                        scale: 1, z: 0, autoAlpha: 1, ease: "none",
-                        immediateRender: false,
-                        scrollTrigger: {
-                            trigger: section,
-                            start: "top bottom",
-                            end: "top 28%",
-                            scrub: 0.75,
-                            invalidateOnRefresh: true
-                        }
-                    }
-                );
-            });
-            ScrollTrigger.refresh();
+        // L'effet démarre une fois l'introduction terminée, sans toucher au scroll natif.
+        const story = gsap.timeline({
+            defaults: { ease: "none" },
+            onUpdate() {
+                // Même playhead amorti pour les contenus ET les particules du fond.
+                window.__portfolioScrollProgress = this.progress();
+            },
+            scrollTrigger: {
+                trigger: hero,
+                start: "top top",
+                end: "bottom top",
+                scrub: 0.35,
+                invalidateOnRefresh: true
+            }
         });
+
+        story.to(heroInner, {
+            scale: mobile ? 1.13 : 1.30,
+            z: mobile ? 90 : 240,
+            y: mobile ? -12 : -35,
+            duration: 0.76
+        }, 0);
+
+        // Le texte s'efface progressivement, sans disparaître brutalement.
+        story.to(heroInner, {
+            autoAlpha: 0,
+            duration: 0.36
+        }, 0.41);
+
+        story.fromTo(projectInner, {
+            scale: mobile ? 0.82 : 0.68,
+            z: mobile ? -150 : -360,
+            y: mobile ? 48 : 90,
+            autoAlpha: 0
+        }, {
+            scale: 1,
+            z: 0,
+            y: 0,
+            autoAlpha: 1,
+            duration: 0.69,
+            immediateRender: false
+        }, 0.29);
+
+        // Fixe exactement la longueur de l'animation à celle de la transition.
+        story.to({ position: 0 }, { position: 1, duration: 1 }, 0);
+
+        // Pour les retours historiques et liens ancrés, synchronise l'état initial.
+        story.scrollTrigger.refresh();
+        window.__portfolioScrollProgress = story.progress();
     }
 
-    function intro() {
-        if (started) return;
-        started = true;
-        if (reduced || !heroInner) {
-            gsap.set(heroInner, { clearProps: "all" });
+    function startIntro() {
+        if (introStarted) return;
+        introStarted = true;
+
+        if (reducedMotion || !heroInner) {
+            if (heroInner) gsap.set(heroInner, { clearProps: "transform,opacity,visibility" });
             release();
             return;
         }
-        // Travelling d'entrée volontairement ample et progressif (~2,8 s).
+
+        // Conserve le travelling d'entrée lent déjà validé.
         gsap.timeline({
-            onComplete: () => {
+            onComplete() {
                 gsap.set(heroInner, { clearProps: "transform,opacity,visibility" });
                 release();
                 setupScroll();
             }
         })
-            .fromTo(heroInner,
-                { scale: 0.18, z: -1100, autoAlpha: 0, transformOrigin: "center center" },
-                { scale: 1, z: 0, autoAlpha: 1, duration: 2.65, ease: "power2.inOut" }
-            )
-            .fromTo(cue,
-                { autoAlpha: 0 },
-                { autoAlpha: 1, duration: 0.55, ease: "power2.out", clearProps: "opacity,visibility" },
-                "-=0.45"
-            );
+            .fromTo(heroInner, {
+                scale: 0.18,
+                z: -1100,
+                autoAlpha: 0,
+                transformOrigin: "center center"
+            }, {
+                scale: 1,
+                z: 0,
+                autoAlpha: 1,
+                duration: 2.65,
+                ease: "power2.inOut"
+            })
+            .fromTo(cue, { autoAlpha: 0 }, {
+                autoAlpha: 1,
+                duration: 0.55,
+                ease: "power2.out",
+                clearProps: "opacity,visibility"
+            }, "-=0.45");
     }
 
-    window.addEventListener("portfolio-loader-hiding", intro, { once: true });
-    if (reduced) {
-        intro();
-    }
-    // Secours si le loader a déjà disparu avant l'installation de l'écouteur.
-    if (!document.getElementById("loading-screen") && !started) intro();
+    window.addEventListener("portfolio-loader-hiding", startIntro, { once: true });
+    if (reducedMotion) startIntro();
+    if (!document.getElementById("loading-screen") && !introStarted) startIntro();
 })();
