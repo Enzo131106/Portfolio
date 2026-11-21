@@ -305,3 +305,25 @@
     .arcade-result-actions { gap: 6px; }
     .arcade-result-button { padding-inline: 9px; font-size: 9px; }
 }
+
+/* Mini-jeu : conserver un écran panoramique sur les résolutions 2K / 4K. */
+@media (min-width: 1920px) {
+    .arcade-screen { height: clamp(250px, 13vw, 320px); }
+    .arcade-topbar { padding: 19px 23px; }
+    .arcade-scorebar { padding: 16px 23px; }
+    .arcade-controls { padding: 14px 23px 17px; }
+    .arcade-title { font-size: 15px; }
+    .arcade-status, .arcade-controls { font-size: 12px; }
+    .arcade-label { font-size: 11px; }
+    .arcade-scorebar strong { font-size: 17px; }
+}
+@media (min-width: 3000px) {
+    .arcade-screen { height: 390px; }
+    .arcade-topbar { padding: 24px 30px; }
+    .arcade-scorebar { padding: 20px 30px; }
+    .arcade-controls { padding: 18px 30px 21px; }
+    .arcade-title { font-size: 18px; }
+    .arcade-status, .arcade-controls { font-size: 15px; }
+    .arcade-label { font-size: 14px; }
+    .arcade-scorebar strong { font-size: 21px; }
+}
