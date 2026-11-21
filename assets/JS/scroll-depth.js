@@ -1,7 +1,8 @@
 "use strict";
 
 // Le scroll est natif ; GSAP ne déplace les plans que sur l'axe de profondeur.
-(() => {
+// On attend le chargement des CDN ou de leur secours local avant de créer la scène.
+function initializeScrollDepth() {
     const hero = document.querySelector("#accueil");
     const heroInner = hero?.querySelector(".hero-inner");
     const project = document.querySelector("#projects");
@@ -151,5 +152,12 @@
 
     window.addEventListener("portfolio-loader-hiding", startIntro, { once: true });
     window.addEventListener("portfolio-loader-hidden", startIntro, { once: true });
-    if (!document.getElementById("loading-screen")) startIntro();
-})();
+    const loadingScreen = document.getElementById("loading-screen");
+    if (!loadingScreen || loadingScreen.classList.contains("is-hidden")) startIntro();
+}
+
+if (window.__portfolioGsapReady) {
+    window.__portfolioGsapReady.then(initializeScrollDepth, initializeScrollDepth);
+} else {
+    initializeScrollDepth();
+}
