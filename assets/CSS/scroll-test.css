@@ -2,6 +2,9 @@
 #projects.scroll-test-section {
     position: relative;
     min-height: 100svh;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
     padding: clamp(110px, 14vh, 150px) 5.5vw 90px;
     color: #f4f7ff;
     scroll-margin-top: 84px;
