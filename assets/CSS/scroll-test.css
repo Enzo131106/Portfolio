@@ -57,3 +57,68 @@ html, body {
     .scroll-test-intro { max-width: 960px; font-size: 22px; }
     .scroll-test-kicker { font-size: 16px; }
 }
+
+
+/*
+ * Plateau de scrollytelling indépendant des sections :
+ * les repères HTML défilent, pas les contenus projetés.
+ * Les deux plans sont maintenus au centre du viewport sur toute la traversée.
+ */
+.depth-stage {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    perspective: clamp(1200px, 100vw, 2100px);
+    perspective-origin: 50% 50%;
+    pointer-events: none;
+    overflow: clip;
+}
+
+.depth-stage-panel {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    transform-style: preserve-3d;
+}
+
+.depth-stage-panel > .hero-inner,
+.depth-stage-panel > .scroll-test-wrap {
+    flex: 0 1 auto;
+    width: min(100%, 1240px);
+    margin: 0;
+    max-width: calc(100vw - 44px);
+    pointer-events: auto;
+    transform-origin: center center;
+    backface-visibility: hidden;
+    will-change: transform, opacity;
+}
+
+.depth-stage-panel > .scroll-test-wrap {
+    width: min(100%, 1040px);
+}
+
+@media (max-width: 1050px) {
+    .depth-stage-panel > .hero-inner {
+        max-width: calc(100vw - 8vw);
+    }
+}
+
+@media (max-width: 760px) {
+    .depth-stage-panel > .hero-inner,
+    .depth-stage-panel > .scroll-test-wrap {
+        max-width: calc(100vw - 44px);
+    }
+}
+
+@media (min-width: 1920px) {
+    .depth-stage-panel > .hero-inner { width: min(100%, 1600px); }
+    .depth-stage-panel > .scroll-test-wrap { width: min(100%, 1400px); }
+}
+
+@media (min-width: 3000px) {
+    .depth-stage-panel > .hero-inner { width: min(100%, 1960px); }
+    .depth-stage-panel > .scroll-test-wrap { width: min(100%, 1700px); }
+}
