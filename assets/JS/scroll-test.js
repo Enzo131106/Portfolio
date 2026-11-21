@@ -5,7 +5,7 @@
     const hero = document.querySelector("#accueil");
     const heroInner = hero?.querySelector(".hero-inner");
     const cue = document.querySelector(".hero-scroll");
-    const scenes = gsap.utils.toArray("[data-scroll-scene-content]");
+    const scenes = Array.from(document.querySelectorAll("[data-scroll-scene-content]"));
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const release = () => {
         document.body.classList.remove("hero-intro-pending");
@@ -36,7 +36,10 @@
 
     // L'introduction démarre lorsque l'écran de chargement s'efface.
     window.addEventListener("portfolio-loader-hiding", intro, { once: true });
-    if (reduced) release();
+    if (reduced) {
+        gsap.set(heroInner, { clearProps: "transform,opacity" });
+        release();
+    }
 
     if (!reduced) {
         motion.add("(min-width: 761px)", () => {
