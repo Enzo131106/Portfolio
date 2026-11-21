@@ -11,6 +11,7 @@
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    const mobileScreen = window.matchMedia("(max-width: 760px)");
     const step = (Math.PI * 2) / cards.length;
     const speed = step / 11;
     const manualPause = 5000; // Les flèches laissent cinq secondes pour regarder le projet.
@@ -40,6 +41,9 @@
     let radius = 0;
     let depth = 0;
     function measureRing() {
+        // Sur téléphone, les cartes utilisent une disposition linéaire en profondeur.
+        // Le calcul du grand cercle ne sert que sur ordinateur.
+        if (mobileScreen.matches) return;
         const cardWidth = cards[0].offsetWidth || scene.clientWidth * 0.44;
         // Un anneau plus large empêche les cartes voisines de se superposer.
         // Le rayon reste adapté à la place disponible sur mobile.
@@ -79,11 +83,45 @@
         }
     }
 
-    // Chaque carte tourne autour du même centre et regarde vers l'extérieur
-    // de l'anneau : devant elle est lisible, sur les côtés elle apparaît de profil.
-    function render() {
+    // Le téléphone montre une seule grande carte et un aperçu des voisines.
+    // Les centres suivent des emplacements espacés : aucune carte ne recouvre
+    // sa voisine, y compris à mi-chemin entre deux projets.
+    function renderMobile() {
+        const cardWidth = cards[0].offsetWidth || scene.clientWidth * 0.73;
+        const gap = Math.max(18, Math.min(30, scene.clientWidth * 0.065));
+        const distance = cardWidth + gap;
+        const current = position / step;
+        const halfCount = cards.length / 2;
 
         cards.forEach((card, index) => {
+            const offset = ((index - current + halfCount) % cards.length + cards.length) % cards.length - halfCount;
+            const distanceFromCenter = Math.abs(offset);
+            const visible = distanceFromCenter < 1.35;
+            const x = offset * distance;
+            const z = -Math.min(distanceFromCenter, 1.35) * 135;
+            const rotation = -Math.max(-1.35, Math.min(1.35, offset)) * 35;
+
+            card.style.transform = `translate3d(${x.toFixed(1)}px, 0, ${z.toFixed(1)}px) rotateY(${rotation.toFixed(2)}deg)`;
+            card.style.opacity = String(visible ? Math.max(0.48, 1 - distanceFromCenter * 0.35) : 0);
+            card.style.visibility = visible ? "visible" : "hidden";
+            card.style.zIndex = String(Math.round(100 - distanceFromCenter * 30));
+
+            const nearCenter = distanceFromCenter <= 0.42;
+            card.style.pointerEvents = nearCenter ? "auto" : "none";
+            card.inert = !nearCenter;
+            card.setAttribute("aria-hidden", String(!nearCenter));
+        });
+    }
+
+    // Sur ordinateur, les cartes gardent le véritable anneau 3D.
+    function render() {
+        if (mobileScreen.matches) {
+            renderMobile();
+            return;
+        }
+
+        cards.forEach((card, index) => {
+            card.style.visibility = "visible";
             const angle = normalizeAngle(index * step - position);
             const cos = Math.cos(angle);
             const x = Math.sin(angle) * radius;
@@ -238,7 +276,12 @@
 
             const index = cards.indexOf(selected);
             const angle = normalizeAngle(index * step - position);
-            if (Math.abs(angle) > hoverMaxAngle) return;
+            if (mobileScreen.matches) {
+                const fraction = angle / step;
+                if (Math.abs(fraction) > 0.42) return;
+            } else if (Math.abs(angle) > hoverMaxAngle) {
+                return;
+            }
 
             hoveredCard = selected;
             lastHoverPosition = pointer;
@@ -295,6 +338,8 @@
         else startLoop();
     });
     window.addEventListener("resize", () => { measureRing(); render(); }, { passive: true });
+    // Évite un ancien rayon si la fenêtre passe du mobile au bureau (ou inversement).
+    mobileScreen.addEventListener?.("change", () => { measureRing(); render(); });
     measureRing();
     render();
     startLoop();

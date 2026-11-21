@@ -315,8 +315,21 @@
         margin-bottom: 7px;
     }
 
-    .projects-carousel__scene { min-height: 260px; }
-    .projects-carousel__card { width: min(77vw, 395px); }
+    /* Sur mobile, un coverflow remplace le grand anneau : une carte lisible,
+       deux aperçus latéraux, les autres hors de l'écran. */
+    .projects-carousel__scene {
+        min-height: 260px;
+        perspective: 1050px;
+        perspective-origin: 50% 50%;
+        overflow: visible;
+    }
+    .projects-carousel__card {
+        width: min(73vw, 360px);
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+    }
+    .projects-carousel__back { display: none; }
+    .projects-carousel__surface { box-shadow: 0 12px 36px rgba(0, 4, 14, .3); }
     .projects-carousel__visual::before { inset: 12px; }
     .projects-carousel__number { font-size: clamp(75px, 25vw, 125px); }
     .projects-carousel__back-number { font-size: clamp(60px, 20vw, 100px); }
@@ -345,7 +358,7 @@
 }
 
 @media (max-height: 680px) and (max-width: 760px) {
-    .projects-carousel__card { width: min(70vw, 275px); }
+    .projects-carousel__card { width: min(68vw, 290px); }
     .projects-carousel__number { font-size: 72px; }
 }
 
