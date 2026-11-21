@@ -6,7 +6,6 @@
     const cards = scene ? [...scene.querySelectorAll("[data-carousel-card]")] : [];
     const previous = carousel?.querySelector("[data-carousel-prev]");
     const next = carousel?.querySelector("[data-carousel-next]");
-    const current = carousel?.querySelector("[data-carousel-current]");
     const status = carousel?.querySelector("[data-carousel-status]");
     if (!carousel || !scene || cards.length < 2 || !previous || !next) return;
 
@@ -24,7 +23,6 @@
     let frame = 0;
     let lastFrameTime = 0;
     let visible = !("IntersectionObserver" in window);
-    let activeIndex = -1;
     let touchStart = null;
 
     const normalizeAngle = angle =>
@@ -37,14 +35,15 @@
     let depth = 0;
     function measureRing() {
         const cardWidth = cards[0].offsetWidth || scene.clientWidth * 0.44;
-        radius = Math.min(scene.clientWidth * 0.42, Math.max(cardWidth * 0.84, scene.clientWidth * 0.29));
-        depth = Math.max(220, Math.min(550, cardWidth * 0.9));
+        // Un anneau plus large empêche les cartes voisines de se superposer.
+        // Le rayon reste adapté à la place disponible sur mobile.
+        radius = Math.min(scene.clientWidth * 0.78, Math.max(cardWidth * 1.45, scene.clientWidth * 0.47));
+        depth = Math.max(260, Math.min(900, cardWidth * 1.32));
     }
 
     // Chaque carte tourne autour du même centre et regarde vers l'extérieur
     // de l'anneau : devant elle est lisible, sur les côtés elle apparaît de profil.
     function render() {
-        const front = projectIndex(Math.round(position / step));
 
         cards.forEach((card, index) => {
             const angle = normalizeAngle(index * step - position);
@@ -64,10 +63,6 @@
             card.setAttribute("aria-hidden", String(!readable));
         });
 
-        if (front !== activeIndex) {
-            activeIndex = front;
-            if (current) current.textContent = String(front + 1).padStart(2, "0");
-        }
     }
 
     function stopLoop() {

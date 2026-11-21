@@ -175,42 +175,16 @@
     line-height: 1.55;
 }
 
-.projects-carousel__footer {
-    display: flex;
-    flex: 0 0 auto;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    min-height: 56px;
-    padding: 5px clamp(3px, 2vw, 18px);
-}
-
-.projects-carousel__count {
-    display: inline-flex;
-    gap: 7px;
-    align-items: center;
-    color: #eaf3ff;
-    font-size: 13px;
-    font-variant-numeric: tabular-nums;
-    font-weight: 600;
-}
-
-.projects-carousel__separator { color: rgba(214, 226, 244, .46); }
-.projects-carousel__note {
-    color: rgba(214, 226, 244, .6);
-    font-size: 11px;
-}
-
-.projects-carousel__arrows {
-    display: flex;
-    gap: 10px;
-}
-
+/* Les commandes sont centrées verticalement, chacune sur un bord du carrousel. */
 .projects-carousel__arrow {
+    position: absolute;
+    z-index: 200;
+    top: 50%;
+    transform: translateY(-50%);
     display: grid;
     place-items: center;
-    width: 46px;
-    height: 46px;
+    width: 52px;
+    height: 52px;
     padding: 0;
     border: 1px solid rgba(183, 207, 234, .4);
     border-radius: 50%;
@@ -221,6 +195,9 @@
     touch-action: manipulation;
     transition: background-color 180ms ease, border-color 180ms ease;
 }
+
+.projects-carousel__arrow--prev { left: clamp(0px, 1.5vw, 22px); }
+.projects-carousel__arrow--next { right: clamp(0px, 1.5vw, 22px); }
 
 .projects-carousel__arrow:hover {
     background: rgba(57, 81, 111, .88);
@@ -268,9 +245,9 @@
     .projects-carousel__details { padding: 13px 18px 15px; }
     .projects-carousel__details h3 { font-size: 19px; }
     .projects-carousel__details p { font-size: 12px; }
-    .projects-carousel__note { display: none; }
-    .projects-carousel__footer { min-height: 48px; padding: 4px; }
     .projects-carousel__arrow { width: 42px; height: 42px; }
+    .projects-carousel__arrow--prev { left: 0; }
+    .projects-carousel__arrow--next { right: 0; }
 }
 
 @media (max-height: 680px) {
@@ -285,7 +262,6 @@
     .projects-carousel__details { padding: 10px 14px; }
     .projects-carousel__details h3 { font-size: 18px; }
     .projects-carousel__details p { font-size: 11px; }
-    .projects-carousel__note { display: none; }
 }
 
 @media (max-height: 680px) and (max-width: 760px) {

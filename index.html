@@ -70,7 +70,7 @@
     <link rel="stylesheet" href="./assets/CSS/hero.css?v=20261121-6">
     <link rel="stylesheet" href="./assets/CSS/byte-invaders.css?v=3">
     <link rel="stylesheet" href="./assets/CSS/scroll-depth.css?v=19">
-    <link rel="stylesheet" href="./assets/CSS/projects-carousel.css?v=2">
+    <link rel="stylesheet" href="./assets/CSS/projects-carousel.css?v=3">
 
     <!-- Fonts -->
     <link id="inter-fonts" href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800" rel="stylesheet" />
@@ -305,14 +305,9 @@
                         </article>
                     </div>
 
-                    <div class="projects-carousel__footer">
-                        <span class="projects-carousel__count" aria-hidden="true"><span data-carousel-current>01</span><span class="projects-carousel__separator">/</span>06</span>
-                        <span class="projects-carousel__note">Rotation automatique · navigation manuelle</span>
-                        <div class="projects-carousel__arrows">
-                            <button type="button" class="projects-carousel__arrow" data-carousel-prev aria-label="Projet précédent" aria-controls="projects-carousel-scene">←</button>
-                            <button type="button" class="projects-carousel__arrow" data-carousel-next aria-label="Projet suivant" aria-controls="projects-carousel-scene">→</button>
-                        </div>
-                    </div>
+                    <!-- Les flèches restent de chaque côté du carrousel, sans barre de commandes en bas. -->
+                    <button type="button" class="projects-carousel__arrow projects-carousel__arrow--prev" data-carousel-prev aria-label="Projet précédent" aria-controls="projects-carousel-scene">←</button>
+                    <button type="button" class="projects-carousel__arrow projects-carousel__arrow--next" data-carousel-next aria-label="Projet suivant" aria-controls="projects-carousel-scene">→</button>
                     <p class="projects-carousel__sr-only" aria-live="polite" aria-atomic="true" data-carousel-status></p>
                 </div>
             </div>
@@ -340,7 +335,7 @@
     <script src="./assets/JS/navigation.js"></script>
     <script src="./assets/JS/byte-invaders.js" defer></script>
     <script src="./assets/JS/scroll-depth.js?v=24" defer></script>
-    <script src="./assets/JS/projects-carousel.js?v=2" defer></script>
+    <script src="./assets/JS/projects-carousel.js?v=3" defer></script>
     <script id="three-background-script" type="module" src="./assets/JS/background.js?v=20261121-2"></script>
 </body>
 
