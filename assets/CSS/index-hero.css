@@ -136,10 +136,11 @@
     width: 22px;
     height: 36px;
     margin: 0;
-    transform: translateX(-50%);
+    /* La compensation est animée depuis le ScrollTrigger de l'accueil. */
+    transform: translate3d(-50%, var(--hero-cue-offset, 0px), 0);
     text-decoration: none;
     opacity: 1;
-    transition: opacity 250ms ease;
+    transition: none;
 }
 
 .hero-scroll-mouse {
