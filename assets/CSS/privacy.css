@@ -458,3 +458,23 @@ body {
     }
 
 }
+
+/* Page de confidentialité sur moniteurs 2K et 4K. */
+@media (min-width: 1920px) {
+    .privacy-page { padding: 60px clamp(60px, 6vw, 160px); }
+    .privacy-container { max-width: 1320px; margin-top: 55px; }
+    .privacy-grid { gap: 22px; }
+    .privacy-card { min-height: 210px; padding: 30px; }
+    .privacy-intro h1 { font-size: 3rem; }
+    .privacy-card h2 { font-size: 1.2rem; }
+    .privacy-card p { font-size: .95rem; }
+    .privacy-footer p { font-size: .85rem; }
+}
+@media (min-width: 3000px) {
+    .privacy-container { max-width: 1650px; }
+    .privacy-card { min-height: 260px; padding: 42px; }
+    .privacy-intro h1 { font-size: 3.8rem; }
+    .privacy-card h2 { font-size: 1.5rem; }
+    .privacy-card p { font-size: 1.15rem; }
+    .privacy-footer p { font-size: 1rem; }
+}
