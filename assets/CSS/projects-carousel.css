@@ -218,7 +218,7 @@
     line-height: 1.55;
 }
 
-/* Pas de gros bouton rond : les flèches accompagnent les cartes sans les dominer. */
+/* Un trait fin et une surface discrète : les flèches restent faciles à viser sans voler la vedette. */
 .projects-carousel__arrow {
     position: absolute;
     z-index: 200;
@@ -227,16 +227,26 @@
     display: grid;
     place-items: center;
     width: 52px;
-    height: 68px;
+    height: 58px;
     padding: 0;
-    border: 0;
-    border-radius: 4px;
-    background: transparent;
-    color: rgba(224, 235, 248, .66);
-    font: 300 34px/1 Arial, sans-serif;
+    border: 1px solid rgba(180, 209, 238, .2);
+    border-radius: 11px;
+    background: rgba(13, 24, 40, .42);
+    color: rgba(227, 237, 250, .83);
     cursor: pointer;
     touch-action: manipulation;
-    transition: color 180ms ease, background-color 180ms ease;
+    transition: color 180ms ease, border-color 180ms ease, background-color 180ms ease;
+}
+
+.projects-carousel__arrow svg {
+    display: block;
+    width: 27px;
+    height: 27px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 /* Les flèches se placent par rapport aux bords du viewport, même sur les grands écrans. */
@@ -244,8 +254,9 @@
 .projects-carousel__arrow--next { right: calc(50% - 50vw + clamp(12px, 1.6vw, 28px)); }
 
 .projects-carousel__arrow:hover {
-    color: #f4f8ff;
-    background: rgba(163, 189, 220, .07);
+    color: #fff;
+    border-color: rgba(192, 222, 249, .46);
+    background: rgba(27, 43, 64, .74);
 }
 
 .projects-carousel__arrow:focus-visible {
@@ -290,7 +301,8 @@
     .projects-carousel__details { padding: 13px 18px 15px; }
     .projects-carousel__details h3 { font-size: 19px; }
     .projects-carousel__details p { font-size: 12px; }
-    .projects-carousel__arrow { width: 40px; height: 52px; font-size: 28px; }
+    .projects-carousel__arrow { width: 43px; height: 51px; border-radius: 9px; }
+    .projects-carousel__arrow svg { width: 24px; height: 24px; }
 }
 
 @media (max-height: 680px) {
