@@ -45,6 +45,38 @@
         // Le rayon reste adapté à la place disponible sur mobile.
         radius = Math.min(scene.clientWidth * 0.78, Math.max(cardWidth * 1.45, scene.clientWidth * 0.47));
         depth = Math.max(260, Math.min(900, cardWidth * 1.32));
+
+        // On garde les cartes dans le champ de la caméra, même sur un petit écran.
+        // La vérification tient compte de leur largeur et de leur rotation en 3D.
+        const viewport = window.innerWidth || scene.clientWidth;
+        const perspective = Math.max(1100, Math.min(2000, viewport * 0.9));
+        const limit = viewport / 2 - Math.max(12, Math.min(22, viewport * 0.015));
+        const halfWidth = cardWidth / 2;
+
+        function fits(nextRadius) {
+            for (let degree = 0; degree <= 180; degree += 4) {
+                const angle = degree * Math.PI / 180;
+                const sin = Math.sin(angle);
+                const cos = Math.cos(angle);
+                for (const edge of [-halfWidth, halfWidth]) {
+                    const x = nextRadius * sin + edge * cos;
+                    const z = (cos - 1) * depth - edge * sin;
+                    if (Math.abs(x * perspective / (perspective - z)) > limit) return false;
+                }
+            }
+            return true;
+        }
+
+        if (!fits(radius)) {
+            let minRadius = 0;
+            let maxRadius = radius;
+            for (let attempt = 0; attempt < 14; attempt++) {
+                const middle = (minRadius + maxRadius) / 2;
+                if (fits(middle)) minRadius = middle;
+                else maxRadius = middle;
+            }
+            radius = minRadius;
+        }
     }
 
     // Chaque carte tourne autour du même centre et regarde vers l'extérieur
