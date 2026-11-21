@@ -1,70 +1,74 @@
-/* Le contenu de chaque section suit le travelling du hero, piloté par le scroll et réversible. */
+"use strict";
+
+/* Scrollytelling piloté par GSAP + ScrollTrigger, sans caméra Three.js liée au scroll. */
 (() => {
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const hero = document.querySelector("#accueil");
     const heroInner = hero?.querySelector(".hero-inner");
-    const scenes = Array.from(document.querySelectorAll("[data-scroll-scene]"));
-    let introFinished = reducedMotion;
-    let frame = 0;
+    const cue = document.querySelector(".hero-scroll");
+    const scenes = gsap.utils.toArray("[data-scroll-scene-content]");
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const release = () => {
+        document.body.classList.remove("hero-intro-pending");
+        cue?.classList.add("is-ready");
+        window.dispatchEvent(new Event("portfolio-hero-arrived"));
+    };
 
-    window.addEventListener("portfolio-hero-arrived", () => {
-        introFinished = true;
-        schedule();
-    }, { once: true });
+    if (!window.gsap || !window.ScrollTrigger) {
+        release();
+        return;
+    }
+    gsap.registerPlugin(ScrollTrigger);
+    const motion = gsap.matchMedia();
 
-    const clamp01 = (value) => Math.max(0, Math.min(1, value));
-    const smooth = (value) => value * value * (3 - 2 * value);
-
-    function update() {
-        frame = 0;
-        const vh = window.innerHeight || 1;
-
-        if (hero && heroInner && introFinished && !reducedMotion) {
-            const progress = clamp01((-hero.getBoundingClientRect().top) / Math.max(1, hero.offsetHeight * 0.82));
-            heroInner.style.transformOrigin = "center center";
-            heroInner.style.transform = `scale(${(1 + progress * 2.4).toFixed(3)})`;
-            heroInner.style.opacity = clamp01(1 - Math.max(0, progress - 0.62) / 0.38).toFixed(3);
-            heroInner.style.willChange = "transform, opacity";
+    const intro = () => {
+        if (reduced || !heroInner) {
+            gsap.set(heroInner, { clearProps: "transform,opacity" });
+            release();
+            return;
         }
+        gsap.timeline({ onComplete: release })
+            .fromTo(heroInner,
+                { scale: 0.78, autoAlpha: 0 },
+                { scale: 1, autoAlpha: 1, duration: 1.2, ease: "power3.out", clearProps: "transform,opacity" })
+            .fromTo(cue, { autoAlpha: 0, y: -12 },
+                { autoAlpha: 1, y: 0, duration: .5, clearProps: "transform,opacity" }, "-=.35");
+    };
 
-        scenes.forEach((scene) => {
-            const visual = scene.querySelector("[data-scroll-scene-content]");
-            if (!visual) return;
-            if (reducedMotion) {
-                visual.style.transform = "";
-                visual.style.opacity = "";
-                visual.style.willChange = "";
-                return;
+    // L'introduction démarre lorsque l'écran de chargement s'efface.
+    window.addEventListener("portfolio-loader-hiding", intro, { once: true });
+    if (reduced) release();
+
+    if (!reduced) {
+        motion.add("(min-width: 761px)", () => {
+            if (hero && heroInner) {
+                gsap.to(heroInner, {
+                    scale: 1.28, autoAlpha: 0, ease: "none",
+                    scrollTrigger: {
+                        trigger: hero, start: "top top", end: "bottom 20%",
+                        scrub: .8, invalidateOnRefresh: true
+                    }
+                });
             }
-
-            const rect = scene.getBoundingClientRect();
-            const atPageTop = window.scrollY <= 0;
-            // Ignore l'élasticité du navigateur en haut de page : elle ne doit pas
-            // déplacer visuellement la scène tant que le scroll réel reste à zéro.
-            // Le contenu est d'abord loin, réduit et aligné sur le centre de l'écran.
-            // En avançant dans la section, il grandit jusqu'à l'échelle normale.
-            const travel = clamp01((vh * 0.92 - rect.top) / Math.max(vh * 0.9, rect.height * 0.72));
-            const progress = smooth(travel);
-            const scale = 0.18 + progress * 0.82;
-            const centerY = atPageTop
-                ? scene.offsetTop + scene.offsetHeight / 2
-                : rect.top + rect.height / 2;
-            const translateY = vh * 0.5 - centerY;
-            const translateZ = -1200 * (1 - progress);
-            const reveal = clamp01((progress - 0.06) / 0.28);
-            const opacity = introFinished ? smooth(reveal) : 0;
-
-            visual.style.transformOrigin = "center center";
-            visual.style.transform = `translate3d(0, ${translateY.toFixed(1)}px, ${translateZ.toFixed(1)}px) scale(${scale.toFixed(3)})`;
-            visual.style.opacity = opacity.toFixed(3);
-            visual.style.willChange = "transform, opacity";
+            scenes.forEach((visual) => {
+                gsap.fromTo(visual,
+                    { scale: .76, y: 110, autoAlpha: 0 },
+                    { scale: 1, y: 0, autoAlpha: 1, ease: "none",
+                      scrollTrigger: {
+                          trigger: visual.closest("[data-scroll-scene]"),
+                          start: "top 95%", end: "top 35%",
+                          scrub: .8, invalidateOnRefresh: true
+                      }
+                    });
+            });
+        });
+        motion.add("(max-width: 760px)", () => {
+            scenes.forEach((visual) => {
+                gsap.from(visual, {
+                    y: 45, autoAlpha: 0, duration: .8, ease: "power2.out",
+                    scrollTrigger: { trigger: visual, start: "top 90%", toggleActions: "play none none reverse" }
+                });
+            });
         });
     }
-
-    function schedule() {
-        if (!frame) frame = requestAnimationFrame(update);
-    }
-    window.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("resize", schedule, { passive: true });
-    update();
+    window.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
 })();
