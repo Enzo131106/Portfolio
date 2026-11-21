@@ -255,5 +255,19 @@
     .hero-button { transition: none; }
 }
 
-
-
+/* Écrans 2K et 4K : conserver une composition lisible sans étirer le contenu. */
+@media (min-width: 1920px) {
+    .hero-section { padding-inline: clamp(90px, 6vw, 180px); }
+    .hero-inner { width: min(1600px, 100%); gap: clamp(72px, 5vw, 130px); }
+    .hero-copy { max-width: 760px; }
+    .hero-copy h1 { max-width: 760px; font-size: clamp(72px, 3.8vw, 88px); }
+    .hero-description { max-width: 660px; font-size: 18px; }
+    .hero-button { min-height: 54px; padding-inline: 22px; font-size: 14px; }
+}
+@media (min-width: 3000px) {
+    .hero-inner { width: min(1960px, 100%); gap: 150px; }
+    .hero-copy { max-width: 880px; }
+    .hero-copy h1 { max-width: 880px; font-size: 108px; }
+    .hero-description { max-width: 760px; font-size: 21px; }
+    .hero-button { min-height: 62px; padding-inline: 26px; font-size: 17px; }
+}
