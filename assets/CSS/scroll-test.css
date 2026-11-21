@@ -155,3 +155,19 @@ html, body {
         touch-action: manipulation;
     }
 }
+
+
+/* Souris de scroll : au même niveau 3D que le bloc Accueil.
+ * Son z et son scale sont animés par GSAP ; la perspective de .depth-stage
+ * la fait sortir du champ par le bas, sans position sticky ni translation Y.
+ */
+.depth-stage-panel--hero > .hero-scroll {
+    pointer-events: auto;
+    touch-action: manipulation;
+    /* La translation CSS reste indépendante du transform 3D de GSAP. */
+    transform: none;
+    translate: -50% 0;
+    transform-origin: center center;
+    backface-visibility: hidden;
+    will-change: transform;
+}
