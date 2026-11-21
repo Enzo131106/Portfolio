@@ -24,7 +24,6 @@
     let pausedUntil = 0;
     let hoveredCard = null;
     let hoverEndsAt = 0;
-    let arrowLockedUntil = 0;
     let lastPointerPosition = null;
     let lastHoverPosition = null;
     let frame = 0;
@@ -134,7 +133,6 @@
         const target = (base + direction) * step;
         const now = performance.now();
         pausedUntil = now + manualPause;
-        arrowLockedUntil = pausedUntil;
 
         if (reducedMotion) {
             transition = null;
@@ -198,8 +196,9 @@
                 return;
             }
 
-            // Une flèche garde la priorité pendant cinq secondes.
-            if (!selected || now < pausedUntil || now < arrowLockedUntil) return;
+            // La pause automatique n'empêche jamais de sélectionner une carte
+            // proche du centre, y compris juste après avoir utilisé une flèche.
+            if (!selected) return;
 
             // Après les deux secondes, un vrai déplacement de souris est nécessaire
             // pour sélectionner de nouveau une carte.
@@ -212,7 +211,8 @@
             hoveredCard = selected;
             lastHoverPosition = pointer;
             hoverEndsAt = now + hoverPause;
-            pausedUntil = hoverEndsAt;
+            // Un survol n'écourte pas les cinq secondes de pause des flèches.
+            pausedUntil = Math.max(pausedUntil, hoverEndsAt);
             selected.classList.add("is-hovered");
             transition = {
                 from: position,
