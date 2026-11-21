@@ -128,8 +128,9 @@
 
 .hero-scroll {
     position: absolute;
-    z-index: 1;
-    bottom: -64px;
+    z-index: 2;
+    /* Repère visuel en bas de l'accueil : il défile avec la section. */
+    bottom: clamp(22px, 3.5svh, 52px);
     left: 50%;
     display: block;
     width: 22px;
@@ -232,8 +233,8 @@
         padding-inline: 15px;
         font-size: 11px;
     }
-    /* Garde la souris sous les boutons, même après le décalage final du travelling. */
-    .hero-scroll { bottom: -50px; }
+    /* Sur téléphone, conserver la souris près du bord inférieur visible. */
+    .hero-scroll { bottom: clamp(18px, 3svh, 34px); }
 }
 
 @media (max-width: 420px) {
