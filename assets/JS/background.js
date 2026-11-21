@@ -5,6 +5,12 @@ import THREE from "./three-loader.js";
 // Définit la valeur correspondant à un cercle complet en radians.
 const FULL_CIRCLE = Math.PI * 2;
 
+// Même objet GSAP que pour les contenus (la caméra ne le modifie jamais).
+const motion = window.__portfolioMotion || (window.__portfolioMotion = { intro: 0, scroll: 0 });
+const cameraIntroZ = 19;
+const cameraHeroZ = 5;
+const cameraScrollDistance = 7.5;
+
 // Détermine le type d'appareil selon la largeur de l'écran.
 const isMobile = window.innerWidth < 768;
 const isTablet =
@@ -34,8 +40,11 @@ const camera = new THREE.PerspectiveCamera(
     1000
 );
 
-// Caméra fixe : le défilement est désormais animé par GSAP.
-camera.position.z = 5;
+// Au chargement, les glyphes sont au loin. GSAP fera avancer la caméra
+// pendant l'introduction puis avec le scroll, sans répétition des particules.
+camera.position.z = cameraIntroZ
+    - (cameraIntroZ - cameraHeroZ) * motion.intro
+    - cameraScrollDistance * motion.scroll;
 
 // Initialise le moteur de rendu WebGL.
 const renderer = new THREE.WebGLRenderer({
@@ -289,9 +298,6 @@ const positions = new Float32Array(
     particleCount * 3
 );
 
-// Conserve la profondeur initiale pour rendre le travelling parfaitement réversible.
-const initialParticleDepths = new Float32Array(particleCount);
-
 // Stocke la couleur de chaque caractère.
 const colors = new Float32Array(
     particleCount * 3
@@ -354,8 +360,8 @@ for (let i = 0; i < particleCount; i++) {
         Math.sin(angle) *
         (radius + variation);
 
-    // Enregistre la profondeur d'origine et la position courante.
-    initialParticleDepths[i] = z;
+    // Chaque particule n'existe qu'une fois dans le tunnel :
+    // pas de modulo ni de copie qui créerait une jonction visible.
     positions[i3 + 2] = z;
 
     // Sélectionne une couleur de néon.
@@ -444,10 +450,6 @@ const material = new THREE.ShaderMaterial({
         },
         uOpacity: {
             value: 1
-        },
-        // Avancée dans le vortex, synchronisée avec la timeline ScrollTrigger.
-        uTravel: {
-            value: 0
         }
     },
 
@@ -463,7 +465,6 @@ const material = new THREE.ShaderMaterial({
 
         uniform float uSize;
         uniform float uTime;
-        uniform float uTravel;
 
         void main() {
 
@@ -473,11 +474,6 @@ const material = new THREE.ShaderMaterial({
 
             // Prépare la position animée du caractère.
             vec3 animatedPosition = position;
-
-            // Les glyphes s'approchent de la caméra pendant le scroll.
-            // Recyclage au fond du tunnel, hors du champ proche, sans saut visible.
-            // À uTravel=0, les coordonnées de départ restent strictement identiques.
-            animatedPosition.z = mod(position.z + uTravel + 25.0, 40.0) - 25.0;
 
             // Anime doucement le mouvement horizontal.
             animatedPosition.x +=
@@ -669,7 +665,7 @@ const particles = new THREE.Points(
 // Ajoute le vortex numérique à la scène.
 scene.add(particles);
 
-// Le défilement est piloté par GSAP ; Three.js ne lit que sa progression.
+// Three.js lit l'introduction et le scroll de GSAP, sans dupliquer le vortex.
 // Indique si l'animation doit être mise en pause.
 let isAnimationPaused = false;
 
@@ -682,9 +678,7 @@ const frameInterval = 1000 / (window.innerWidth >= 3000 ? 35 : 60);
 // Indique au loader que le fond Three.js a produit sa première image.
 let hasSignaledBackgroundReady = false;
 
-// Le même avancement que GSAP anime les caractères et la caméra.
-const cameraHeroZ = 5;
-camera.position.z = cameraHeroZ;
+// L'opacité du vortex ne dépend pas de l'opacité des sections HTML.
 material.uniforms.uOpacity.value = 1;
 
 // Fonction principale exécutée à chaque image.
@@ -719,11 +713,15 @@ function animate(currentTime) {
     material.uniforms.uTime.value =
         elapsedTime;
 
-    // Lecture de la progression amortie de GSAP : réversible dans les deux sens.
-    const progress = Math.max(0, Math.min(1, Number(window.__portfolioScrollProgress) || 0));
-    material.uniforms.uTravel.value = progress * 19;
-    camera.position.z = cameraHeroZ - progress * 3;
-    // Le dégradé reste à une profondeur constante derrière la caméra.
+    // Mouvement continu : intro (19 → 5), puis scroll (5 → -2,5).
+    // Les points restent aux mêmes coordonnées 3D : aucune couture de répétition.
+    const introProgress = Math.max(0, Math.min(1, motion.intro || 0));
+    const scrollProgress = Math.max(0, Math.min(1, motion.scroll || 0));
+    camera.position.z = cameraIntroZ
+        - (cameraIntroZ - cameraHeroZ) * introProgress
+        - cameraScrollDistance * scrollProgress;
+
+    // Le dégradé reste toujours en arrière-plan de la caméra.
     background.position.z = camera.position.z - 45;
 
     // Dessine la scène depuis le point de vue de la caméra.
