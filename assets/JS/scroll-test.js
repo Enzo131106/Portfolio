@@ -12,6 +12,7 @@
     const project = document.querySelector("#projects");
     const projectInner = project?.querySelector("[data-scroll-scene-content]");
     const cue = document.querySelector(".hero-scroll");
+    const cueMouse = cue?.querySelector(".hero-scroll-mouse");
     const main = document.querySelector("main");
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const shortScreen = window.innerHeight < 480;
@@ -68,6 +69,17 @@
     });
 
     function setupScroll() {
+        // La souris reste visuellement au bas de l'accueil pendant la transition.
+        // Compense uniquement le défilement NATIF (sans scrub) pour éviter
+        // qu'elle remonte avec la section alors que les panneaux sont centrés.
+        // Après 65 % du trajet elle est invisible et quitte la page avec l'accueil.
+        const alignCue = (progress) => {
+            if (!cue) return;
+            const offset = Math.min(Math.max(progress, 0), 0.65) * hero.offsetHeight;
+            cue.style.setProperty("--hero-cue-offset", `${offset}px`);
+        };
+        alignCue(0);
+
         // Une seule timeline, une seule plage, et zéro translation verticale.
         const story = gsap.timeline({
             defaults: { ease: "none" },
@@ -76,7 +88,9 @@
                 start: "top top",
                 end: "bottom top",
                 scrub: 0.35,
-                invalidateOnRefresh: true
+                invalidateOnRefresh: true,
+                onUpdate(self) { alignCue(self.progress); },
+                onRefresh(self) { alignCue(self.progress); }
             }
         });
 
@@ -94,6 +108,23 @@
                 immediateRender: false
             }, 0
         );
+
+        // La souris partage le zoom de l'accueil et s'efface au même moment.
+        // Elle reste un enfant de #accueil, jamais fixée sur les autres sections.
+        if (cue) {
+            story.fromTo(cue,
+                { autoAlpha: 1 },
+                { autoAlpha: 0, duration: 0.45, immediateRender: false },
+                0.20
+            );
+        }
+        if (cueMouse) {
+            story.fromTo(cueMouse,
+                { scale: 1, transformOrigin: "center center" },
+                { scale: 1.65, duration: 0.65, immediateRender: false },
+                0
+            );
+        }
 
         // Projets : arrivée de loin, toujours au CENTRE du même viewport.
         story.to(projectInner, {
