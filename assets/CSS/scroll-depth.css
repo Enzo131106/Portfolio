@@ -1,4 +1,4 @@
-/* Perspective de section : le bloc complet arrive de loin au centre, comme le hero. */
+/* La section Projets réserve une hauteur de scroll même si son texte est déplacé dans la scène 3D. */
 #projects.scroll-test-section {
     position: relative;
     min-height: 100svh;
@@ -34,15 +34,15 @@
 html, body {
     max-width: 100%;
     overflow-x: clip;
-    /* Laisse le navigateur mobile déclencher l'actualisation par glissement depuis le haut. */
+    /* On laisse le geste d'actualisation fonctionner depuis le haut sur mobile. */
     overscroll-behavior-y: auto;
 }
 #projects.scroll-test-section, .scroll-test-wrap { max-width: 100%; }
 
 
-/* Le défilement tactile reste natif : ne pas désactiver les interactions des paragraphes. */
 
-/* Sections de projets sur grands écrans : largeur de lecture maîtrisée. */
+
+/* Sur 2K et 4K, les blocs restent centrés avec une largeur de lecture limitée. */
 @media (min-width: 1920px) {
     #projects.scroll-test-section { padding-top: clamp(160px, 12vh, 220px); padding-bottom: 120px; }
     .scroll-test-wrap { width: min(1400px, 100%); }
@@ -59,11 +59,7 @@ html, body {
 }
 
 
-/*
- * Plateau de scrollytelling indépendant des sections :
- * les repères HTML défilent, pas les contenus projetés.
- * Les deux plans sont maintenus au centre du viewport sur toute la traversée.
- */
+/* Le plateau reste fixe : seule la profondeur des contenus change pendant le scroll. */
 .depth-stage {
     position: fixed;
     inset: 0;
@@ -123,11 +119,7 @@ html, body {
     .depth-stage-panel > .scroll-test-wrap { width: min(100%, 1700px); }
 }
 
-/*
- * Mobile tactile : les textes décoratifs du plateau 3D ne doivent pas
- * capturer un glissement vertical ni déclencher une sélection par appui long.
- * Les boutons et liens restent interactifs (CV, souris de scroll, etc.).
- */
+/* Sur mobile, le doigt doit pouvoir glisser sur le texte sans sélectionner les paragraphes. */
 @media (max-width: 760px) and (pointer: coarse) {
     .depth-stage,
     .depth-stage-panel,
@@ -157,14 +149,11 @@ html, body {
 }
 
 
-/* Souris de scroll : au même niveau 3D que le bloc Accueil.
- * Son z et son scale sont animés par GSAP ; la perspective de .depth-stage
- * la fait sortir du champ par le bas, sans position sticky ni translation Y.
- */
+/* La souris partage le plan 3D de l'accueil et sort du cadre en avançant vers la caméra. */
 .depth-stage-panel--hero > .hero-scroll {
     pointer-events: auto;
     touch-action: manipulation;
-    /* La translation CSS reste indépendante du transform 3D de GSAP. */
+    /* On centre la souris indépendamment du transform 3D utilisé par GSAP. */
     transform: none;
     translate: -50% 0;
     transform-origin: center center;

@@ -1,4 +1,4 @@
-/* Inter 700 en local */
+/* Cette version locale d'Inter prend le relais si la police distante est indisponible. */
 @font-face {
     font-family: "Inter Local";
     src: url("../../vendor/fonts/inter/Inter-Bold.woff2") format("woff2");
@@ -7,13 +7,13 @@
     font-display: swap;
 }
 
-/* Bunny Fonts en priorité */
+/* Inter distante reste prioritaire pour conserver le rendu normal du site. */
 body {
     font-family: "Inter", "Inter Local", Arial, sans-serif;
     font-weight: 700;
 }
 
-/* Activation explicite du fallback local */
+/* La classe est ajoutée par le script de secours quand la police distante échoue. */
 html.inter-local-fallback body {
     font-family: "Inter Local", Arial, sans-serif;
 }

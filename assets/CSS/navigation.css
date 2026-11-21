@@ -1,4 +1,4 @@
-/* Navigation principale */
+/* La navigation reste fixe pendant que les sections défilent derrière elle. */
 :root {
     --nav-text: rgba(235, 243, 255, .8);
     --nav-text-strong: #f8fbff;
@@ -274,7 +274,7 @@
     }
 }
 
-/* Navigation proportionnée aux grands moniteurs. */
+/* Sur les grands moniteurs, la barre s'agrandit sans occuper toute la largeur. */
 @media (min-width: 1920px) {
     .navbar { padding-block: 28px; }
     .navbar-container { gap: 26px; padding: 11px 18px; }

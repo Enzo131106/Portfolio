@@ -1,4 +1,4 @@
-/* Écran de chargement du portfolio */
+/* Le chargement masque la page jusqu'au premier rendu du fond et au signal du script. */
 .loading-screen {
     position: fixed;
     inset: 0;
@@ -35,7 +35,7 @@
     object-fit: contain;
 }
 
-/* Le logo est masqué proprement tant que le fichier personnel n'est pas ajouté. */
+/* Si le logo ne se charge pas, on supprime son emplacement vide. */
 .loading-logo.is-unavailable {
     display: none;
 }
@@ -114,7 +114,7 @@
 }
 
 
-/* Aucun défilement pendant l'introduction et le travelling initial du hero. */
+/* Pendant le chargement et l'intro, on bloque le scroll pour éviter un départ au milieu. */
 html:has(body.hero-intro-pending),
 body.hero-intro-pending {
     overflow: hidden !important;
@@ -122,9 +122,9 @@ body.hero-intro-pending {
     touch-action: none;
 }
 
-/* Une fois l'intro terminée, réautorise explicitement le geste vertical sur mobile. */
+/* Après l'intro, on rend la navigation tactile au navigateur. */
 html:not(:has(body.hero-intro-pending)),
 body:not(.hero-intro-pending) {
-    /* Le scroll vertical et le zoom par pincement restent disponibles. */
+    /* Le geste vertical et le zoom à deux doigts doivent fonctionner sur mobile. */
     touch-action: pan-y pinch-zoom;
 }

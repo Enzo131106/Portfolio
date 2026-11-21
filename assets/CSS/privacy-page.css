@@ -1,4 +1,4 @@
-/* Les variables globales */
+/* Les couleurs de la page de confidentialité sont définies à un seul endroit. */
 :root {
 
     --privacy-background: #070b18;
@@ -15,7 +15,7 @@
 
 }
 
-/* Structure générale */
+/* Base de la page : garder une lecture confortable, sans dépendre du portfolio animé. */
 html,
 body {
 
@@ -40,7 +40,7 @@ body {
 
 }
 
-/* Page */
+/* Le contenu de cette page défile normalement, sans effet 3D. */
 .privacy-page {
 
     min-height: 100vh;
@@ -49,7 +49,7 @@ body {
 
 }
 
-/* Bouton retour */
+/* Le retour doit rester visible et facile à activer au clavier. */
 .back-button {
 
     display: inline-flex;
@@ -89,7 +89,7 @@ body {
 
 }
 
-/* Conteneur */
+/* On limite la largeur du texte pour qu'il reste agréable à lire. */
 .privacy-container {
 
     width: 100%;
@@ -100,7 +100,7 @@ body {
 
 }
 
-/* Introduction */
+/* Le titre et l'introduction ouvrent la page avant les informations détaillées. */
 .privacy-intro {
 
     display: flex;
@@ -188,7 +188,7 @@ body {
 
 }
 
-/* Grille */
+/* Les sections passent en grille seulement quand il reste assez de place. */
 .privacy-grid {
 
     display: grid;
@@ -199,7 +199,7 @@ body {
 
 }
 
-/* Cartes */
+/* Les cartes séparent les sujets pour faciliter la lecture. */
 .privacy-card {
 
     display: flex;
@@ -279,7 +279,7 @@ body {
 
 }
 
-/* Technologies */
+/* Les badges de technologies complètent les descriptions sans prendre toute la place. */
 .technology-list {
 
     display: flex;
@@ -308,7 +308,7 @@ body {
 
 }
 
-/* Pied de page */
+/* Le pied de page ferme les informations légales et propose la navigation. */
 .privacy-footer {
 
     display: flex;
@@ -363,7 +363,7 @@ body {
 
 }
 
-/* Format tablette */
+/* Sur tablette, on réduit les colonnes plutôt que de rétrécir le texte. */
 @media screen and (max-width: 900px) {
 
     .privacy-page {
@@ -387,7 +387,7 @@ body {
 }
 
 
-/* Format téléphone */
+/* Sur téléphone, tout repasse sur une colonne avec des marges adaptées. */
 @media screen and (max-width: 600px) {
 
     .privacy-page {
@@ -447,7 +447,7 @@ body {
 
 }
 
-/* Réduction des animations */
+/* On respecte la préférence de réduction des animations du navigateur. */
 @media (prefers-reduced-motion: reduce) {
 
     .back-button,
@@ -459,7 +459,7 @@ body {
 
 }
 
-/* Page de confidentialité sur moniteurs 2K et 4K. */
+/* Sur les grands écrans, on augmente les dimensions sans étirer les paragraphes. */
 @media (min-width: 1920px) {
     .privacy-page { padding: 60px clamp(60px, 6vw, 160px); }
     .privacy-container { max-width: 1320px; margin-top: 55px; }

@@ -3,7 +3,7 @@ body {
     background: #070b18;
 }
 
-/* Background Three.js */
+/* Le canvas reste derrière les sections et ne doit jamais intercepter les clics. */
 #background {
     position: fixed;
     top: 0;
@@ -15,7 +15,7 @@ body {
     z-index: -1;
 }
 
-/* Masque la barre de défilement native sans désactiver le scroll. */
+/* On cache la barre de défilement, mais le scroll du navigateur reste actif. */
 html {
     scrollbar-width: none;
 }

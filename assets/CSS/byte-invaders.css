@@ -1,4 +1,4 @@
-/* Carte principale et structure générale du mini-jeu. */
+/* La carte du mini-jeu garde les scores et le canvas dans un même bloc. */
 .arcade-card {
     position: relative;
     z-index: 1;
@@ -14,10 +14,10 @@
     backdrop-filter: none;
 }
 
-/* Alignement commun des barres d'information et des commandes. */
+/* Les barres partagent le même espacement pour rester alignées. */
 .arcade-topbar,
 .arcade-scorebar,
-/* Rappel des commandes clavier sous la zone de jeu. */
+/* Les raccourcis clavier restent visibles sous le jeu sur ordinateur. */
 .arcade-controls {
     display: flex;
     align-items: center;
@@ -46,7 +46,7 @@
     letter-spacing: .075em;
 }
 
-/* Indicateur d'état : prêt, en cours ou fin de partie. */
+/* Le voyant change d'état selon la partie. */
 .arcade-status {
     display: inline-flex;
     flex: 0 0 auto;
@@ -64,7 +64,7 @@
     background: #83d9b4;
 }
 
-/* Tableau de score, record et vies. */
+/* Les scores restent lisibles, même quand la carte se rétrécit. */
 .arcade-scorebar {
     gap: 12px;
     padding: 12px 17px;
@@ -99,7 +99,7 @@
     white-space: nowrap;
 }
 
-/* Zone de jeu : le canvas occupe toute la surface disponible. */
+/* Le canvas remplit cette zone : ses dimensions sont calculées côté JavaScript. */
 .arcade-screen {
     position: relative;
     height: clamp(190px, 19vw, 235px);
@@ -114,7 +114,7 @@
     height: 100%;
 }
 
-/* Écran d'accueil et écran de fin superposés au canvas. */
+/* L'écran de début et celui de fin recouvrent le canvas sans le déplacer. */
 .arcade-overlay {
     position: absolute;
     z-index: 2;
@@ -203,7 +203,7 @@
     text-align: center;
 }
 
-/* Boutons tactiles disponibles si leur affichage est activé. */
+/* Ces commandes servent aux appareils tactiles compatibles. */
 .arcade-mobile-controls {
     display: none;
     grid-template-columns: 1fr 1fr 1fr;
@@ -228,7 +228,7 @@
     background: #123047;
 }
 
-/* Réduire les marges internes sur les écrans intermédiaires. */
+/* On réduit les espacements avant que la carte manque de place. */
 @media (max-width: 1050px) {
     .arcade-card { transform: none; }
     .arcade-topbar { padding-inline: 14px; }
@@ -236,20 +236,20 @@
     .arcade-controls { padding-inline: 14px; }
 }
 
-/* Le mini-jeu est masqué sur les petits écrans. */
+/* Le mini-jeu est trop serré sur téléphone : on cache toute la carte. */
 @media (max-width: 760px) {
-    /* Le mini-jeu reste réservé aux écrans où il est réellement confortable. */
+    
     .arcade-card { display: none; }
 }
 
-/* Respecter la préférence système de réduction des animations. */
+/* Les transitions sont coupées si l'utilisateur préfère moins d'animations. */
 @media (prefers-reduced-motion: reduce) {
     .arcade-overlay,
     .arcade-start { transition: none; }
 }
 
 
-/* État de fin de partie : alerte visuelle et actions liées au score. */
+/* Le score final est mis en évidence sans modifier les autres états. */
 .arcade-status.is-game-over {
     color: #ff6b78;
 }
@@ -259,7 +259,7 @@
     box-shadow: 0 0 9px rgba(255, 77, 94, .65);
 }
 
-/* Actions de partage et de téléchargement affichées en fin de partie. */
+/* Les actions de partage n'apparaissent qu'à la fin d'une partie. */
 .arcade-result-actions {
     display: none;
     flex-wrap: wrap;
@@ -300,13 +300,13 @@
     font-size: 12px;
 }
 
-/* Ajuster les actions de score sur les très petits écrans. */
+/* Sur les petits écrans, les boutons de résultat doivent tenir sur une ligne. */
 @media (max-width: 430px) {
     .arcade-result-actions { gap: 6px; }
     .arcade-result-button { padding-inline: 9px; font-size: 9px; }
 }
 
-/* Mini-jeu : conserver un écran panoramique sur les résolutions 2K / 4K. */
+/* Sur les grands écrans, on agrandit la carte sans déformer la zone de jeu. */
 @media (min-width: 1920px) {
     .arcade-screen { height: clamp(250px, 13vw, 320px); }
     .arcade-topbar { padding: 19px 23px; }
