@@ -751,8 +751,8 @@ document.addEventListener(
     }
 );
 
-// Lance la boucle d'animation.
-animate();
+// Le premier frame reçoit un timestamp valide (pas de NaN dans les shaders).
+requestAnimationFrame(animate);
 
 // Recalcule les dimensions du rendu lors du redimensionnement.
 function handleResize() {
