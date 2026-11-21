@@ -37,16 +37,7 @@ html, body {
 #projects.scroll-test-section, .scroll-test-wrap { max-width: 100%; }
 
 
-/* Sur téléphone, les paragraphes ne capturent pas le toucher pendant le défilement.
-   Les liens, boutons et contrôles interactifs restent utilisables normalement. */
-@media (max-width: 760px) {
-    p {
-        -webkit-user-select: none;
-        user-select: none;
-        touch-action: pan-y;
-        pointer-events: none;
-    }
-}
+/* Le défilement tactile reste natif : ne pas désactiver les interactions des paragraphes. */
 
 /* Sections de projets sur grands écrans : largeur de lecture maîtrisée. */
 @media (min-width: 1920px) {
