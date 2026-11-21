@@ -66,18 +66,20 @@
             duration: 0.36
         }, 0.41);
 
-        story.fromTo(projectInner, {
+        // Le bloc est masqué dès le départ pour éviter son apparition
+        // soudaine au moment où il entre dans le viewport.
+        gsap.set(projectInner, {
             scale: mobile ? 0.82 : 0.68,
             z: mobile ? -150 : -360,
             y: mobile ? 48 : 90,
             autoAlpha: 0
-        }, {
+        });
+        story.to(projectInner, {
             scale: 1,
             z: 0,
             y: 0,
             autoAlpha: 1,
-            duration: 0.69,
-            immediateRender: false
+            duration: 0.69
         }, 0.29);
 
         // Fixe exactement la longueur de l'animation à celle de la transition.
