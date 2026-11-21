@@ -69,17 +69,6 @@
     });
 
     function setupScroll() {
-        // La souris reste visuellement au bas de l'accueil pendant la transition.
-        // Compense uniquement le défilement NATIF (sans scrub) pour éviter
-        // qu'elle remonte avec la section alors que les panneaux sont centrés.
-        // Après 65 % du trajet elle est invisible et quitte la page avec l'accueil.
-        const alignCue = (progress) => {
-            if (!cue) return;
-            const offset = Math.min(Math.max(progress, 0), 0.65) * hero.offsetHeight;
-            cue.style.setProperty("--hero-cue-offset", `${offset}px`);
-        };
-        alignCue(0);
-
         // Une seule timeline, une seule plage, et zéro translation verticale.
         const story = gsap.timeline({
             defaults: { ease: "none" },
@@ -88,9 +77,7 @@
                 start: "top top",
                 end: "bottom top",
                 scrub: 0.35,
-                invalidateOnRefresh: true,
-                onUpdate(self) { alignCue(self.progress); },
-                onRefresh(self) { alignCue(self.progress); }
+                invalidateOnRefresh: true
             }
         });
 
