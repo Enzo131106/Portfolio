@@ -16,6 +16,7 @@
     const manualPause = 7000;
     const travelDuration = 750;
     const hoverTravelDuration = 950;
+    const hoverMaxAngle = Math.PI * 0.28; // Uniquement les cartes à moins d'environ 50° du centre.
 
     let position = 0;
     let transition = null;
@@ -59,10 +60,12 @@
             card.style.opacity = String(0.46 + 0.54 * (cos + 1) / 2);
             card.style.zIndex = String(Math.round(100 + cos * 50));
 
-            // Une carte arrière visible peut aussi être ramenée devant au survol.
-            card.style.pointerEvents = "auto";
-            card.inert = false;
-            card.setAttribute("aria-hidden", String(cos < -0.3));
+            // Les côtés lointains et les dos restent visibles, mais ne réagissent
+            // pas au pointeur. Seules les cartes proches de l'avant sont interactives.
+            const nearCenter = Math.abs(angle) <= hoverMaxAngle;
+            card.style.pointerEvents = nearCenter ? "auto" : "none";
+            card.inert = !nearCenter;
+            card.setAttribute("aria-hidden", String(!nearCenter));
         });
 
     }
@@ -159,11 +162,14 @@
 
             card.addEventListener("pointerenter", event => {
                 if (event.pointerType === "touch" || hoveredCard === card) return;
+                const angle = normalizeAngle(index * step - position);
+                // Double vérification : le pointerenter ne suffit pas, car les
+                // cartes peuvent bouger sous un curseur immobile.
+                if (Math.abs(angle) > hoverMaxAngle) return;
+
                 clearTilt(hoveredCard);
                 hoveredCard = card;
                 card.classList.add("is-hovered");
-
-                const angle = normalizeAngle(index * step - position);
                 transition = {
                     from: position,
                     to: position + angle,

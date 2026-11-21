@@ -239,8 +239,9 @@
     transition: color 180ms ease, background-color 180ms ease;
 }
 
-.projects-carousel__arrow--prev { left: clamp(0px, 1.5vw, 22px); }
-.projects-carousel__arrow--next { right: clamp(0px, 1.5vw, 22px); }
+/* Les flèches se placent par rapport aux bords du viewport, même sur les grands écrans. */
+.projects-carousel__arrow--prev { left: calc(50% - 50vw + clamp(12px, 1.6vw, 28px)); }
+.projects-carousel__arrow--next { right: calc(50% - 50vw + clamp(12px, 1.6vw, 28px)); }
 
 .projects-carousel__arrow:hover {
     color: #f4f8ff;
@@ -290,8 +291,6 @@
     .projects-carousel__details h3 { font-size: 19px; }
     .projects-carousel__details p { font-size: 12px; }
     .projects-carousel__arrow { width: 40px; height: 52px; font-size: 28px; }
-    .projects-carousel__arrow--prev { left: 0; }
-    .projects-carousel__arrow--next { right: 0; }
 }
 
 @media (max-height: 680px) {
