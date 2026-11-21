@@ -125,5 +125,6 @@ body.hero-intro-pending {
 /* Une fois l'intro terminée, réautorise explicitement le geste vertical sur mobile. */
 html:not(:has(body.hero-intro-pending)),
 body:not(.hero-intro-pending) {
-    touch-action: pan-y;
+    /* Le scroll vertical et le zoom par pincement restent disponibles. */
+    touch-action: pan-y pinch-zoom;
 }
