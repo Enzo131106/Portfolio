@@ -12,7 +12,6 @@
     const project = document.querySelector("#projects");
     const projectInner = project?.querySelector("[data-scroll-scene-content]");
     const cue = document.querySelector(".hero-scroll");
-    const cueMouse = cue?.querySelector(".hero-scroll-mouse");
     const main = document.querySelector("main");
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const shortScreen = window.innerHeight < 480;
@@ -56,6 +55,10 @@
     const projectPanel = document.createElement("div");
     projectPanel.className = "depth-stage-panel depth-stage-panel--project";
     heroPanel.appendChild(heroInner);
+    // Dans le même plan 3D que l'accueil : au départ près du bas,
+    // puis projetée vers la caméra jusqu'à sortir du viewport.
+    // On ne l'ancre pas au scroll natif : cela la ferait remonter verticalement.
+    if (cue) heroPanel.appendChild(cue);
     projectPanel.appendChild(projectInner);
     stage.append(heroPanel, projectPanel);
     main.appendChild(stage);
@@ -96,19 +99,18 @@
             }, 0
         );
 
-        // La souris partage le zoom de l'accueil et s'efface au même moment.
-        // Elle reste un enfant de #accueil, jamais fixée sur les autres sections.
+        // Même travelling en Z et même zoom que le bloc Accueil.
+        // La perspective du plateau projette la souris hors de l'écran
+        // PAR LE BAS, sans la remonter ou la masquer prématurément par opacité.
         if (cue) {
             story.fromTo(cue,
-                { autoAlpha: 1 },
-                { autoAlpha: 0, duration: 0.45, immediateRender: false },
-                0.20
-            );
-        }
-        if (cueMouse) {
-            story.fromTo(cueMouse,
-                { scale: 1, transformOrigin: "center center" },
-                { scale: 1.65, duration: 0.65, immediateRender: false },
+                { z: 0, scale: 1, autoAlpha: 1 },
+                {
+                    z: 570,
+                    scale: 1.65,
+                    duration: 0.65,
+                    immediateRender: false
+                },
                 0
             );
         }
