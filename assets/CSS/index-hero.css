@@ -129,14 +129,14 @@
 .hero-scroll {
     position: absolute;
     z-index: 2;
-    /* Repère visuel en bas de l'accueil : il défile avec la section. */
+    /* Repère en bas de l'accueil, projeté dans la scène 3D pendant le scroll. */
     bottom: clamp(22px, 3.5svh, 52px);
     left: 50%;
     display: block;
     width: 22px;
     height: 36px;
     margin: 0;
-    /* Ancrée à l'accueil : le scroll natif l'emporte hors du viewport. */
+    /* Centrage normal si la scène 3D ne s'initialise pas. */
     transform: translateX(-50%);
     text-decoration: none;
     opacity: 1;
