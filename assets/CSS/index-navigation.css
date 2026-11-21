@@ -273,3 +273,19 @@
         scroll-behavior: auto !important;
     }
 }
+
+/* Navigation proportionnée aux grands moniteurs. */
+@media (min-width: 1920px) {
+    .navbar { padding-block: 28px; }
+    .navbar-container { gap: 26px; padding: 11px 18px; }
+    .profile-photo { width: 43px; height: 43px; flex-basis: 43px; }
+    .brand-name { font-size: 13px; }
+    .navbar .nav-link { font-size: 14px; padding: 11px 14px !important; }
+}
+@media (min-width: 3000px) {
+    .navbar { padding-block: 36px; }
+    .navbar-container { gap: 32px; padding: 14px 22px; }
+    .profile-photo { width: 52px; height: 52px; flex-basis: 52px; }
+    .brand-name { font-size: 16px; }
+    .navbar .nav-link { font-size: 17px; padding: 14px 18px !important; }
+}
