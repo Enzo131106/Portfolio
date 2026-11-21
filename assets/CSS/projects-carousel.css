@@ -66,7 +66,6 @@
     translate: -50% -50%;
     transform-origin: center center;
     transform-style: preserve-3d;
-    backface-visibility: hidden;
     will-change: transform, opacity;
     pointer-events: none;
 }
@@ -79,6 +78,8 @@
     background: #111b2b;
     box-shadow: 0 20px 50px rgba(0, 4, 14, .34);
     transform-style: preserve-3d;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
     transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) translateZ(var(--lift, 0px));
     transition: transform 150ms ease-out, border-color 200ms ease, box-shadow 200ms ease;
 }
@@ -87,6 +88,48 @@
     --lift: 15px;
     border-color: rgba(179, 213, 244, .64);
     box-shadow: 0 26px 65px rgba(0, 4, 14, .45);
+}
+
+/* Au fond de l'anneau, on voit le dos des cartes, pas leurs textes inversés. */
+.projects-carousel__back {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    border: 1px solid rgba(176, 199, 222, .24);
+    border-radius: 13px;
+    background: linear-gradient(145deg, var(--card-background), #111823);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform: rotateY(180deg);
+    pointer-events: none;
+}
+
+.projects-carousel__back::before {
+    content: "";
+    position: absolute;
+    inset: 15px;
+    border: 1px solid rgba(201, 214, 229, .12);
+    border-radius: 6px;
+}
+
+.projects-carousel__back-number {
+    color: var(--card-accent);
+    opacity: .55;
+    font-size: clamp(68px, 8vw, 125px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -.07em;
+}
+
+.projects-carousel__back-label {
+    color: rgba(221, 232, 247, .52);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .22em;
 }
 
 .projects-carousel__card--web { --card-accent: #a5d4ee; --card-background: #172839; }
@@ -175,7 +218,7 @@
     line-height: 1.55;
 }
 
-/* Les commandes sont centrées verticalement, chacune sur un bord du carrousel. */
+/* Pas de gros bouton rond : les flèches accompagnent les cartes sans les dominer. */
 .projects-carousel__arrow {
     position: absolute;
     z-index: 200;
@@ -184,24 +227,24 @@
     display: grid;
     place-items: center;
     width: 52px;
-    height: 52px;
+    height: 68px;
     padding: 0;
-    border: 1px solid rgba(183, 207, 234, .4);
-    border-radius: 50%;
-    background: rgba(15, 27, 44, .88);
-    color: #f3f7fc;
-    font: 400 22px/1 Arial, sans-serif;
+    border: 0;
+    border-radius: 4px;
+    background: transparent;
+    color: rgba(224, 235, 248, .66);
+    font: 300 34px/1 Arial, sans-serif;
     cursor: pointer;
     touch-action: manipulation;
-    transition: background-color 180ms ease, border-color 180ms ease;
+    transition: color 180ms ease, background-color 180ms ease;
 }
 
 .projects-carousel__arrow--prev { left: clamp(0px, 1.5vw, 22px); }
 .projects-carousel__arrow--next { right: clamp(0px, 1.5vw, 22px); }
 
 .projects-carousel__arrow:hover {
-    background: rgba(57, 81, 111, .88);
-    border-color: rgba(209, 230, 249, .8);
+    color: #f4f8ff;
+    background: rgba(163, 189, 220, .07);
 }
 
 .projects-carousel__arrow:focus-visible {
@@ -241,11 +284,12 @@
     .projects-carousel__card { width: min(77vw, 395px); }
     .projects-carousel__visual::before { inset: 12px; }
     .projects-carousel__number { font-size: clamp(75px, 25vw, 125px); }
+    .projects-carousel__back-number { font-size: clamp(60px, 20vw, 100px); }
     .projects-carousel__placeholder { left: 17px; bottom: 16px; font-size: 8px; }
     .projects-carousel__details { padding: 13px 18px 15px; }
     .projects-carousel__details h3 { font-size: 19px; }
     .projects-carousel__details p { font-size: 12px; }
-    .projects-carousel__arrow { width: 42px; height: 42px; }
+    .projects-carousel__arrow { width: 40px; height: 52px; font-size: 28px; }
     .projects-carousel__arrow--prev { left: 0; }
     .projects-carousel__arrow--next { right: 0; }
 }

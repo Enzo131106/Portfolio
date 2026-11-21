@@ -15,6 +15,7 @@
     const speed = step / 11;
     const manualPause = 7000;
     const travelDuration = 750;
+    const hoverTravelDuration = 950;
 
     let position = 0;
     let transition = null;
@@ -54,13 +55,14 @@
 
             // Le même angle pilote la position sur le cercle et la rotation Y.
             card.style.transform = `translate3d(${x.toFixed(1)}px, 0, ${z.toFixed(1)}px) rotateY(${rotation.toFixed(2)}deg)`;
-            card.style.opacity = String(Math.max(0, Math.min(1, (cos + 0.12) * 1.55)));
+            // Les dos restent visibles au fond et passent derrière les cartes proches.
+            card.style.opacity = String(0.46 + 0.54 * (cos + 1) / 2);
             card.style.zIndex = String(Math.round(100 + cos * 50));
 
-            const readable = cos > 0.2;
-            card.style.pointerEvents = readable ? "auto" : "none";
-            card.inert = !readable;
-            card.setAttribute("aria-hidden", String(!readable));
+            // Une carte arrière visible peut aussi être ramenée devant au survol.
+            card.style.pointerEvents = "auto";
+            card.inert = false;
+            card.setAttribute("aria-hidden", String(cos < -0.3));
         });
 
     }
@@ -82,7 +84,7 @@
         lastFrameTime = now;
 
         if (transition) {
-            const progress = Math.min(1, (now - transition.started) / travelDuration);
+            const progress = Math.min(1, (now - transition.started) / transition.duration);
             const eased = 1 - Math.pow(1 - progress, 3);
             position = transition.from + (transition.to - transition.from) * eased;
             if (progress === 1) transition = null;
@@ -101,6 +103,17 @@
     }
 
     function move(direction) {
+        // Une flèche reprend la main même si une carte était sélectionnée au survol.
+        if (hoveredCard) {
+            hoveredCard.classList.remove("is-hovered");
+            const surface = hoveredCard.querySelector("[data-carousel-surface]");
+            if (surface) {
+                for (const property of ["--tilt-x", "--tilt-y", "--pointer-x", "--pointer-y"]) {
+                    surface.style.removeProperty(property);
+                }
+            }
+            hoveredCard = null;
+        }
         const base = Math.round((transition ? transition.to : position) / step);
         const target = (base + direction) * step;
         const now = performance.now();
@@ -111,7 +124,7 @@
             position = target;
             render();
         } else {
-            transition = { from: position, to: target, started: now };
+            transition = { from: position, to: target, started: now, duration: travelDuration };
             startLoop();
         }
 
@@ -127,17 +140,37 @@
         move(event.key === "ArrowRight" ? 1 : -1);
     });
 
-    // On incline le contenu, pas la carte qui tourne autour du carrousel.
-    // Les deux rotations ne se remplacent donc jamais.
+    // Survoler une carte la ramène au centre par le chemin le plus court.
+    // Le carrousel reste arrêté tant que la souris est dans la scène.
     if (finePointer && !reducedMotion) {
-        cards.forEach(card => {
+        function clearTilt(card) {
+            if (!card) return;
+            const surface = card.querySelector("[data-carousel-surface]");
+            card.classList.remove("is-hovered");
+            if (!surface) return;
+            for (const property of ["--tilt-x", "--tilt-y", "--pointer-x", "--pointer-y"]) {
+                surface.style.removeProperty(property);
+            }
+        }
+
+        cards.forEach((card, index) => {
             const surface = card.querySelector("[data-carousel-surface]");
             if (!surface) return;
 
             card.addEventListener("pointerenter", event => {
-                if (event.pointerType === "touch") return;
+                if (event.pointerType === "touch" || hoveredCard === card) return;
+                clearTilt(hoveredCard);
                 hoveredCard = card;
                 card.classList.add("is-hovered");
+
+                const angle = normalizeAngle(index * step - position);
+                transition = {
+                    from: position,
+                    to: position + angle,
+                    started: performance.now(),
+                    duration: hoverTravelDuration
+                };
+                startLoop();
             });
 
             card.addEventListener("pointermove", event => {
@@ -153,14 +186,25 @@
                 surface.style.setProperty("--pointer-y", `${((ny + 1) * 50).toFixed(1)}%`);
             });
 
+            // La carte se déplace sous la souris en rejoignant le centre :
+            // un simple pointerleave sur la carte ne doit pas relancer la rotation.
             card.addEventListener("pointerleave", () => {
-                if (hoveredCard === card) hoveredCard = null;
-                card.classList.remove("is-hovered");
-                surface.style.removeProperty("--tilt-x");
-                surface.style.removeProperty("--tilt-y");
-                surface.style.removeProperty("--pointer-x");
-                surface.style.removeProperty("--pointer-y");
+                const wasSelected = hoveredCard === card;
+                if (!wasSelected) clearTilt(card);
+                else {
+                    const bounds = card.getBoundingClientRect();
+                    if (!bounds.width || !bounds.height) return;
+                    for (const property of ["--tilt-x", "--tilt-y", "--pointer-x", "--pointer-y"]) {
+                        surface.style.removeProperty(property);
+                    }
+                }
             });
+        });
+
+        scene.addEventListener("pointerleave", () => {
+            clearTilt(hoveredCard);
+            hoveredCard = null;
+            pausedUntil = performance.now() + 1200;
         });
     }
 
