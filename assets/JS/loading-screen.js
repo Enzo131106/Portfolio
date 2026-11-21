@@ -14,7 +14,20 @@
 
     let pageLoaded = document.readyState === "complete";
     let backgroundReady = window.__portfolioBackgroundReady === true;
+    let animationsReady = !window.__portfolioGsapReady;
     let finished = false;
+
+    // Les scripts CDN peuvent être remplacés après le chargement HTML.
+    // On attend leur résultat pour ne pas manquer le départ de l'introduction.
+    if (window.__portfolioGsapReady) {
+        window.__portfolioGsapReady.then(() => {
+            animationsReady = true;
+            finishLoading();
+        }, () => {
+            animationsReady = true;
+            finishLoading();
+        });
+    }
 
     if (logo) {
         logo.addEventListener("error", () => {
@@ -53,7 +66,7 @@
 
     // Le loader ne disparaît qu'une fois les deux signaux reçus ; l'intro démarre pendant son fondu.
     function finishLoading() {
-        if (finished || !pageLoaded || !backgroundReady) return;
+        if (finished || !pageLoaded || !backgroundReady || !animationsReady) return;
         finished = true;
 
         loader.classList.remove("is-loading");
@@ -106,6 +119,7 @@
     window.setTimeout(() => {
         if (finished) return;
         backgroundReady = true;
+        animationsReady = true;
         finishLoading();
-    }, 8000);
+    }, 12000);
 })();
