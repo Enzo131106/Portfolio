@@ -1,21 +1,53 @@
-/* Le carrousel reste dans le contenu Projets : le scroll 3D de la page ne pilote pas sa rotation. */
-.projects-carousel {
-    position: relative;
-    width: 100%;
-    margin-top: clamp(10px, 2vh, 22px);
-    pointer-events: auto;
+/* La section Projets occupe le plateau 3D, sans modifier le travelling de la page. */
+#projects .scroll-test-wrap,
+.depth-stage-panel--project > .scroll-test-wrap {
+    display: flex;
+    flex-direction: column;
+    width: min(calc(100vw - clamp(32px, 7vw, 136px)), 1950px);
+    max-width: none;
+    box-sizing: border-box;
 }
 
-.scroll-test-wrap > .scroll-test-intro {
-    margin: 13px 0 0;
-    max-width: 660px;
+#projects .scroll-test-wrap {
+    min-height: min(76svh, 820px);
+}
+
+.depth-stage-panel--project > .scroll-test-wrap {
+    height: 100svh;
+    min-height: 0;
+    padding: clamp(90px, 12svh, 138px) 0 clamp(23px, 4svh, 48px);
+}
+
+.scroll-test-wrap > .scroll-test-title {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: none;
+    margin: 0 0 clamp(6px, 1.8svh, 20px);
+    text-align: center;
+    font-size: clamp(38px, 4.8vw, 78px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -.055em;
+}
+
+.projects-carousel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    margin: 0;
+    pointer-events: auto;
 }
 
 .projects-carousel__scene {
     position: relative;
-    height: clamp(275px, 43svh, 410px);
-    perspective: clamp(850px, 95vw, 1300px);
-    perspective-origin: center center;
+    flex: 1 1 auto;
+    width: 100%;
+    min-height: 305px;
+    perspective: clamp(1100px, 90vw, 2000px);
+    perspective-origin: 50% 50%;
     transform-style: preserve-3d;
     overflow: clip;
     touch-action: pan-y pinch-zoom;
@@ -23,36 +55,53 @@
     -webkit-user-select: none;
 }
 
+/* Une carte a deux niveaux : le premier tourne autour de l'anneau,
+   le second s'incline indépendamment sous le pointeur. */
 .projects-carousel__card {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: clamp(245px, 41vw, 410px);
+    width: clamp(300px, 43vw, 670px);
     margin: 0;
     translate: -50% -50%;
     transform-origin: center center;
     transform-style: preserve-3d;
     backface-visibility: hidden;
-    border: 1px solid rgba(154, 187, 225, .24);
-    border-radius: 13px;
-    background: #111b2b;
-    box-shadow: 0 18px 45px rgba(0, 4, 14, .25);
-    overflow: hidden;
     will-change: transform, opacity;
     pointer-events: none;
+}
+
+.projects-carousel__surface {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(154, 187, 225, .28);
+    border-radius: 13px;
+    background: #111b2b;
+    box-shadow: 0 20px 50px rgba(0, 4, 14, .34);
+    transform-style: preserve-3d;
+    transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) translateZ(var(--lift, 0px));
+    transition: transform 150ms ease-out, border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.projects-carousel__card.is-hovered .projects-carousel__surface {
+    --lift: 15px;
+    border-color: rgba(179, 213, 244, .64);
+    box-shadow: 0 26px 65px rgba(0, 4, 14, .45);
 }
 
 .projects-carousel__card--web { --card-accent: #a5d4ee; --card-background: #172839; }
 .projects-carousel__card--game { --card-accent: #b5becf; --card-background: #202a3b; }
 .projects-carousel__card--mmi { --card-accent: #a5c6c1; --card-background: #1b3032; }
 .projects-carousel__card--lab { --card-accent: #d0bfd6; --card-background: #292437; }
+.projects-carousel__card--code { --card-accent: #d4caab; --card-background: #302c26; }
+.projects-carousel__card--personal { --card-accent: #a9bacb; --card-background: #233143; }
 
 .projects-carousel__visual {
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 16 / 10;
     background: linear-gradient(140deg, var(--card-background), #0d1422);
     border-bottom: 1px solid rgba(154, 187, 225, .12);
     overflow: hidden;
@@ -61,32 +110,46 @@
 .projects-carousel__visual::before {
     content: "";
     position: absolute;
-    inset: 18px;
+    inset: 20px;
     border: 1px solid color-mix(in srgb, var(--card-accent) 28%, transparent);
     border-radius: 4px;
 }
 
+.projects-carousel__visual::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    background: radial-gradient(circle at var(--pointer-x, 50%) var(--pointer-y, 50%), rgba(255, 255, 255, .13), transparent 62%);
+    transition: opacity 200ms ease;
+}
+
+.projects-carousel__card.is-hovered .projects-carousel__visual::after {
+    opacity: 1;
+}
+
 .projects-carousel__number {
     color: var(--card-accent);
-    font-size: clamp(78px, 10vw, 130px);
+    font-size: clamp(95px, 11vw, 180px);
     line-height: 1;
     font-weight: 700;
     letter-spacing: -.075em;
-    opacity: .48;
+    opacity: .46;
 }
 
 .projects-carousel__placeholder {
     position: absolute;
-    bottom: 27px;
-    left: 28px;
+    bottom: 28px;
+    left: 30px;
     color: rgba(231, 240, 250, .68);
-    font-size: 9px;
+    font-size: 10px;
     letter-spacing: .17em;
     font-weight: 600;
 }
 
 .projects-carousel__details {
-    padding: 17px 23px 19px;
+    padding: clamp(17px, 1.6vw, 26px) clamp(20px, 2vw, 32px);
 }
 
 .projects-carousel__type {
@@ -98,27 +161,28 @@
 }
 
 .projects-carousel__details h3 {
-    margin: 6px 0 3px;
-    font-size: clamp(19px, 2vw, 23px);
-    line-height: 1.25;
+    margin: 6px 0 4px;
     color: #f3f7fc;
+    font-size: clamp(21px, 2vw, 30px);
     font-weight: 700;
+    line-height: 1.25;
 }
 
 .projects-carousel__details p {
     margin: 0;
     color: rgba(222, 233, 246, .64);
-    font-size: 12px;
+    font-size: clamp(12px, 1vw, 15px);
     line-height: 1.55;
 }
 
 .projects-carousel__footer {
     display: flex;
+    flex: 0 0 auto;
     align-items: center;
     justify-content: space-between;
     gap: 15px;
-    min-height: 49px;
-    padding: 0 clamp(3px, 2vw, 18px);
+    min-height: 56px;
+    padding: 5px clamp(3px, 2vw, 18px);
 }
 
 .projects-carousel__count {
@@ -131,27 +195,22 @@
     font-weight: 600;
 }
 
-.projects-carousel__separator {
-    color: rgba(214, 226, 244, .46);
-}
-
+.projects-carousel__separator { color: rgba(214, 226, 244, .46); }
 .projects-carousel__note {
     color: rgba(214, 226, 244, .6);
     font-size: 11px;
-    letter-spacing: .015em;
 }
 
 .projects-carousel__arrows {
     display: flex;
-    align-items: center;
     gap: 10px;
 }
 
 .projects-carousel__arrow {
     display: grid;
     place-items: center;
-    width: 43px;
-    height: 43px;
+    width: 46px;
+    height: 46px;
     padding: 0;
     border: 1px solid rgba(183, 207, 234, .4);
     border-radius: 50%;
@@ -160,7 +219,7 @@
     font: 400 22px/1 Arial, sans-serif;
     cursor: pointer;
     touch-action: manipulation;
-    transition: background-color .18s ease, border-color .18s ease;
+    transition: background-color 180ms ease, border-color 180ms ease;
 }
 
 .projects-carousel__arrow:hover {
@@ -185,51 +244,64 @@
     border: 0;
 }
 
-/* Sur téléphone, les cartes restent assez grandes pour être lisibles et le scroll vertical reste possible. */
 @media (max-width: 760px) {
-    .scroll-test-wrap > .scroll-test-intro {
-        max-width: 480px;
-        margin-top: 10px;
-        font-size: 13px;
-        line-height: 1.6;
+    #projects .scroll-test-wrap,
+    .depth-stage-panel--project > .scroll-test-wrap {
+        width: calc(100vw - 32px);
     }
-    .projects-carousel { margin-top: 8px; }
-    .projects-carousel__scene { height: clamp(260px, 40svh, 340px); }
-    .projects-carousel__card { width: min(73vw, 315px); border-radius: 10px; }
-    .projects-carousel__details { padding: 13px 15px 15px; }
-    .projects-carousel__details h3 { font-size: 19px; }
+
+    .depth-stage-panel--project > .scroll-test-wrap {
+        padding-top: clamp(88px, 12svh, 116px);
+        padding-bottom: clamp(12px, 3svh, 28px);
+    }
+
+    .scroll-test-wrap > .scroll-test-title {
+        font-size: clamp(34px, 9vw, 52px);
+        margin-bottom: 7px;
+    }
+
+    .projects-carousel__scene { min-height: 260px; }
+    .projects-carousel__card { width: min(77vw, 395px); }
     .projects-carousel__visual::before { inset: 12px; }
-    .projects-carousel__placeholder { bottom: 19px; left: 19px; font-size: 8px; }
+    .projects-carousel__number { font-size: clamp(75px, 25vw, 125px); }
+    .projects-carousel__placeholder { left: 17px; bottom: 16px; font-size: 8px; }
+    .projects-carousel__details { padding: 13px 18px 15px; }
+    .projects-carousel__details h3 { font-size: 19px; }
+    .projects-carousel__details p { font-size: 12px; }
     .projects-carousel__note { display: none; }
-    .projects-carousel__footer { padding: 0 3px; }
-    .projects-carousel__arrow { width: 41px; height: 41px; }
+    .projects-carousel__footer { min-height: 48px; padding: 4px; }
+    .projects-carousel__arrow { width: 42px; height: 42px; }
 }
 
 @media (max-height: 680px) {
-    .projects-carousel__scene { height: clamp(215px, 38svh, 290px); }
-    .projects-carousel__card { width: min(36vw, 310px); }
-    .projects-carousel__details { padding: 11px 16px 12px; }
+    .depth-stage-panel--project > .scroll-test-wrap {
+        padding-top: 75px;
+        padding-bottom: 11px;
+    }
+    .scroll-test-wrap > .scroll-test-title { font-size: clamp(32px, 4vw, 52px); }
+    .projects-carousel__scene { min-height: 210px; }
+    .projects-carousel__card { width: min(33vw, 440px); }
+    .projects-carousel__visual { aspect-ratio: 16 / 9; }
+    .projects-carousel__details { padding: 10px 14px; }
     .projects-carousel__details h3 { font-size: 18px; }
+    .projects-carousel__details p { font-size: 11px; }
     .projects-carousel__note { display: none; }
 }
 
 @media (max-height: 680px) and (max-width: 760px) {
-    .projects-carousel__scene { height: 215px; }
-    .projects-carousel__card { width: min(69vw, 260px); }
-    .projects-carousel__number { font-size: 74px; }
-    .projects-carousel__details p { font-size: 11px; }
+    .projects-carousel__card { width: min(70vw, 275px); }
+    .projects-carousel__number { font-size: 72px; }
 }
 
 @media (min-width: 1920px) {
-    .projects-carousel__scene { height: clamp(430px, 42svh, 560px); }
-    .projects-carousel__card { width: clamp(440px, 26vw, 550px); }
-    .projects-carousel__details { padding: 23px 28px 26px; }
-    .projects-carousel__details h3 { font-size: 28px; }
-    .projects-carousel__details p { font-size: 15px; }
-    .projects-carousel__number { font-size: 155px; }
+    .projects-carousel__card { width: clamp(660px, 34vw, 880px); }
+    .projects-carousel__number { font-size: 210px; }
+    .scroll-test-wrap > .scroll-test-title { font-size: clamp(76px, 4.4vw, 108px); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .projects-carousel__arrow { transition: none; }
+    .projects-carousel__arrow,
+    .projects-carousel__surface,
+    .projects-carousel__visual::after { transition: none; }
     .projects-carousel__card { will-change: auto; }
 }
