@@ -1,9 +1,10 @@
 "use strict";
 
 /*
- * GSAP anime une seule traversée entre l'accueil et les projets.
- * Three.js lit la même progression que les sections, y compris à l'intro.
- * Le défilement du navigateur reste natif et entièrement réversible.
+ * Scrollytelling 100 % profondeur :
+ * un plateau fixe reste centré dans le viewport pendant le scroll.
+ * GSAP anime uniquement scale / translateZ / opacité ; jamais X ou Y.
+ * Les sections restent dans le flux pour garder les ancres et le scroll natif.
  */
 (() => {
     const hero = document.querySelector("#accueil");
@@ -11,13 +12,13 @@
     const project = document.querySelector("#projects");
     const projectInner = project?.querySelector("[data-scroll-scene-content]");
     const cue = document.querySelector(".hero-scroll");
+    const main = document.querySelector("main");
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const isMobile = window.matchMedia("(max-width: 760px)").matches;
+    const shortScreen = window.innerHeight < 480;
     let introStarted = false;
     let released = false;
 
-    // Objet partagé : la caméra WebGL suit exactement l'animation GSAP.
-    // Ne jamais le remplacer : le module Three.js peut démarrer avant ou après.
+    // L'objet partagé est également utilisé par la caméra du fond Three.js.
     const motion = window.__portfolioMotion || (window.__portfolioMotion = {
         intro: 0,
         scroll: 0
@@ -31,8 +32,10 @@
         window.dispatchEvent(new Event("portfolio-hero-arrived"));
     }
 
-    if (!window.gsap || !window.ScrollTrigger) {
-        // CDN indisponible : afficher le contenu et le fond dans leur état normal.
+    // Pas de mise en scène fixe lorsque GSAP est indisponible,
+    // lorsque le mouvement réduit est demandé ou sur un écran très bas.
+    if (!window.gsap || !window.ScrollTrigger || !hero || !heroInner ||
+        !project || !projectInner || !main || reducedMotion || shortScreen) {
         motion.intro = 1;
         motion.scroll = 0;
         release();
@@ -41,53 +44,66 @@
 
     gsap.registerPlugin(ScrollTrigger);
 
+    // Déplace uniquement les contenus visuels, sans toucher aux sections
+    // #accueil et #projects : elles restent des repères de défilement natif.
+    // Le plateau est frère des sections, pas leur descendant : il n'est jamais
+    // entraîné vers le haut par le scroll ni par leur CSS perspective.
+    const stage = document.createElement("div");
+    stage.className = "depth-stage";
+    const heroPanel = document.createElement("div");
+    heroPanel.className = "depth-stage-panel depth-stage-panel--hero";
+    const projectPanel = document.createElement("div");
+    projectPanel.className = "depth-stage-panel depth-stage-panel--project";
+    heroPanel.appendChild(heroInner);
+    projectPanel.appendChild(projectInner);
+    stage.append(heroPanel, projectPanel);
+    main.appendChild(stage);
+
+    // Le contenu Projets ne peut pas surgir à l'écran avant le premier scroll.
+    gsap.set(projectInner, {
+        z: -850,
+        scale: 0.32,
+        autoAlpha: 0,
+        transformOrigin: "center center"
+    });
+
     function setupScroll() {
-        if (reducedMotion || !hero || !heroInner || !projectInner) return;
-
-        // La section suivante reste à sa place dans le flux de la page :
-        // aucun pin, snap, changement forcé de scroll ou déplacement vertical massif.
-        gsap.set(projectInner, {
-            scale: isMobile ? 0.94 : 0.85,
-            z: isMobile ? 0 : -155,
-            autoAlpha: 0,
-            transformOrigin: "center center"
-        });
-
+        // Une seule timeline, une seule plage, et zéro translation verticale.
         const story = gsap.timeline({
             defaults: { ease: "none" },
             scrollTrigger: {
                 trigger: hero,
                 start: "top top",
                 end: "bottom top",
-                scrub: isMobile ? 0.14 : 0.25,
+                scrub: 0.35,
                 invalidateOnRefresh: true
             }
         });
 
-        // Le vortex, l'accueil et les projets utilisent le MÊME playhead.
+        // Le vortex se déplace exactement au rythme des contenus.
         story.to(motion, { scroll: 1, duration: 1 }, 0);
 
-        // Le hero s'approche légèrement puis s'efface, sans zoom disproportionné.
+        // Accueil : le plan traverse la caméra en grossissant depuis le centre.
         story.fromTo(heroInner,
-            { scale: 1, z: 0, autoAlpha: 1 },
+            { z: 0, scale: 1, autoAlpha: 1 },
             {
-                scale: isMobile ? 1.07 : 1.14,
-                z: isMobile ? 0 : 90,
+                z: 570,
+                scale: 1.65,
                 autoAlpha: 0,
-                duration: 0.67,
+                duration: 0.65,
                 immediateRender: false
             }, 0
         );
 
-        // Le nouveau contenu apparaît uniquement lorsqu'il entre dans le champ.
+        // Projets : arrivée de loin, toujours au CENTRE du même viewport.
         story.to(projectInner, {
-            scale: 1,
             z: 0,
+            scale: 1,
             autoAlpha: 1,
-            duration: 0.54
-        }, 0.43);
+            duration: 0.65
+        }, 0.35);
 
-        // Liens d'ancrage, retour arrière navigateur et redimensionnement.
+        // Quand on remonte, GSAP rejoue exactement la trajectoire inverse.
         ScrollTrigger.refresh();
     }
 
@@ -95,34 +111,23 @@
         if (introStarted) return;
         introStarted = true;
 
-        if (reducedMotion || !heroInner) {
-            motion.intro = 1;
-            motion.scroll = 0;
-            if (heroInner) gsap.set(heroInner, {
-                clearProps: "transform,opacity,visibility"
-            });
-            release();
-            return;
-        }
-
-        // Le vortex avance pendant les mêmes 2,65 secondes que le contenu.
+        // Le déplacement du vortex et l'apparition du hero ont même durée.
         gsap.timeline({
             onComplete() {
-                gsap.set(heroInner, {
-                    clearProps: "transform,opacity,visibility"
-                });
+                // Le plateau fixe conserve sa position, sans saut entre intro et scroll.
+                gsap.set(heroInner, { z: 0, scale: 1, autoAlpha: 1 });
                 release();
                 setupScroll();
             }
         })
             .fromTo(heroInner, {
+                z: -1050,
                 scale: 0.18,
-                z: -1100,
                 autoAlpha: 0,
                 transformOrigin: "center center"
             }, {
-                scale: 1,
                 z: 0,
+                scale: 1,
                 autoAlpha: 1,
                 duration: 2.65,
                 ease: "power2.inOut"
@@ -141,8 +146,6 @@
     }
 
     window.addEventListener("portfolio-loader-hiding", startIntro, { once: true });
-    // Secours si le loader a déjà commencé à disparaître au chargement du script.
     window.addEventListener("portfolio-loader-hidden", startIntro, { once: true });
-    if (reducedMotion) startIntro();
-    if (!document.getElementById("loading-screen") && !introStarted) startIntro();
+    if (!document.getElementById("loading-screen")) startIntro();
 })();
