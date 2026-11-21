@@ -34,10 +34,8 @@ const camera = new THREE.PerspectiveCamera(
     1000
 );
 
-// La caméra démarre loin du hero, puis traverse réellement le vortex.
-const cameraStartZ = isMobile ? 20 : 22;
-const cameraHeroZ = 5;
-camera.position.z = cameraStartZ;
+// Caméra fixe : le défilement est désormais animé par GSAP.
+camera.position.z = 5;
 
 // Initialise le moteur de rendu WebGL.
 const renderer = new THREE.WebGLRenderer({
@@ -674,44 +672,10 @@ const frameInterval = 1000 / 30;
 // Indique au loader que le fond Three.js a produit sa première image.
 let hasSignaledBackgroundReady = false;
 
-// Le travelling démarre après le loader et respecte la préférence de mouvement réduit.
-const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const heroInner = document.querySelector(".hero-inner");
-const heroScroll = document.querySelector(".hero-scroll");
-const cameraApproachDuration = isMobile ? 2200 : 2500;
-let cameraApproachStarted = false;
-let cameraApproachComplete = prefersReducedMotion;
-let cameraApproachStartTime = 0;
-let heroArrivalDispatched = false;
-
-if (prefersReducedMotion) {
-    camera.position.z = cameraHeroZ;
-    material.uniforms.uOpacity.value = 1;
-    document.body.classList.remove("hero-intro-pending");
-    if (heroScroll) heroScroll.classList.add("is-ready");
-} else {
-    window.addEventListener("portfolio-loader-hiding", () => {
-        if (cameraApproachStarted) return;
-        cameraApproachStarted = true;
-        cameraApproachStartTime = performance.now();
-        // Le vortex est déjà visible quand le loader disparaît : pas de fondu depuis un écran vide.
-        material.uniforms.uOpacity.value = 1;
-
-        // Le vrai contenu se rapproche avec la caméra, sans maquette intermédiaire.
-        if (heroInner) {
-            heroInner.style.transformOrigin = "center center";
-            heroInner.style.transform = "scale(0.18)";
-            heroInner.style.opacity = "1";
-            heroInner.style.willChange = "transform, opacity";
-        }
-        if (heroScroll) {
-            heroScroll.style.opacity = "0";
-            heroScroll.classList.remove("is-ready");
-            heroScroll.classList.add("is-travelling");
-            heroScroll.style.setProperty("--hero-travel-duration", `${cameraApproachDuration}ms`);
-        }
-    }, { once: true });
-}
+// Three.js conserve uniquement le fond animé ; GSAP gère les mouvements de page.
+const cameraHeroZ = 5;
+camera.position.z = cameraHeroZ;
+material.uniforms.uOpacity.value = 1;
 
 // Fonction principale exécutée à chaque image.
 function animate(currentTime) {
@@ -745,102 +709,8 @@ function animate(currentTime) {
     material.uniforms.uTime.value =
         elapsedTime;
 
-    // Travelling d'introduction : conserve exactement le mouvement déclenché après le loader.
-    if (cameraApproachStarted) {
-        const elapsed = currentTime - cameraApproachStartTime;
-        const progress = Math.min(elapsed / cameraApproachDuration, 1);
-        const easedProgress = progress < 0.72
-            ? 0.5 * Math.pow(progress / 0.72, 1.65) * 0.92
-            : 0.46 + 0.54 * (1 - Math.pow(1 - (progress - 0.72) / 0.28, 3));
-
-        camera.position.z =
-            cameraStartZ + (cameraHeroZ - cameraStartZ) * easedProgress;
-
-        // Agrandit le vrai hero selon la progression du travelling : proportions et mise en page inchangées.
-        if (heroInner) {
-            const heroScale = 0.18 + 0.82 * easedProgress;
-            heroInner.style.transform = `scale(${heroScale})`;
-            heroInner.style.opacity = "1";
-        }
-        if (heroScroll) {
-            // Déplace la souris entière vers le bas avec exactement la progression de la caméra.
-            // Elle s'efface à l'approche de l'arrivée pour éviter un retour visuel brusque.
-            const scrollCueOpacity =
-                Math.min(progress / 0.06, 1) *
-                Math.min((1 - progress) / 0.18, 1);
-            heroScroll.style.opacity = String(Math.max(0, scrollCueOpacity));
-            heroScroll.style.transform = `translate(-50%, ${easedProgress * 44}px)`;
-            heroScroll.style.setProperty("--hero-travel-progress", String(easedProgress));
-        }
-
-        // Les particules entrent progressivement dans le champ au début du travelling.
-        material.uniforms.uOpacity.value = 1;
-
-        if (progress >= 1) {
-            cameraApproachStarted = false;
-            cameraApproachComplete = true;
-            camera.position.z = cameraHeroZ;
-            material.uniforms.uOpacity.value = 1;
-
-            // Retire les styles temporaires pour rendre les interactions CSS normales.
-            if (heroInner) {
-                // Garde une transformation neutre pour éviter le clignement lors du
-                // passage de l’animation JS aux styles CSS normaux.
-                heroInner.style.transform = "scale(1)";
-                heroInner.style.opacity = "1";
-                heroInner.style.transformOrigin = "center center";
-                heroInner.style.willChange = "";
-            }
-            if (heroScroll) {
-                heroScroll.style.opacity = "1";
-                // Conserve la position finale du travelling : retirer le transform ici
-                // ferait remonter la souris d'un coup au dernier frame.
-                heroScroll.style.transform = "translate(-50%, 44px)";
-                heroScroll.style.removeProperty("--hero-travel-progress");
-                const scrollDot = heroScroll.querySelector(".hero-scroll-mouse span");
-                if (scrollDot) {
-                    scrollDot.style.removeProperty("opacity");
-                    scrollDot.style.removeProperty("transform");
-                }
-                heroScroll.classList.remove("is-travelling");
-                heroScroll.classList.add("is-ready");
-            }
-
-            if (!heroArrivalDispatched) {
-                heroArrivalDispatched = true;
-                window.dispatchEvent(new Event("portfolio-hero-arrived"));
-                document.body.classList.remove("hero-intro-pending");
-            }
-        }
-    }
-
-    // Le scroll pilote un travelling réversible, borné à la position du hero
-    // en haut de page. Le ratio réduit évite de traverser le vortex trop vite.
-    if (cameraApproachComplete && !prefersReducedMotion) {
-        // La caméra avance vers le centre du vortex (z=0) sans le dépasser :
-        // dépasser ce point donnait l'impression de s'éloigner du tunnel.
-        // Les particules dépendent directement du scroll, donc le trajet est réversible.
-        const travelPerPixel = isMobile ? 0.0018 : 0.0022;
-        const scrollDepth = Math.max(0, window.scrollY) * travelPerPixel;
-        const cameraTravel = Math.min(scrollDepth, cameraHeroZ);
-        camera.position.z = cameraHeroZ - cameraTravel;
-        background.position.z = camera.position.z - 45;
-
-        const positionAttribute = geometry.attributes.position;
-        const positionArray = positionAttribute.array;
-        for (let i = 0; i < particleCount; i++) {
-            const i3 = i * 3;
-            const baseZ = initialParticleDepths[i];
-            const relativeDepth = ((baseZ + scrollDepth + 18) % 36 + 36) % 36 - 18;
-            // À scroll nul, la position doit être exactement celle de l'intro :
-            // on applique le déplacement relatif à la caméra sans saut de profondeur.
-            positionArray[i3 + 2] = relativeDepth + camera.position.z - cameraHeroZ;
-        }
-        positionAttribute.needsUpdate = true;
-    } else if (cameraApproachComplete) {
-        camera.position.z = cameraHeroZ;
-        background.position.z = camera.position.z - 45;
-    }
+    // Le vortex reste un fond décoratif indépendant du scroll.
+    background.position.z = camera.position.z - 45;
 
     // Dessine la scène depuis le point de vue de la caméra.
     renderer.render(
