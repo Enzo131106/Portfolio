@@ -49,6 +49,7 @@
 }
 
 .hero-copy h1 span {
+    display: block;
     color: #ABD2FA;
     font-size: .72em;
 }
