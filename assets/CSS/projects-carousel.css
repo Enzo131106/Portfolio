@@ -71,88 +71,67 @@
     pointer-events: none;
 }
 
+/* Un seul dégradé, du bleu du bouton CV au bleu nuit de Byte Invaders.
+   Pas de fausses bordures, de cadres décoratifs ou de pastilles. */
 .projects-carousel__surface {
     position: relative;
     overflow: hidden;
-    border: 1px solid rgba(6, 18, 37, .17);
-    border-radius: 13px;
-    background: #ABD2FA;
-    box-shadow: 0 20px 50px rgba(0, 4, 14, .24);
+    border: 0;
+    border-radius: 11px;
+    background: linear-gradient(160deg,
+        #ABD2FA 0%,
+        #85b5dd 27%,
+        #416b91 52%,
+        #111d33 77%,
+        #0a1428 100%);
+    box-shadow: 0 19px 46px rgba(0, 4, 14, .3);
     transform-style: preserve-3d;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
     transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) translateZ(var(--lift, 0px));
-    transition: transform 150ms ease-out, border-color 200ms ease, box-shadow 200ms ease;
+    transition: transform 150ms ease-out, box-shadow 200ms ease;
 }
 
 .projects-carousel__card.is-hovered .projects-carousel__surface {
     --lift: 15px;
-    border-color: rgba(6, 18, 37, .38);
-    box-shadow: 0 26px 65px rgba(0, 4, 14, .32);
+    box-shadow: 0 25px 58px rgba(0, 4, 14, .4);
 }
 
-/* Au fond de l'anneau, on voit le dos des cartes, pas leurs textes inversés. */
+/* Le dos participe au même mouvement sans ajouter de fausse interface. */
 .projects-carousel__back {
     position: absolute;
     inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    border: 1px solid rgba(6, 18, 37, .17);
-    border-radius: 13px;
-    background: linear-gradient(145deg, #c4e0fc, #ABD2FA 72%);
+    display: grid;
+    place-items: center;
+    border: 0;
+    border-radius: 11px;
+    background: linear-gradient(145deg, #ABD2FA 0%, #608eb7 48%, #111d33 100%);
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
     transform: rotateY(180deg);
     pointer-events: none;
 }
 
-.projects-carousel__back::before {
-    content: "";
-    position: absolute;
-    inset: 15px;
-    border: 1px solid rgba(6, 18, 37, .16);
-    border-radius: 6px;
-}
-
 .projects-carousel__back-number {
-    color: var(--card-accent);
-    opacity: .55;
-    font-size: clamp(68px, 8vw, 125px);
-    font-weight: 700;
+    color: #0a1428;
+    opacity: .56;
+    font-size: clamp(95px, 13vw, 190px);
+    font-weight: 800;
     line-height: 1;
-    letter-spacing: -.07em;
+    letter-spacing: -.085em;
 }
 
-.projects-carousel__back-label {
-    color: rgba(6, 18, 37, .54);
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: .22em;
-}
-
-/* Même bleu que le bouton « Télécharger mon CV » : #ABD2FA. */
-.projects-carousel__card { --card-accent: #061225; --card-background: #ABD2FA; }
-
+/* Le numéro sert d'identité visuelle tant que les vraies captures manquent. */
 .projects-carousel__visual {
     position: relative;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    aspect-ratio: 16 / 9;
-    background: linear-gradient(145deg, #c9e4ff, #ABD2FA 58%, #9ecaf5);
-    border-bottom: 1px solid rgba(6, 18, 37, .12);
+    justify-content: flex-end;
+    align-items: flex-end;
+    aspect-ratio: 16 / 8.8;
+    padding: clamp(17px, 2.1vw, 34px);
+    background: transparent;
     overflow: hidden;
-}
-
-.projects-carousel__visual::before {
-    content: "";
-    position: absolute;
-    inset: 20px;
-    border: 1px solid color-mix(in srgb, var(--card-accent) 28%, transparent);
-    border-radius: 4px;
+    box-sizing: border-box;
 }
 
 .projects-carousel__visual::after {
@@ -161,7 +140,7 @@
     inset: 0;
     pointer-events: none;
     opacity: 0;
-    background: radial-gradient(circle at var(--pointer-x, 50%) var(--pointer-y, 50%), rgba(255, 255, 255, .13), transparent 62%);
+    background: radial-gradient(circle at var(--pointer-x, 50%) var(--pointer-y, 50%), rgba(255, 255, 255, .13), transparent 65%);
     transition: opacity 200ms ease;
 }
 
@@ -170,85 +149,71 @@
 }
 
 .projects-carousel__number {
-    color: var(--card-accent);
-    font-size: clamp(95px, 11vw, 180px);
-    line-height: 1;
-    font-weight: 700;
-    letter-spacing: -.075em;
-    opacity: .24;
-}
-
-.projects-carousel__placeholder {
-    position: absolute;
-    bottom: 28px;
-    left: 30px;
-    color: rgba(6, 18, 37, .6);
-    font-size: 10px;
-    letter-spacing: .17em;
-    font-weight: 600;
+    color: #0a1428;
+    font-size: clamp(110px, 15vw, 220px);
+    font-weight: 800;
+    line-height: .82;
+    letter-spacing: -.085em;
+    opacity: .62;
 }
 
 .projects-carousel__details {
-    padding: clamp(14px, 1.4vw, 24px) clamp(20px, 2vw, 32px);
-}
-
-.projects-carousel__type {
-    display: block;
-    color: var(--card-accent);
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: .12em;
+    padding: clamp(10px, 1.3vw, 20px) clamp(21px, 2.3vw, 35px) clamp(21px, 2vw, 31px);
 }
 
 .projects-carousel__details h3 {
-    margin: 6px 0 4px;
-    color: #061225;
-    font-size: clamp(21px, 2vw, 30px);
-    font-weight: 700;
-    line-height: 1.25;
+    margin: 0 0 7px;
+    color: #f4f8ff;
+    font-size: clamp(24px, 2.35vw, 35px);
+    font-weight: 750;
+    line-height: 1.13;
+    letter-spacing: -.035em;
 }
 
 .projects-carousel__details p {
     margin: 0;
-    color: rgba(6, 18, 37, .68);
+    color: rgba(226, 239, 255, .78);
     font-size: clamp(12px, 1vw, 15px);
-    line-height: 1.55;
+    line-height: 1.5;
 }
 
-/* Zone prête à accueillir les compétences réelles de chaque projet. */
+/* Les compétences sont de simples mentions, sans badges ni encadrements. */
 .projects-carousel__skills {
-    margin-top: clamp(12px, 1.4vw, 18px);
-    padding-top: clamp(10px, 1vw, 15px);
-    border-top: 1px solid rgba(6, 18, 37, .18);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 12px;
+    margin-top: clamp(14px, 1.7vw, 22px);
 }
 
 .projects-carousel__skills-title {
-    display: block;
-    margin-bottom: 9px;
-    color: rgba(6, 18, 37, .62);
-    font-size: 9px;
-    font-weight: 750;
-    letter-spacing: .095em;
+    color: #b3cde8;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0;
 }
 
 .projects-carousel__skill-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 4px 0;
     margin: 0;
     padding: 0;
     list-style: none;
 }
 
 .projects-carousel__skill-list li {
-    padding: 5px 9px;
-    border: 1px solid rgba(6, 18, 37, .2);
-    border-radius: 5px;
-    background: rgba(255, 255, 255, .23);
-    color: #061225;
-    font-size: 10px;
-    font-weight: 600;
-    line-height: 1.3;
+    color: #f1f6ff;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.projects-carousel__skill-list li + li::before {
+    content: "/";
+    display: inline-block;
+    padding: 0 8px;
+    color: #8cadd0;
 }
 
 /* Navigation façon repère éditorial : une flèche, deux traits fins, aucun cadre. */
@@ -361,18 +326,17 @@
         -webkit-backface-visibility: hidden;
     }
     .projects-carousel__back { display: none; }
-    .projects-carousel__surface { box-shadow: 0 12px 36px rgba(0, 4, 14, .3); }
-    .projects-carousel__visual::before { inset: 12px; }
-    .projects-carousel__number { font-size: clamp(75px, 25vw, 125px); }
+    .projects-carousel__surface { box-shadow: 0 12px 32px rgba(0, 4, 14, .3); }
+    .projects-carousel__visual { aspect-ratio: 16 / 8.8; padding: 15px; }
+    .projects-carousel__number { font-size: clamp(82px, 25vw, 132px); }
     .projects-carousel__back-number { font-size: clamp(60px, 20vw, 100px); }
-    .projects-carousel__placeholder { left: 17px; bottom: 16px; font-size: 8px; }
-    .projects-carousel__details { padding: 13px 18px 15px; }
-    .projects-carousel__details h3 { font-size: 19px; }
+    .projects-carousel__details { padding: 8px 17px 20px; }
+    .projects-carousel__details h3 { margin-bottom: 6px; font-size: 21px; }
     .projects-carousel__details p { font-size: 12px; }
-    .projects-carousel__skills { margin-top: 10px; padding-top: 10px; }
-    .projects-carousel__skills-title { margin-bottom: 7px; font-size: 8px; }
-    .projects-carousel__skill-list { gap: 5px; }
-    .projects-carousel__skill-list li { padding: 4px 7px; font-size: 9px; }
+    .projects-carousel__skills { gap: 4px 9px; margin-top: 12px; }
+    .projects-carousel__skills-title,
+    .projects-carousel__skill-list li { font-size: 10px; }
+    .projects-carousel__skill-list li + li::before { padding-inline: 6px; }
     /* Sur téléphone, le doigt suffit pour naviguer : pas de commandes latérales. */
     .projects-carousel__arrow { display: none; }
 }
@@ -386,12 +350,12 @@
     .projects-carousel__scene { min-height: 210px; }
     .projects-carousel__card { width: min(33vw, 440px); }
     .projects-carousel__visual { aspect-ratio: 16 / 9; }
-    .projects-carousel__details { padding: 10px 14px; }
+    .projects-carousel__details { padding: 8px 14px 13px; }
     .projects-carousel__details h3 { font-size: 18px; }
     .projects-carousel__details p { font-size: 11px; }
-    .projects-carousel__skills { margin-top: 8px; padding-top: 8px; }
-    .projects-carousel__skills-title { margin-bottom: 6px; }
-    .projects-carousel__skill-list li { padding: 3px 6px; }
+    .projects-carousel__skills { margin-top: 8px; }
+    .projects-carousel__skills-title,
+    .projects-carousel__skill-list li { font-size: 9px; }
 }
 
 @media (max-height: 680px) and (max-width: 760px) {
