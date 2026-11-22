@@ -260,6 +260,45 @@
     object-fit: contain;
 }
 
+/* Lien sobre vers le dépôt, sans ajouter de bouton encadré à la carte. */
+.projects-carousel__source {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 34px;
+    margin-top: 12px;
+    padding: 4px 0;
+    color: #d7edff;
+    font-size: 12px;
+    font-weight: 650;
+    line-height: 1.3;
+    text-decoration: none;
+    transition: color 180ms ease;
+}
+
+.projects-carousel__source span {
+    display: inline-block;
+    font-size: 17px;
+    line-height: 1;
+    transition: transform 180ms ease;
+}
+
+.projects-carousel__source:hover {
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.projects-carousel__source:hover span,
+.projects-carousel__source:focus-visible span {
+    transform: translate(2px, -2px);
+}
+
+.projects-carousel__source:focus-visible {
+    outline: 2px solid #ABD2FA;
+    outline-offset: 4px;
+}
+
 
 /* Navigation façon repère éditorial : une flèche, deux traits fins, aucun cadre. */
 .projects-carousel__arrow {
@@ -385,6 +424,7 @@
     .projects-carousel__skill-list--icons { gap: 7px 11px; }
     .projects-carousel__skill-list--icons li { gap: 5px; }
     .projects-carousel__skill-list--icons img { width: 18px; height: 18px; flex-basis: 18px; }
+    .projects-carousel__source { min-height: 32px; margin-top: 8px; font-size: 11px; }
     /* Sur téléphone, le doigt suffit pour naviguer : pas de commandes latérales. */
     .projects-carousel__arrow { display: none; }
 }
@@ -406,6 +446,7 @@
     .projects-carousel__skill-list li { font-size: 9px; }
     .projects-carousel__skill-list--icons { gap: 6px 9px; }
     .projects-carousel__skill-list--icons img { width: 16px; height: 16px; flex-basis: 16px; }
+    .projects-carousel__source { margin-top: 5px; }
 }
 
 @media (max-height: 680px) and (max-width: 760px) {
