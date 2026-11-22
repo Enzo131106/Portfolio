@@ -311,8 +311,8 @@
     }
 
     .scroll-test-wrap > .scroll-test-title {
-        font-size: clamp(34px, 9vw, 52px);
-        margin-bottom: 7px;
+        font-size: clamp(43px, 11vw, 64px);
+        margin-bottom: 10px;
     }
 
     /* Sur mobile, un coverflow remplace le grand anneau : une carte lisible,
@@ -356,6 +356,8 @@
 }
 
 @media (max-height: 680px) and (max-width: 760px) {
+    /* Le titre reste marqué même sur les téléphones à faible hauteur. */
+    .scroll-test-wrap > .scroll-test-title { font-size: clamp(38px, 8.8vw, 50px); }
     .projects-carousel__card { width: min(68vw, 290px); }
     .projects-carousel__number { font-size: 72px; }
 }
