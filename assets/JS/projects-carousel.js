@@ -15,7 +15,7 @@
     const step = (Math.PI * 2) / cards.length;
     const speed = step / 11;
     const manualPause = 5000; // Les flèches laissent cinq secondes pour regarder le projet.
-    const hoverPause = 2000; // Un survol laisse deux secondes avant la reprise.
+    const hoverPause = 2000; // Après avoir quitté une carte, patienter deux secondes avant de reprendre.
     const travelDuration = 750;
     const hoverTravelDuration = 950;
     const mobileHold = 3000; // Sur mobile, chaque projet reste affiché trois secondes.
@@ -27,7 +27,6 @@
     let pausedUntil = 0;
     let mobileNextAt = 0;
     let hoveredCard = null;
-    let hoverEndsAt = 0;
     let lastPointerPosition = null;
     let lastHoverPosition = null;
     let frame = 0;
@@ -179,9 +178,8 @@
         const dt = lastFrameTime ? Math.min((now - lastFrameTime) / 1000, 0.05) : 0;
         lastFrameTime = now;
 
-        // Une carte ne peut pas retenir la rotation au-delà des deux secondes.
-        if (hoveredCard && now >= hoverEndsAt) clearHover();
-
+        // Une carte survolée bloque la rotation tant que la souris ne l'a pas quittée.
+        // Ne jamais libérer ce survol selon un simple délai : le pointeur peut être immobile.
         if (transition) {
             const progress = Math.min(1, (now - transition.started) / transition.duration);
             const eased = progress * progress * (3 - 2 * progress);
@@ -204,7 +202,7 @@
                 };
                 mobileNextAt = 0;
             }
-        } else if (!reducedMotion && now >= pausedUntil) {
+        } else if (!reducedMotion && !hoveredCard && now >= pausedUntil) {
             position += dt * speed;
         }
 
@@ -284,24 +282,20 @@
                         surface.style.setProperty("--pointer-x", `${((nx + 1) * 50).toFixed(1)}%`);
                         surface.style.setProperty("--pointer-y", `${((ny + 1) * 50).toFixed(1)}%`);
                     }
-                } else {
-                    // La carte peut passer hors du pointeur pendant son recentrage.
-                    // On enlève l'inclinaison, mais on conserve le délai initial.
-                    const surface = hoveredCard.querySelector("[data-carousel-surface]");
-                    if (surface) {
-                        surface.style.removeProperty("--tilt-x");
-                        surface.style.removeProperty("--tilt-y");
-                    }
+                    return;
                 }
-                return;
+                // La souris a réellement quitté la carte, sans sortir de la scène.
+                // On attend deux secondes après ce départ avant de relancer la rotation.
+                clearHover();
+                pausedUntil = Math.max(pausedUntil, now + hoverPause);
+                lastHoverPosition = null;
             }
 
             // La pause automatique n'empêche jamais de sélectionner une carte
             // proche du centre, y compris juste après avoir utilisé une flèche.
             if (!selected) return;
 
-            // Après les deux secondes, un vrai déplacement de souris est nécessaire
-            // pour sélectionner de nouveau une carte.
+            // Un vrai déplacement est nécessaire pour sélectionner de nouveau une carte.
             if (lastHoverPosition && Math.hypot(pointer.x - lastHoverPosition.x, pointer.y - lastHoverPosition.y) < 40) return;
 
             const index = cards.indexOf(selected);
@@ -315,9 +309,8 @@
 
             hoveredCard = selected;
             lastHoverPosition = pointer;
-            hoverEndsAt = now + hoverPause;
-            // Un survol n'écourte pas les cinq secondes de pause des flèches.
-            pausedUntil = Math.max(pausedUntil, hoverEndsAt);
+            // Le survol ne coupe pas les cinq secondes de pause des flèches.
+            // La rotation restera arrêtée jusqu'au départ réel du pointeur.
             selected.classList.add("is-hovered");
             transition = {
                 from: position,
@@ -329,10 +322,12 @@
         }, { passive: true });
 
         scene.addEventListener("pointerleave", () => {
-            clearHover();
+            if (hoveredCard) {
+                clearHover();
+                pausedUntil = Math.max(pausedUntil, performance.now() + hoverPause);
+            }
             lastPointerPosition = null;
             lastHoverPosition = null;
-            // On ne prolonge pas le délai : la reprise reste à deux secondes.
         });
     }
 
@@ -364,7 +359,12 @@
     }
 
     document.addEventListener("visibilitychange", () => {
-        if (document.hidden) stopLoop();
+        if (document.hidden) {
+            clearHover();
+            lastPointerPosition = null;
+            lastHoverPosition = null;
+            stopLoop();
+        }
         else {
             // L'onglet ne rattrape pas les rotations manquées pendant son absence.
             if (mobileScreen.matches) {
