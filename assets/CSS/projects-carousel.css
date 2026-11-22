@@ -226,6 +226,32 @@
     color: #8cadd0;
 }
 
+/* Icônes locales identiques aux Skill Icons du README : sobres, sans badges. */
+.projects-carousel__skill-list--icons {
+    gap: 9px 15px;
+    align-items: center;
+}
+
+.projects-carousel__skill-list--icons li {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.projects-carousel__skill-list--icons li + li::before {
+    content: none;
+}
+
+.projects-carousel__skill-list--icons img {
+    display: block;
+    width: 21px;
+    height: 21px;
+    flex: 0 0 21px;
+    object-fit: contain;
+}
+
+
 /* Navigation façon repère éditorial : une flèche, deux traits fins, aucun cadre. */
 .projects-carousel__arrow {
     position: absolute;
@@ -347,6 +373,9 @@
     .projects-carousel__skills-title,
     .projects-carousel__skill-list li { font-size: 10px; }
     .projects-carousel__skill-list li + li::before { padding-inline: 6px; }
+    .projects-carousel__skill-list--icons { gap: 7px 11px; }
+    .projects-carousel__skill-list--icons li { gap: 5px; }
+    .projects-carousel__skill-list--icons img { width: 18px; height: 18px; flex-basis: 18px; }
     /* Sur téléphone, le doigt suffit pour naviguer : pas de commandes latérales. */
     .projects-carousel__arrow { display: none; }
 }
@@ -366,6 +395,8 @@
     .projects-carousel__skills { margin-top: 8px; }
     .projects-carousel__skills-title,
     .projects-carousel__skill-list li { font-size: 9px; }
+    .projects-carousel__skill-list--icons { gap: 6px 9px; }
+    .projects-carousel__skill-list--icons img { width: 16px; height: 16px; flex-basis: 16px; }
 }
 
 @media (max-height: 680px) and (max-width: 760px) {
