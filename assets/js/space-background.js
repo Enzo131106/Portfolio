@@ -6,7 +6,7 @@ import THREE from "./three-loader.js";
 
 const FULL_CIRCLE = Math.PI * 2;
 
-const motion = window.__portfolioMotion || (window.__portfolioMotion = { intro: 0, scroll: 0 });
+const motion = window._portfolioMotion || (window._portfolioMotion = { intro: 0, scroll: 0 });
 const cameraIntroZ = 19;
 const cameraHeroZ = 5;
 const cameraScrollDistance = 7.5;
@@ -616,7 +616,7 @@ function animate(currentTime) {
 
     if (!hasSignaledBackgroundReady) {
         hasSignaledBackgroundReady = true;
-        window.__portfolioBackgroundReady = true;
+        window._portfolioBackgroundReady = true;
         window.dispatchEvent(new Event("portfolio-background-ready"));
     }
 }

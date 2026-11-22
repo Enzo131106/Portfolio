@@ -14,7 +14,7 @@ function initializeScrollDepth() {
     let introStarted = false;
     let released = false;
 
-    const motion = window.__portfolioMotion || (window.__portfolioMotion = {
+    const motion = window._portfolioMotion || (window._portfolioMotion = {
         intro: 0,
         scroll: 0
     });
@@ -146,8 +146,8 @@ function initializeScrollDepth() {
     if (!loadingScreen || loadingScreen.classList.contains("is-hidden")) startIntro();
 }
 
-if (window.__portfolioGsapReady) {
-    window.__portfolioGsapReady.then(initializeScrollDepth, initializeScrollDepth);
+if (window._portfolioGsapReady) {
+    window._portfolioGsapReady.then(initializeScrollDepth, initializeScrollDepth);
 } else {
     initializeScrollDepth();
 }

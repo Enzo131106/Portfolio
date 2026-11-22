@@ -14,12 +14,12 @@
 
 
     let pageLoaded = document.readyState === "complete";
-    let backgroundReady = window.__portfolioBackgroundReady === true;
-    let animationsReady = !window.__portfolioGsapReady;
+    let backgroundReady = window._portfolioBackgroundReady === true;
+    let animationsReady = !window._portfolioGsapReady;
     let finished = false;
 
-    if (window.__portfolioGsapReady) {
-        window.__portfolioGsapReady.then(() => {
+    if (window._portfolioGsapReady) {
+        window._portfolioGsapReady.then(() => {
             animationsReady = true;
             finishLoading();
         }, () => {

@@ -136,7 +136,7 @@ function loadAnimationLibrary(cdn, local, isReady) {
 }
 
 const animationSources = document.currentScript?.dataset;
-window.__portfolioGsapReady = (async () => {
+window._portfolioGsapReady = (async () => {
     const gsapLoaded = await loadAnimationLibrary(
         animationSources.gsapCdn,
         "./vendor/gsap/gsap.min.js",
