@@ -11,18 +11,21 @@
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-    const mobileScreen = window.matchMedia("(max-width: 760px)");
+    const mobileScreen = window.matchMedia("(max-width: 760px), (max-height: 500px) and (pointer: coarse)");
     const step = (Math.PI * 2) / cards.length;
     const speed = step / 11;
     const manualPause = 5000; // Les flèches laissent cinq secondes pour regarder le projet.
     const hoverPause = 2000; // Un survol laisse deux secondes avant la reprise.
     const travelDuration = 750;
     const hoverTravelDuration = 950;
+    const mobileHold = 3000; // Sur mobile, chaque projet reste affiché trois secondes.
+    const mobileTravelDuration = 800;
     const hoverMaxAngle = Math.PI * 0.28; // Uniquement les cartes à moins d'environ 50° du centre.
 
     let position = 0;
     let transition = null;
     let pausedUntil = 0;
+    let mobileNextAt = 0;
     let hoveredCard = null;
     let hoverEndsAt = 0;
     let lastPointerPosition = null;
@@ -180,7 +183,24 @@
             const progress = Math.min(1, (now - transition.started) / transition.duration);
             const eased = progress * progress * (3 - 2 * progress);
             position = transition.from + (transition.to - transition.from) * eased;
-            if (progress === 1) transition = null;
+            if (progress === 1) {
+                transition = null;
+                // Après un changement, le projet reste entièrement visible.
+                if (mobileScreen.matches) mobileNextAt = now + mobileHold;
+            }
+        } else if (mobileScreen.matches && !reducedMotion) {
+            // Sur téléphone, on avance d'un projet à la fois plutôt que de défiler sans arrêt.
+            if (!mobileNextAt) mobileNextAt = now + mobileHold;
+            if (now >= mobileNextAt) {
+                const nextIndex = Math.round(position / step) + 1;
+                transition = {
+                    from: position,
+                    to: nextIndex * step,
+                    started: now,
+                    duration: mobileTravelDuration
+                };
+                mobileNextAt = 0;
+            }
         } else if (!reducedMotion && now >= pausedUntil) {
             position += dt * speed;
         }
@@ -202,7 +222,14 @@
         const base = Math.round((transition ? transition.to : position) / step);
         const target = (base + direction) * step;
         const now = performance.now();
-        pausedUntil = now + manualPause;
+        // Le glissement au doigt suit la même cadence que l'automatisme mobile.
+        // Sur ordinateur, les flèches gardent leurs cinq secondes de pause.
+        if (mobileScreen.matches) {
+            mobileNextAt = 0;
+            pausedUntil = 0;
+        } else {
+            pausedUntil = now + manualPause;
+        }
 
         if (reducedMotion) {
             transition = null;
@@ -335,11 +362,29 @@
 
     document.addEventListener("visibilitychange", () => {
         if (document.hidden) stopLoop();
-        else startLoop();
+        else {
+            // L'onglet ne rattrape pas les rotations manquées pendant son absence.
+            if (mobileScreen.matches) {
+                if (transition) {
+                    position = transition.to;
+                    transition = null;
+                }
+                mobileNextAt = 0;
+                render();
+            }
+            startLoop();
+        }
     });
     window.addEventListener("resize", () => { measureRing(); render(); }, { passive: true });
     // Évite un ancien rayon si la fenêtre passe du mobile au bureau (ou inversement).
-    mobileScreen.addEventListener?.("change", () => { measureRing(); render(); });
+    mobileScreen.addEventListener?.("change", () => {
+        // On se replace sur un projet entier lors d'un changement d'orientation.
+        position = Math.round(position / step) * step;
+        transition = null;
+        mobileNextAt = 0;
+        measureRing();
+        render();
+    });
     measureRing();
     render();
     startLoop();

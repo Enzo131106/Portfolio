@@ -337,10 +337,8 @@
     .projects-carousel__details { padding: 13px 18px 15px; }
     .projects-carousel__details h3 { font-size: 19px; }
     .projects-carousel__details p { font-size: 12px; }
-    .projects-carousel__arrow { width: 42px; height: 82px; }
-    .projects-carousel__arrow::before,
-    .projects-carousel__arrow::after { height: 15px; }
-    .projects-carousel__arrow svg { width: 25px; height: 25px; }
+    /* Sur téléphone, le doigt suffit pour naviguer : pas de commandes latérales. */
+    .projects-carousel__arrow { display: none; }
 }
 
 @media (max-height: 680px) {
@@ -376,4 +374,16 @@
     .projects-carousel__surface,
     .projects-carousel__visual::after { transition: none; }
     .projects-carousel__card { will-change: auto; }
+}
+
+/* Un téléphone tourné en paysage conserve le carrousel tactile, sans flèches. */
+@media (max-height: 500px) and (pointer: coarse) {
+    .projects-carousel__arrow { display: none; }
+    .projects-carousel__scene { perspective: 1050px; overflow: visible; }
+    .projects-carousel__card {
+        width: min(64vw, 290px);
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+    }
+    .projects-carousel__back { display: none; }
 }
