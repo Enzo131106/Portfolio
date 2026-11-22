@@ -1,16 +1,16 @@
 "use strict";
 
+// Scène WebGL : rendu spatial synchronisé avec l'animation de la page.
+
 import THREE from "./three-loader.js";
 
 const FULL_CIRCLE = Math.PI * 2;
 
-// La caméra lit la progression de GSAP : l'intro et le scroll utilisent le même mouvement.
 const motion = window.__portfolioMotion || (window.__portfolioMotion = { intro: 0, scroll: 0 });
 const cameraIntroZ = 19;
 const cameraHeroZ = 5;
 const cameraScrollDistance = 7.5;
 
-// On réduit les particules sur les petits écrans pour préserver la fluidité.
 const isMobile = window.innerWidth < 768;
 const isTablet =
     window.innerWidth >= 768 &&
@@ -39,7 +39,6 @@ camera.position.z = cameraIntroZ
     - (cameraIntroZ - cameraHeroZ) * motion.intro
     - cameraScrollDistance * motion.scroll;
 
-// Le canvas reste sous le contenu et sa résolution est plafonnée pour limiter le travail du GPU.
 const renderer = new THREE.WebGLRenderer({
     antialias: true,
     alpha: false
@@ -72,7 +71,6 @@ const backgroundGeometry = new THREE.PlaneGeometry(
     120
 );
 
-// Ce shader crée le fond lumineux derrière les glyphes, sans image à télécharger.
 const backgroundMaterial = new THREE.ShaderMaterial({
 
     uniforms: {
@@ -204,14 +202,12 @@ background.renderOrder = -1;
 
 scene.add(background);
 
-// Le vortex utilise un petit alphabet de caractères pour garder un style cohérent.
 const glyphs = [
     "0", "1", "{", "}", "<", ">", "/", ";"
 ];
 
 const glyphCount = glyphs.length;
 
-// Tous les caractères sont dessinés dans une seule texture : une texture par particule coûterait trop cher.
 const glyphCanvas = document.createElement("canvas");
 const glyphContext = glyphCanvas.getContext("2d");
 
@@ -251,7 +247,6 @@ const glyphTexture = new THREE.CanvasTexture(
 
 glyphTexture.colorSpace = THREE.SRGBColorSpace;
 
-// Les positions, couleurs et tailles partent au GPU dans des tableaux compacts.
 const geometry = new THREE.BufferGeometry();
 
 const positions = new Float32Array(
@@ -283,7 +278,6 @@ const dataColors = [
     new THREE.Color(0x2870e8)
 ];
 
-// Chaque glyphe a une profondeur fixe ; on ne recycle pas les positions pour éviter une jonction visible.
 for (let i = 0; i < particleCount; i++) {
 
     const i3 = i * 3;
@@ -358,7 +352,6 @@ geometry.setAttribute(
     new THREE.BufferAttribute(phases, 1)
 );
 
-// Le shader dessine les caractères et leur halo sans créer d'objet HTML pour chacun.
 const material = new THREE.ShaderMaterial({
 
     transparent: true,
@@ -566,7 +559,6 @@ const material = new THREE.ShaderMaterial({
     `
 });
 
-// Tous les glyphes sont rendus ensemble, ce qui limite le nombre d'appels WebGL.
 const particles = new THREE.Points(
     geometry,
     material
@@ -578,14 +570,12 @@ let isAnimationPaused = false;
 
 let lastFrameTime = 0;
 
-// Le rendu 4K est limité à 35 images par seconde pour ne pas saturer le GPU.
 const frameInterval = 1000 / (window.innerWidth >= 3000 ? 35 : 60);
 
 let hasSignaledBackgroundReady = false;
 
 material.uniforms.uOpacity.value = 1;
 
-// Cette boucle s'arrête de calculer quand l'onglet n'est plus visible.
 function animate(currentTime) {
 
     requestAnimationFrame(animate);
@@ -611,7 +601,6 @@ function animate(currentTime) {
     material.uniforms.uTime.value =
         elapsedTime;
 
-    // Les caractères restent à leur place : c'est la caméra qui avance dans le tunnel.
     const introProgress = Math.max(0, Math.min(1, motion.intro || 0));
     const scrollProgress = Math.max(0, Math.min(1, motion.scroll || 0));
     camera.position.z = cameraIntroZ
@@ -625,7 +614,6 @@ function animate(currentTime) {
         camera
     );
 
-    // Le loader attend cette première image pour éviter de dévoiler un écran noir.
     if (!hasSignaledBackgroundReady) {
         hasSignaledBackgroundReady = true;
         window.__portfolioBackgroundReady = true;
@@ -644,7 +632,6 @@ document.addEventListener(
 
 requestAnimationFrame(animate);
 
-// Après un changement de taille, on recalcule la caméra et la résolution du canvas.
 function handleResize() {
 
     camera.aspect =

@@ -1,7 +1,8 @@
 "use strict";
 
+// Mini-jeu Canvas autonome : logique, rendu et commandes clavier/tactiles.
+
 (() => {
-    // Le mini-jeu travaille sur son propre canvas, séparé du fond Three.js.
     const canvas = document.getElementById("byte-invaders-canvas");
     const screen = document.getElementById("arcade-screen");
     const overlay = document.getElementById("arcade-overlay");
@@ -34,7 +35,6 @@
     bestText.textContent = formatScore(best);
 
     function formatScore(value) { return String(Math.max(0, Math.floor(Number(value) || 0))); }
-    // On utilise la taille de mise en page, pas la taille transformée par le zoom GSAP.
     function resize() {
         const layoutWidth = screen.offsetWidth;
         const layoutHeight = screen.offsetHeight;
@@ -59,7 +59,6 @@
         livesText.setAttribute("aria-label", state.lives + (state.lives > 1 ? " vies" : " vie"));
         bestText.textContent = formatScore(best);
     }
-    // Le nombre de colonnes dépend de la largeur disponible : les ennemis ne doivent pas déborder.
     function createWave() {
         state.enemies = [];
         const cols = Math.max(5, Math.min(9, Math.floor(width / 47)));
@@ -87,7 +86,6 @@
         state.invulnerable = 0; state.gameOver = false;
         createWave(); updateHud();
     }
-    // On relit la taille du canvas au départ, car l'introduction a pu agrandir la carte.
     function startGame() {
         if (state.running) return;
         resize();
@@ -103,7 +101,6 @@
         state.animationId = requestAnimationFrame(loop);
         canvas.focus({ preventScroll: true });
     }
-    // Le record est enregistré à la fin, avant d'afficher les actions de résultat.
     function endGame(wonWave = false) {
         state.running = false;
         state.gameOver = true;
@@ -133,13 +130,11 @@
             });
         }
     }
-    // Un délai entre deux tirs évite de remplir l'écran de projectiles.
     function shoot() {
         if (!state.running || state.player.cooldown > 0) return;
         state.bullets.push({ x: state.player.x, y: state.player.y - 9, vy: -390, friendly: true });
         state.player.cooldown = .23;
     }
-    // Les déplacements utilisent le temps écoulé pour rester réguliers malgré les variations de FPS.
     function update(dt) {
         const player = state.player;
         const left = keys.has("ArrowLeft") || keys.has("a") || keys.has("q") || pointerControls.has("left");
@@ -292,7 +287,6 @@
             drawShip(width / 2 + Math.sin(t * .8) * width * .08, height * .82);
         }
     }
-    // La boucle sépare les calculs du dessin pour garder le jeu prévisible.
     function loop(now) {
         if (!state.running) return;
         const dt = Math.min((now - state.lastTime) / 1000 || 0, .035);
@@ -306,7 +300,6 @@
     function getScoreShareText() {
         return "J’ai marqué " + formatScore(state.score) + " points sur BYTE INVADERS ! Tu peux battre mon score ?\n" + window.location.href;
     }
-    // La carte de score est dessinée en image pour pouvoir être partagée ou enregistrée.
     function createScoreImageBlob() {
         return new Promise(resolve => {
             const exportCanvas = document.createElement("canvas");
@@ -347,7 +340,6 @@
             exportCanvas.toBlob(resolve, "image/png");
         });
     }
-    // Quand le presse-papiers moderne est bloqué, on garde une méthode compatible.
     async function copyScoreText(text) {
         if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
             try {
@@ -371,7 +363,6 @@
         return copied;
     }
 
-    // Sur ordinateur on copie le score ; sur mobile on utilise le partage natif s'il existe.
     async function shareScore() {
         const text = getScoreShareText();
         const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -432,7 +423,6 @@
     if (shareScoreButton) shareScoreButton.addEventListener("click", shareScore);
     if (downloadScoreButton) downloadScoreButton.addEventListener("click", downloadScore);
     startButton.addEventListener("click", startGame);
-    // Les flèches et l'espace ne font pas défiler la page pendant une partie.
     window.addEventListener("keydown", event => {
         const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
         if (["ArrowLeft", "ArrowRight", " ", "ArrowUp", "ArrowDown"].includes(key)) event.preventDefault();
@@ -449,7 +439,6 @@
     });
     document.querySelectorAll("[data-game-control]").forEach(button => {
         const control = button.dataset.gameControl;
-        // Ces boutons tactiles restent enfoncés jusqu'au relâchement du doigt.
         const down = event => { event.preventDefault(); pointerControls.add(control); };
         const up = event => { event.preventDefault(); pointerControls.delete(control); };
         button.addEventListener("pointerdown", down);

@@ -1,5 +1,7 @@
 "use strict";
 
+// PC : anneau 3D et pause au survol. Mobile : défilement carte par carte.
+
 (() => {
     const carousel = document.querySelector("[data-projects-carousel]");
     const scene = carousel?.querySelector("[data-carousel-scene]");
@@ -14,13 +16,13 @@
     const mobileScreen = window.matchMedia("(max-width: 760px), (max-height: 500px) and (pointer: coarse)");
     const step = (Math.PI * 2) / cards.length;
     const speed = step / 11;
-    const manualPause = 5000; // Les flèches laissent cinq secondes pour regarder le projet.
-    const hoverPause = 2000; // Après avoir quitté une carte, patienter deux secondes avant de reprendre.
+    const manualPause = 5000;
+    const hoverPause = 2000;
     const travelDuration = 750;
     const hoverTravelDuration = 950;
-    const mobileHold = 3000; // Sur mobile, chaque projet reste affiché trois secondes.
+    const mobileHold = 3000;
     const mobileTravelDuration = 800;
-    const hoverMaxAngle = Math.PI * 0.28; // Uniquement les cartes à moins d'environ 50° du centre.
+    const hoverMaxAngle = Math.PI * 0.28;
 
     let position = 0;
     let transition = null;
@@ -38,22 +40,14 @@
         ((angle + Math.PI) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2) - Math.PI;
     const projectIndex = index => ((index % cards.length) + cards.length) % cards.length;
 
-    // On mesure les cartes dans leur taille normale, sans le zoom de perspective.
-    // Refaire la mesure à chaque image ferait varier le rayon pendant la rotation.
     let radius = 0;
     let depth = 0;
     function measureRing() {
-        // Sur téléphone, les cartes utilisent une disposition linéaire en profondeur.
-        // Le calcul du grand cercle ne sert que sur ordinateur.
         if (mobileScreen.matches) return;
         const cardWidth = cards[0].offsetWidth || scene.clientWidth * 0.44;
-        // Un anneau plus large empêche les cartes voisines de se superposer.
-        // Le rayon reste adapté à la place disponible sur mobile.
         radius = Math.min(scene.clientWidth * 0.78, Math.max(cardWidth * 1.45, scene.clientWidth * 0.47));
         depth = Math.max(260, Math.min(900, cardWidth * 1.32));
 
-        // On garde les cartes dans le champ de la caméra, même sur un petit écran.
-        // La vérification tient compte de leur largeur et de leur rotation en 3D.
         const viewport = window.innerWidth || scene.clientWidth;
         const perspective = Math.max(1100, Math.min(2000, viewport * 0.9));
         const limit = viewport / 2 - Math.max(12, Math.min(22, viewport * 0.015));
@@ -85,9 +79,7 @@
         }
     }
 
-    // Le téléphone montre une seule grande carte et un aperçu des voisines.
-    // Les centres suivent des emplacements espacés : aucune carte ne recouvre
-    // sa voisine, y compris à mi-chemin entre deux projets.
+    // Le coverflow mobile n'affiche que les cartes adjacentes.
     function renderMobile() {
         const cardWidth = cards[0].offsetWidth || scene.clientWidth * 0.73;
         const gap = Math.max(18, Math.min(30, scene.clientWidth * 0.065));
@@ -104,7 +96,6 @@
             const rotation = -Math.max(-1.35, Math.min(1.35, offset)) * 35;
 
             card.style.transform = `translate3d(${x.toFixed(1)}px, 0, ${z.toFixed(1)}px) rotateY(${rotation.toFixed(2)}deg)`;
-            // Les aperçus restent bien opaques tout en conservant un léger recul visuel.
             card.style.opacity = String(visible ? Math.max(0.86, 1 - distanceFromCenter * 0.12) : 0);
             card.style.visibility = visible ? "visible" : "hidden";
             card.style.zIndex = String(Math.round(100 - distanceFromCenter * 30));
@@ -116,7 +107,6 @@
         });
     }
 
-    // Sur ordinateur, les cartes gardent le véritable anneau 3D.
     function render() {
         if (mobileScreen.matches) {
             renderMobile();
@@ -131,16 +121,10 @@
             const z = (cos - 1) * depth;
             const rotation = angle * (180 / Math.PI);
 
-            // Le même angle pilote la position sur le cercle et la rotation Y.
             card.style.transform = `translate3d(${x.toFixed(1)}px, 0, ${z.toFixed(1)}px) rotateY(${rotation.toFixed(2)}deg)`;
-            // Les dos restent visibles au fond et passent derrière les cartes proches.
-            // Les cartes arrière restent présentes : un léger dégradé d'opacité
-            // suffit à suggérer la profondeur, sans effet de transparence excessif.
             card.style.opacity = String(0.84 + 0.16 * (cos + 1) / 2);
             card.style.zIndex = String(Math.round(100 + cos * 50));
 
-            // Les côtés lointains et les dos restent visibles, mais ne réagissent
-            // pas au pointeur. Seules les cartes proches de l'avant sont interactives.
             const nearCenter = Math.abs(angle) <= hoverMaxAngle;
             card.style.pointerEvents = nearCenter ? "auto" : "none";
             card.inert = !nearCenter;
@@ -168,6 +152,7 @@
         lastFrameTime = 0;
     }
 
+    // Tant qu'une carte est survolée, la rotation automatique reste suspendue.
     function loop(now) {
         frame = 0;
         if (!visible || document.hidden) {
@@ -178,19 +163,15 @@
         const dt = lastFrameTime ? Math.min((now - lastFrameTime) / 1000, 0.05) : 0;
         lastFrameTime = now;
 
-        // Une carte survolée bloque la rotation tant que la souris ne l'a pas quittée.
-        // Ne jamais libérer ce survol selon un simple délai : le pointeur peut être immobile.
         if (transition) {
             const progress = Math.min(1, (now - transition.started) / transition.duration);
             const eased = progress * progress * (3 - 2 * progress);
             position = transition.from + (transition.to - transition.from) * eased;
             if (progress === 1) {
                 transition = null;
-                // Après un changement, le projet reste entièrement visible.
                 if (mobileScreen.matches) mobileNextAt = now + mobileHold;
             }
         } else if (mobileScreen.matches && !reducedMotion) {
-            // Sur téléphone, on avance d'un projet à la fois plutôt que de défiler sans arrêt.
             if (!mobileNextAt) mobileNextAt = now + mobileHold;
             if (now >= mobileNextAt) {
                 const nextIndex = Math.round(position / step) + 1;
@@ -217,14 +198,11 @@
     }
 
     function move(direction) {
-        // Les flèches ont priorité sur le survol, sans prolongation involontaire.
         clearHover();
         lastHoverPosition = null;
         const base = Math.round((transition ? transition.to : position) / step);
         const target = (base + direction) * step;
         const now = performance.now();
-        // Le glissement au doigt suit la même cadence que l'automatisme mobile.
-        // Sur ordinateur, les flèches gardent leurs cinq secondes de pause.
         if (mobileScreen.matches) {
             mobileNextAt = 0;
             pausedUntil = 0;
@@ -253,8 +231,6 @@
         move(event.key === "ArrowRight" ? 1 : -1);
     });
 
-    // On suit les vrais mouvements de souris, pas les cartes qui passent sous un
-    // pointeur immobile. Cela évite les recentrages en boucle et les à-coups.
     if (finePointer && !reducedMotion) {
         scene.addEventListener("pointermove", event => {
             if (event.pointerType === "touch") return;
@@ -263,8 +239,6 @@
             const previousPosition = lastPointerPosition;
             lastPointerPosition = pointer;
 
-            // Les micro-mouvements et les événements générés par l'animation
-            // ne doivent pas sélectionner une autre carte.
             if (previousPosition && Math.hypot(pointer.x - previousPosition.x, pointer.y - previousPosition.y) < 2) return;
 
             const candidate = event.target.closest?.("[data-carousel-card]");
@@ -284,18 +258,13 @@
                     }
                     return;
                 }
-                // La souris a réellement quitté la carte, sans sortir de la scène.
-                // On attend deux secondes après ce départ avant de relancer la rotation.
                 clearHover();
                 pausedUntil = Math.max(pausedUntil, now + hoverPause);
                 lastHoverPosition = null;
             }
 
-            // La pause automatique n'empêche jamais de sélectionner une carte
-            // proche du centre, y compris juste après avoir utilisé une flèche.
             if (!selected) return;
 
-            // Un vrai déplacement est nécessaire pour sélectionner de nouveau une carte.
             if (lastHoverPosition && Math.hypot(pointer.x - lastHoverPosition.x, pointer.y - lastHoverPosition.y) < 40) return;
 
             const index = cards.indexOf(selected);
@@ -309,8 +278,6 @@
 
             hoveredCard = selected;
             lastHoverPosition = pointer;
-            // Le survol ne coupe pas les cinq secondes de pause des flèches.
-            // La rotation restera arrêtée jusqu'au départ réel du pointeur.
             selected.classList.add("is-hovered");
             transition = {
                 from: position,
@@ -331,7 +298,6 @@
         });
     }
 
-    // Sur mobile, un geste horizontal change de carte sans intercepter le scroll vertical.
     scene.addEventListener("touchstart", event => {
         const touch = event.changedTouches[0];
         touchStart = touch ? { x: touch.clientX, y: touch.clientY } : null;
@@ -348,7 +314,6 @@
     }, { passive: true });
     scene.addEventListener("touchcancel", () => { touchStart = null; }, { passive: true });
 
-    // La visibilité sert seulement à économiser le rendu hors de la section.
     if ("IntersectionObserver" in window) {
         const observer = new IntersectionObserver(entries => {
             visible = entries[0].intersectionRatio > 0.25;
@@ -366,7 +331,6 @@
             stopLoop();
         }
         else {
-            // L'onglet ne rattrape pas les rotations manquées pendant son absence.
             if (mobileScreen.matches) {
                 if (transition) {
                     position = transition.to;
@@ -379,9 +343,7 @@
         }
     });
     window.addEventListener("resize", () => { measureRing(); render(); }, { passive: true });
-    // Évite un ancien rayon si la fenêtre passe du mobile au bureau (ou inversement).
     mobileScreen.addEventListener?.("change", () => {
-        // On se replace sur un projet entier lors d'un changement d'orientation.
         position = Math.round(position / step) * step;
         transition = null;
         mobileNextAt = 0;

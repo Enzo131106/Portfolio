@@ -1,6 +1,7 @@
 "use strict";
 
-// Si un style distant échoue, on charge sa copie locale sans bloquer la page.
+// Dépendances externes avec ressources locales de secours (Bootstrap, Inter, GSAP).
+
 function loadCSSWithFallback(element, local) {
 
     element.addEventListener("error", () => {
@@ -17,7 +18,6 @@ function loadCSSWithFallback(element, local) {
     });
 }
 
-// Même principe pour les scripts qui ont une version locale.
 function loadJSWithFallback(element, local) {
 
     element.addEventListener("error", () => {
@@ -34,7 +34,6 @@ function loadJSWithFallback(element, local) {
     });
 }
 
-// Bootstrap et ses icônes utilisent le CDN tant qu'il répond.
 const bootstrapCSS = document.getElementById("bootstrap-css");
 
 if (bootstrapCSS) {
@@ -67,7 +66,6 @@ if (bootstrapJS) {
 
 const interFonts = document.getElementById("inter-fonts");
 
-// La classe CSS active la police locale quand Bunny Fonts ne fournit pas Inter.
 function activateLocalInter() {
     console.warn("Inter CDN indisponible : activation de la police locale.");
 
@@ -77,7 +75,6 @@ function activateLocalInter() {
 if (interFonts) {
     interFonts.addEventListener("error", activateLocalInter);
 
-    // Une feuille chargée ne garantit pas que la police soit vraiment disponible.
     interFonts.addEventListener("load", async () => {
         try {
             const faces = await document.fonts.load("700 16px Inter");
@@ -92,8 +89,6 @@ if (interFonts) {
 }
 
 
-// GSAP doit être chargé avant ScrollTrigger, même si seul un CDN tombe en panne.
-// On ajoute les scripts dans cet ordre et on n'ouvre l'introduction qu'après les deux.
 function loadAnimationLibrary(cdn, local, isReady) {
     return new Promise(resolve => {
         const remote = document.createElement("script");
@@ -115,7 +110,6 @@ function loadAnimationLibrary(cdn, local, isReady) {
             usingLocal = true;
             window.clearTimeout(timeoutId);
 
-            // Un CDN bloqué ne doit pas laisser la page en chargement indéfiniment.
             remote.onload = null;
             remote.onerror = null;
             remote.remove();
@@ -136,7 +130,6 @@ function loadAnimationLibrary(cdn, local, isReady) {
             else useLocal();
         };
         remote.onerror = useLocal;
-        // Après cinq secondes sans réponse, la copie locale prend le relais.
         timeoutId = window.setTimeout(useLocal, 5000);
         document.head.appendChild(remote);
     });

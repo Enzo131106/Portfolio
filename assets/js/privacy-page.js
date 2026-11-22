@@ -1,6 +1,7 @@
 "use strict";
 
-// On tente de fermer l'onglet ; sinon le bouton ramène à l'accueil.
+// Navigation de retour depuis la page de confidentialité.
+
 const backButton = document.getElementById("privacy-back");
 
 backButton.addEventListener("click", () => {

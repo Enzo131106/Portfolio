@@ -1,7 +1,8 @@
 "use strict";
 
+// L'accueil s'affiche après le chargement de la page et le premier rendu WebGL.
+
 (() => {
-    // Le chargement attend à la fois la page HTML et la première image de Three.js.
     const loader = document.getElementById("loading-screen");
     if (!loader) return;
 
@@ -17,8 +18,6 @@
     let animationsReady = !window.__portfolioGsapReady;
     let finished = false;
 
-    // Les scripts CDN peuvent être remplacés après le chargement HTML.
-    // On attend leur résultat pour ne pas manquer le départ de l'introduction.
     if (window.__portfolioGsapReady) {
         window.__portfolioGsapReady.then(() => {
             animationsReady = true;
@@ -37,7 +36,6 @@
 
     loader.classList.add("is-loading");
 
-    // On empêche le scroll jusqu'à la fin de l'intro pour ne pas commencer entre deux sections.
     const blockIntroScroll = (event) => {
         if (!document.body.classList.contains("hero-intro-pending")) return;
         if (event.cancelable) event.preventDefault();
@@ -64,7 +62,6 @@
         progress?.setAttribute("aria-valuenow", String(Math.round(safeValue)));
     }
 
-    // Le loader ne disparaît qu'une fois les deux signaux reçus ; l'intro démarre pendant son fondu.
     function finishLoading() {
         if (finished || !pageLoaded || !backgroundReady || !animationsReady) return;
         finished = true;
@@ -83,7 +80,6 @@
         }, 180);
     }
 
-    // Le chargement de la page et celui du fond peuvent se terminer dans n'importe quel ordre.
     function onPageLoad() {
         pageLoaded = true;
         setProgress(88);
@@ -108,7 +104,6 @@
         window.addEventListener("portfolio-background-ready", onBackgroundReady, { once: true });
     }
 
-    // Si WebGL échoue, on libère quand même la page au lieu de laisser le loader indéfiniment.
     if (backgroundScript) {
         backgroundScript.addEventListener("error", () => {
             backgroundReady = true;

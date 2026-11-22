@@ -1,6 +1,6 @@
-/* La section Projets occupe le plateau 3D, sans modifier le travelling de la page. */
-#projects .scroll-test-wrap,
-.depth-stage-panel--project > .scroll-test-wrap {
+/* Scène 3D, cartes et navigation du carrousel. */
+#projects .projects-content,
+.depth-stage-panel--project > .projects-content {
     display: flex;
     flex-direction: column;
     width: min(calc(100vw - clamp(32px, 7vw, 136px)), 1950px);
@@ -8,17 +8,17 @@
     box-sizing: border-box;
 }
 
-#projects .scroll-test-wrap {
+#projects .projects-content {
     min-height: min(76svh, 820px);
 }
 
-.depth-stage-panel--project > .scroll-test-wrap {
+.depth-stage-panel--project > .projects-content {
     height: 100svh;
     min-height: 0;
     padding: clamp(90px, 12svh, 138px) 0 clamp(23px, 4svh, 48px);
 }
 
-.scroll-test-wrap > .scroll-test-title {
+.projects-content > .projects-title {
     flex: 0 0 auto;
     width: 100%;
     max-width: none;
@@ -49,15 +49,14 @@
     perspective: clamp(1100px, 90vw, 2000px);
     perspective-origin: 50% 50%;
     transform-style: preserve-3d;
-    /* Le plateau précédent coupait les coins des cartes sur les côtés. */
+    
     overflow: visible;
     touch-action: pan-y pinch-zoom;
     user-select: none;
     -webkit-user-select: none;
 }
 
-/* Une carte a deux niveaux : le premier tourne autour de l'anneau,
-   le second s'incline indépendamment sous le pointeur. */
+
 .projects-carousel__card {
     position: absolute;
     top: 50%;
@@ -71,14 +70,13 @@
     pointer-events: none;
 }
 
-/* Un seul dégradé, du bleu du bouton CV au bleu nuit de Byte Invaders.
-   Pas de fausses bordures, de cadres décoratifs ou de pastilles. */
+
 .projects-carousel__surface {
     position: relative;
     overflow: hidden;
     border: 0;
     border-radius: 11px;
-    /* Un éclairage discret en haut, puis une transition profonde et continue. */
+    
     background-color: #111d33;
     background-image:
         radial-gradient(ellipse at 10% 0%, rgba(255, 255, 255, .18), transparent 55%),
@@ -104,7 +102,7 @@
     box-shadow: 0 25px 58px rgba(0, 4, 14, .4);
 }
 
-/* Le dos participe au même mouvement sans ajouter de fausse interface. */
+
 .projects-carousel__back {
     position: absolute;
     inset: 0;
@@ -131,7 +129,7 @@
     letter-spacing: -.085em;
 }
 
-/* Le numéro sert d'identité visuelle tant que les vraies captures manquent. */
+
 .projects-carousel__visual {
     position: relative;
     display: flex;
@@ -158,7 +156,7 @@
     opacity: 1;
 }
 
-/* La capture occupe exactement la zone prévue pour les visuels des projets. */
+
 .projects-carousel__visual--image {
     padding: 0;
     background: #0a1428;
@@ -174,7 +172,7 @@
     object-position: center;
 }
 
-/* Une ombre douce relie la capture au bleu profond de la carte, sans cadre. */
+
 .projects-carousel__visual--image::before {
     content: "";
     position: absolute;
@@ -213,7 +211,7 @@
     line-height: 1.5;
 }
 
-/* Les compétences sont de simples mentions, sans badges ni encadrements. */
+
 .projects-carousel__skills {
     display: flex;
     flex-wrap: wrap;
@@ -256,7 +254,7 @@
     color: #8cadd0;
 }
 
-/* Icônes locales identiques aux Skill Icons du README : sobres, sans badges. */
+
 .projects-carousel__skill-list--icons {
     gap: 9px 15px;
     align-items: center;
@@ -286,7 +284,7 @@
     object-fit: contain;
 }
 
-/* Lien sobre vers le dépôt, sans ajouter de bouton encadré à la carte. */
+
 .projects-carousel__source {
     display: inline-flex;
     align-items: center;
@@ -326,7 +324,6 @@
 }
 
 
-/* Navigation façon repère éditorial : une flèche, deux traits fins, aucun cadre. */
 .projects-carousel__arrow {
     position: absolute;
     z-index: 200;
@@ -372,7 +369,7 @@
     transition: transform 220ms ease;
 }
 
-/* Les commandes se calent sur les bords de l'écran, pas sur le centre des cartes. */
+
 .projects-carousel__arrow--prev { left: calc(50% - 50vw + clamp(8px, 1.2vw, 22px)); }
 .projects-carousel__arrow--next { right: calc(50% - 50vw + clamp(8px, 1.2vw, 22px)); }
 
@@ -407,23 +404,22 @@
 }
 
 @media (max-width: 760px) {
-    #projects .scroll-test-wrap,
-    .depth-stage-panel--project > .scroll-test-wrap {
+    #projects .projects-content,
+    .depth-stage-panel--project > .projects-content {
         width: calc(100vw - 32px);
     }
 
-    .depth-stage-panel--project > .scroll-test-wrap {
+    .depth-stage-panel--project > .projects-content {
         padding-top: clamp(88px, 12svh, 116px);
         padding-bottom: clamp(12px, 3svh, 28px);
     }
 
-    .scroll-test-wrap > .scroll-test-title {
+    .projects-content > .projects-title {
         font-size: clamp(43px, 11vw, 64px);
         margin-bottom: 10px;
     }
 
-    /* Sur mobile, un coverflow remplace le grand anneau : une carte lisible,
-       deux aperçus latéraux, les autres hors de l'écran. */
+    
     .projects-carousel__scene {
         min-height: 260px;
         perspective: 1050px;
@@ -451,16 +447,16 @@
     .projects-carousel__skill-list--icons li { gap: 5px; }
     .projects-carousel__skill-list--icons img { width: 18px; height: 18px; flex-basis: 18px; }
     .projects-carousel__source { min-height: 32px; margin-top: 8px; font-size: 11px; }
-    /* Sur téléphone, le doigt suffit pour naviguer : pas de commandes latérales. */
+    
     .projects-carousel__arrow { display: none; }
 }
 
 @media (max-height: 680px) {
-    .depth-stage-panel--project > .scroll-test-wrap {
+    .depth-stage-panel--project > .projects-content {
         padding-top: 75px;
         padding-bottom: 11px;
     }
-    .scroll-test-wrap > .scroll-test-title { font-size: clamp(32px, 4vw, 52px); }
+    .projects-content > .projects-title { font-size: clamp(32px, 4vw, 52px); }
     .projects-carousel__scene { min-height: 210px; }
     .projects-carousel__card { width: min(33vw, 440px); }
     .projects-carousel__visual { aspect-ratio: 16 / 9; }
@@ -476,8 +472,8 @@
 }
 
 @media (max-height: 680px) and (max-width: 760px) {
-    /* Le titre reste marqué même sur les téléphones à faible hauteur. */
-    .scroll-test-wrap > .scroll-test-title { font-size: clamp(38px, 8.8vw, 50px); }
+    
+    .projects-content > .projects-title { font-size: clamp(38px, 8.8vw, 50px); }
     .projects-carousel__card { width: min(68vw, 290px); }
     .projects-carousel__number { font-size: 72px; }
 }
@@ -485,7 +481,7 @@
 @media (min-width: 1920px) {
     .projects-carousel__card { width: clamp(660px, 34vw, 880px); }
     .projects-carousel__number { font-size: 210px; }
-    .scroll-test-wrap > .scroll-test-title { font-size: clamp(76px, 4.4vw, 108px); }
+    .projects-content > .projects-title { font-size: clamp(76px, 4.4vw, 108px); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -498,7 +494,7 @@
     .projects-carousel__card { will-change: auto; }
 }
 
-/* Un téléphone tourné en paysage conserve le carrousel tactile, sans flèches. */
+
 @media (max-height: 500px) and (pointer: coarse) {
     .projects-carousel__arrow { display: none; }
     .projects-carousel__scene { perspective: 1050px; overflow: visible; }

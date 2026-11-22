@@ -1,12 +1,12 @@
 "use strict";
 
-// Le scroll est natif ; GSAP ne déplace les plans que sur l'axe de profondeur.
-// On attend le chargement des CDN ou de leur secours local avant de créer la scène.
+// La scène GSAP anime la profondeur sans remplacer le défilement natif.
+
 function initializeScrollDepth() {
     const hero = document.querySelector("#accueil");
     const heroInner = hero?.querySelector(".hero-inner");
     const project = document.querySelector("#projects");
-    const projectInner = project?.querySelector("[data-scroll-scene-content]");
+    const projectInner = project?.querySelector("[data-depth-content]");
     const cue = document.querySelector(".hero-scroll");
     const main = document.querySelector("main");
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -14,7 +14,6 @@ function initializeScrollDepth() {
     let introStarted = false;
     let released = false;
 
-    // Three.js utilise ce même objet pour faire avancer le vortex en rythme.
     const motion = window.__portfolioMotion || (window.__portfolioMotion = {
         intro: 0,
         scroll: 0
@@ -28,7 +27,6 @@ function initializeScrollDepth() {
         window.dispatchEvent(new Event("portfolio-hero-arrived"));
     }
 
-    // Sans GSAP ou avec le mouvement réduit, les contenus restent dans leur mise en page normale.
     if (!window.gsap || !window.ScrollTrigger || !hero || !heroInner ||
         !project || !projectInner || !main || reducedMotion || shortScreen) {
         motion.intro = 1;
@@ -39,7 +37,6 @@ function initializeScrollDepth() {
 
     gsap.registerPlugin(ScrollTrigger);
 
-    // Les contenus sont placés dans un plateau fixe : les sections restent dans le flux pour les ancres.
     const stage = document.createElement("div");
     stage.className = "depth-stage";
     const heroPanel = document.createElement("div");
@@ -47,13 +44,11 @@ function initializeScrollDepth() {
     const projectPanel = document.createElement("div");
     projectPanel.className = "depth-stage-panel depth-stage-panel--project";
     heroPanel.appendChild(heroInner);
-    // La souris partage le plan de l'accueil pour avancer vers la caméra, pas glisser vers le haut.
     if (cue) heroPanel.appendChild(cue);
     projectPanel.appendChild(projectInner);
     stage.append(heroPanel, projectPanel);
     main.appendChild(stage);
 
-    // Les projets démarrent loin de la caméra pour ne pas apparaître avant le scroll.
     gsap.set(projectInner, {
         z: -850,
         scale: 0.32,
@@ -61,7 +56,6 @@ function initializeScrollDepth() {
         transformOrigin: "center center"
     });
 
-    // Une seule timeline pilote les deux plans et la caméra ; remonter rejoue le même trajet à l'envers.
     function setupScroll() {
         const story = gsap.timeline({
             defaults: { ease: "none" },
@@ -76,7 +70,6 @@ function initializeScrollDepth() {
 
         story.to(motion, { scroll: 1, duration: 1 }, 0);
 
-        // L'accueil avance puis quitte le champ, sans translation verticale.
         story.fromTo(heroInner,
             { z: 0, scale: 1, autoAlpha: 1 },
             {
@@ -89,7 +82,6 @@ function initializeScrollDepth() {
         );
 
         if (cue) {
-            // La souris suit la profondeur de l'accueil et peut sortir du cadre par le bas.
             story.fromTo(cue,
                 { z: 0, scale: 1, autoAlpha: 1 },
                 {
@@ -102,7 +94,6 @@ function initializeScrollDepth() {
             );
         }
 
-        // Les projets arrivent du fond au centre de l'écran.
         story.to(projectInner, {
             z: 0,
             scale: 1,
@@ -113,7 +104,6 @@ function initializeScrollDepth() {
         ScrollTrigger.refresh();
     }
 
-    // L'intro démarre quand le loader commence à disparaître, pour laisser voir le mouvement du fond.
     function startIntro() {
         if (introStarted) return;
         introStarted = true;

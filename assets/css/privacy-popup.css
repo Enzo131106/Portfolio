@@ -1,4 +1,3 @@
-/* Les couleurs de la fenêtre sont regroupées ici pour être ajustées ensemble. */
 :root {
 
     --privacy-bg: rgba(10, 15, 30, 0.94);
@@ -14,7 +13,7 @@
 
 }
 
-/* La fenêtre recouvre la page tant que le choix de confidentialité n'a pas été validé. */
+
 .privacy-popup {
 
     position: fixed;
@@ -219,7 +218,7 @@
 
 }
 
-/* La fenêtre se resserre sur tablette pour rester entièrement visible. */
+
 @media screen and (max-width: 1199px) {
 
     .privacy-box {
@@ -230,7 +229,7 @@
 
 }
 
-/* Sur téléphone, les boutons passent dans un format plus simple à toucher. */
+
 @media screen and (max-width: 767px) {
 
     .privacy-popup {
@@ -284,7 +283,7 @@
 
 }
 
-/* On retire les effets de transition quand le mouvement réduit est demandé. */
+
 @media (prefers-reduced-motion: reduce) {
 
     .privacy-popup,
@@ -298,7 +297,7 @@
 
 }
 
-/* Sur 2K et 4K, la fenêtre reste lisible sans s'étaler sur tout l'écran. */
+
 @media (min-width: 1920px) {
     .privacy-box { max-width: 580px; }
     .privacy-title { font-size: 1.95rem; }

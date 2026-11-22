@@ -1,5 +1,5 @@
-/* La section Projets réserve une hauteur de scroll même si son texte est déplacé dans la scène 3D. */
-#projects.scroll-test-section {
+/* Mise en profondeur de l'accueil et des projets. */
+#projects.projects-section {
     position: relative;
     min-height: 100svh;
     box-sizing: border-box;
@@ -13,53 +13,42 @@
     transform-style: preserve-3d;
     overflow: visible;
 }
-.scroll-test-wrap {
+.projects-content {
     width: min(1040px, 100%);
     margin: 0 auto;
     transform-origin: center center;
     transform-style: preserve-3d;
     backface-visibility: hidden;
 }
-.scroll-test-kicker { margin: 0 0 14px; color: #79dfff; font: 700 11px/1.5 monospace; letter-spacing: .16em; text-transform: uppercase; }
-.scroll-test-title { max-width: 760px; margin: 0; color: #f4f7ff; font-size: clamp(34px, 5vw, 60px); font-weight: 800; letter-spacing: -.045em; line-height: 1.06; }
-.scroll-test-title span { color: #70d8ff; }
-.scroll-test-intro { max-width: 650px; margin: 20px 0 38px; color: rgba(220,231,249,.76); font-size: 15px; line-height: 1.8; }
+.projects-title { max-width: 760px; margin: 0; color: #f4f7ff; font-size: clamp(34px, 5vw, 60px); font-weight: 800; letter-spacing: -.045em; line-height: 1.06; }
+.projects-title span { color: #70d8ff; }
 @media (max-width: 760px) {
-    #projects.scroll-test-section { padding: 120px 20px 70px; }
-    .scroll-test-intro { margin-bottom: 28px; font-size: 14px; }
+    #projects.projects-section { padding: 120px 20px 70px; }
 }
 @media (prefers-reduced-motion: reduce) {
-    .scroll-test-wrap { transform: none !important; opacity: 1 !important; will-change: auto; }
+    .projects-content { transform: none !important; opacity: 1 !important; will-change: auto; }
 }
 html, body {
     max-width: 100%;
     overflow-x: clip;
-    /* On laisse le geste d'actualisation fonctionner depuis le haut sur mobile. */
+    
     overscroll-behavior-y: auto;
 }
-#projects.scroll-test-section, .scroll-test-wrap { max-width: 100%; }
+#projects.projects-section, .projects-content { max-width: 100%; }
 
 
-
-
-/* Sur 2K et 4K, les blocs restent centrés avec une largeur de lecture limitée. */
 @media (min-width: 1920px) {
-    #projects.scroll-test-section { padding-top: clamp(160px, 12vh, 220px); padding-bottom: 120px; }
-    .scroll-test-wrap { width: min(1400px, 100%); }
-    .scroll-test-title { max-width: 980px; font-size: 76px; }
-    .scroll-test-intro { max-width: 780px; font-size: 18px; }
-    .scroll-test-kicker { font-size: 13px; }
+    #projects.projects-section { padding-top: clamp(160px, 12vh, 220px); padding-bottom: 120px; }
+    .projects-content { width: min(1400px, 100%); }
+    .projects-title { max-width: 980px; font-size: 76px; }
 }
 @media (min-width: 3000px) {
-    #projects.scroll-test-section { padding-top: 250px; padding-bottom: 160px; }
-    .scroll-test-wrap { width: min(1700px, 100%); }
-    .scroll-test-title { max-width: 1200px; font-size: 94px; }
-    .scroll-test-intro { max-width: 960px; font-size: 22px; }
-    .scroll-test-kicker { font-size: 16px; }
+    #projects.projects-section { padding-top: 250px; padding-bottom: 160px; }
+    .projects-content { width: min(1700px, 100%); }
+    .projects-title { max-width: 1200px; font-size: 94px; }
 }
 
 
-/* Le plateau reste fixe : seule la profondeur des contenus change pendant le scroll. */
 .depth-stage {
     position: fixed;
     inset: 0;
@@ -81,7 +70,7 @@ html, body {
 }
 
 .depth-stage-panel > .hero-inner,
-.depth-stage-panel > .scroll-test-wrap {
+.depth-stage-panel > .projects-content {
     flex: 0 1 auto;
     width: min(100%, 1240px);
     margin: 0;
@@ -92,7 +81,7 @@ html, body {
     will-change: transform, opacity;
 }
 
-.depth-stage-panel > .scroll-test-wrap {
+.depth-stage-panel > .projects-content {
     width: min(100%, 1040px);
 }
 
@@ -104,36 +93,34 @@ html, body {
 
 @media (max-width: 760px) {
     .depth-stage-panel > .hero-inner,
-    .depth-stage-panel > .scroll-test-wrap {
+    .depth-stage-panel > .projects-content {
         max-width: calc(100vw - 44px);
     }
 }
 
 @media (min-width: 1920px) {
     .depth-stage-panel > .hero-inner { width: min(100%, 1600px); }
-    .depth-stage-panel > .scroll-test-wrap { width: min(100%, 1400px); }
+    .depth-stage-panel > .projects-content { width: min(100%, 1400px); }
 }
 
 @media (min-width: 3000px) {
     .depth-stage-panel > .hero-inner { width: min(100%, 1960px); }
-    .depth-stage-panel > .scroll-test-wrap { width: min(100%, 1700px); }
+    .depth-stage-panel > .projects-content { width: min(100%, 1700px); }
 }
 
-/* Sur mobile, le doigt doit pouvoir glisser sur le texte sans sélectionner les paragraphes. */
+
 @media (max-width: 760px) and (pointer: coarse) {
     .depth-stage,
     .depth-stage-panel,
     .depth-stage-panel > .hero-inner,
-    .depth-stage-panel > .scroll-test-wrap,
+    .depth-stage-panel > .projects-content,
     .depth-stage-panel .hero-copy {
         touch-action: pan-y pinch-zoom;
     }
 
     .depth-stage-panel .hero-copy h1,
     .depth-stage-panel .hero-description,
-    .depth-stage-panel .scroll-test-kicker,
-    .depth-stage-panel .scroll-test-title,
-    .depth-stage-panel .scroll-test-intro {
+    .depth-stage-panel .projects-title {
         pointer-events: none;
         -webkit-user-select: none;
         user-select: none;
@@ -149,11 +136,10 @@ html, body {
 }
 
 
-/* La souris partage le plan 3D de l'accueil et sort du cadre en avançant vers la caméra. */
 .depth-stage-panel--hero > .hero-scroll {
     pointer-events: auto;
     touch-action: manipulation;
-    /* On centre la souris indépendamment du transform 3D utilisé par GSAP. */
+    
     transform: none;
     translate: -50% 0;
     transform-origin: center center;

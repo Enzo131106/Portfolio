@@ -2,18 +2,15 @@
 <html lang="fr-FR">
 
 <head>
-    <!-- Métadonnées principales -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enzo Camilo | Portfolio</title>
     <meta name="description"
         content="Portfolio d'Enzo Camilo, étudiant en MMI à l'IUT de Tarbes. Découvrez mes projets en développement logiciel, création de jeux vidéo et création numérique.">
 
-    <!-- Sécurité et confidentialité -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta name="referrer" content="strict-origin-when-cross-origin">
 
-    <!-- Politique de sécurité -->
     <meta http-equiv="Content-Security-Policy" content="
             default-src 'self';
             script-src 'self' https://cdn.jsdelivr.net;
@@ -26,7 +23,6 @@
             upgrade-insecure-requests;
         ">
 
-    <!-- Open Graph pour les réseaux sociaux -->
     <meta property="og:title" content="Enzo Camilo | Portfolio">
     <meta property="og:description"
         content="Portfolio d'Enzo Camilo, étudiant en MMI à l'IUT de Tarbes. Découvrez mes projets en développement logiciel, création de jeux vidéo et création numérique.">
@@ -34,53 +30,43 @@
     <meta property="og:url" content="https://enzo131106.github.io/Portfolio/">
     <meta property="og:site_name" content="Enzo Camilo">
     <meta property="og:locale" content="fr_FR">
-    <meta property="og:image" content="">
+    <meta property="og:image" content="https://enzo131106.github.io/Portfolio/assets/images/portfolio-screenshot.webp">
 
-    <!-- Twitter Card pour X -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Enzo Camilo | Portfolio">
     <meta name="twitter:description"
         content="Portfolio d'Enzo Camilo, étudiant en MMI à l'IUT de Tarbes. Découvrez mes projets en développement logiciel, création de jeux vidéo et création numérique.">
-    <meta name="twitter:image" content="">
+    <meta name="twitter:image" content="https://enzo131106.github.io/Portfolio/assets/images/portfolio-screenshot.webp">
 
-    <!-- Connexions anticipées aux CDN -->
-    <!-- Précharge le logo du loader pour l’afficher au plus tôt -->
     <link rel="preload" as="image" href="./assets/icon/logo.svg" fetchpriority="high">
-    <link rel="stylesheet" href="./assets/CSS/loading-screen.css?v=4">
+    <link rel="stylesheet" href="./assets/css/loading-screen.css">
 
-    <!-- Feuille de style prioritaire : écran de chargement -->
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="preconnect" href="https://fonts.bunny.net">
 
-    <!-- Bootstrap CSS -->
     <link id="bootstrap-css" rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 
-    <!-- Bootstrap Icons -->
     <link id="bootstrap-icons" rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
         integrity="sha384-CK2SzKma4jA5H/MXDUU7i1TqZlCFaD4T01vtyDFvPlD97JQyS+IsSh1nI2EFbpyk" crossorigin="anonymous">
 
-    <!-- Feuilles de style -->
-    <link rel="stylesheet" href="./assets/CSS/privacy-popup.css">
-    <link rel="stylesheet" href="./assets/CSS/fonts.css">
-    <link rel="stylesheet" href="./assets/CSS/navigation.css">
-    <link rel="stylesheet" href="./assets/CSS/background.css">
-    <link rel="stylesheet" href="./assets/CSS/hero.css?v=20261121-6">
-    <link rel="stylesheet" href="./assets/CSS/byte-invaders.css?v=3">
-    <link rel="stylesheet" href="./assets/CSS/scroll-depth.css?v=19">
-    <link rel="stylesheet" href="./assets/CSS/projects-carousel.css?v=17">
+    <link rel="stylesheet" href="./assets/css/privacy-popup.css">
+    <link rel="stylesheet" href="./assets/css/fonts.css">
+    <link rel="stylesheet" href="./assets/css/navigation.css">
+    <link rel="stylesheet" href="./assets/css/space-background.css">
+    <link rel="stylesheet" href="./assets/css/hero.css">
+    <link rel="stylesheet" href="./assets/css/byte-invaders.css">
+    <link rel="stylesheet" href="./assets/css/scroll-depth.css">
+    <link rel="stylesheet" href="./assets/css/projects-carousel.css">
 
-    <!-- Fonts -->
     <link id="inter-fonts" href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800" rel="stylesheet" />
 
-    <!-- Icône -->
     <link rel="icon" href="./assets/icon/logo.svg" type="image/svg+xml">
 </head>
 
 <body class="hero-intro-pending">
-    <!-- Écran de chargement -->
     <div id="loading-screen" class="loading-screen" role="status" aria-live="polite" aria-label="Chargement du portfolio">
         <div class="loading-content">
             <img id="loading-logo" class="loading-logo" src="./assets/icon/logo.svg" alt="Logo du portfolio" width="120" height="120">
@@ -92,7 +78,6 @@
         </div>
     </div>
 
-    <!-- Pop-up de confidentialité -->
     <div id="privacy-popup" class="privacy-popup">
         <div class="privacy-box p-4 p-md-5">
             <div class="privacy-icon mb-3">
@@ -118,7 +103,6 @@
     </div>
 
     <header>
-        <!-- Navigation principale -->
         <nav class="navbar fixed-top" aria-label="Navigation principale">
             <div class="navbar-container">
                 <div class="navbar-identity">
@@ -149,7 +133,6 @@
     </header>
 
     <main>
-        <!-- Hero -->
         <section id="accueil" class="hero-section" aria-labelledby="hero-title">
             <div class="hero-inner">
                 <div class="hero-copy">
@@ -184,7 +167,7 @@
                         <div class="arcade-overlay" id="arcade-overlay">
                             <p class="arcade-overlay-title" id="arcade-overlay-title">READY, PLAYER ONE?</p>
                             <p class="arcade-overlay-copy" id="arcade-overlay-copy">Élimine les vagues de données ennemies.</p>
-                            <div class="arcade-result-actions" id="arcade-result-actions" aria-label="Actions sur le score">
+                            <div class="arcade-result-actions" id="arcade-result-actions" role="group" aria-label="Actions sur le score">
                                 <button class="arcade-result-button" id="arcade-share-score" type="button"><i class="bi bi-share" aria-hidden="true"></i> PARTAGER</button>
                                 <button class="arcade-result-button" id="arcade-download-score" type="button"><i class="bi bi-download" aria-hidden="true"></i> TÉLÉCHARGER</button>
                             </div>
@@ -195,7 +178,7 @@
                         <span><kbd>←</kbd><kbd>→</kbd> DÉPLACER</span>
                         <span><kbd>SPACE</kbd> TIRER</span>
                     </div>
-                    <div class="arcade-mobile-controls" aria-label="Commandes tactiles">
+                    <div class="arcade-mobile-controls" role="group" aria-label="Commandes tactiles">
                         <button type="button" data-game-control="left" aria-label="Déplacer à gauche">←</button>
                         <button type="button" data-game-control="shoot" aria-label="Tirer">FIRE</button>
                         <button type="button" data-game-control="right" aria-label="Déplacer à droite">→</button>
@@ -208,25 +191,23 @@
             </a>
         </section>
 
-        <!-- Projets  -->
-        <section id="projects" class="scroll-test-section" data-scroll-scene aria-labelledby="scroll-test-title">
-            <div class="scroll-test-wrap" data-scroll-scene-content>
-                <h2 id="scroll-test-title" class="scroll-test-title">Mes projets</h2>
+        <section id="projects" class="projects-section" aria-labelledby="projects-title">
+            <div class="projects-content" data-depth-content>
+                <h2 id="projects-title" class="projects-title">Mes projets</h2>
 
                 <div class="projects-carousel" data-projects-carousel role="region" aria-label="Carrousel des projets">
                     <div class="projects-carousel__scene" id="projects-carousel-scene" data-carousel-scene>
-                        <!-- Les visuels sont temporaires, en attendant les vrais projets. -->
-                        <article class="projects-carousel__card projects-carousel__card--web" data-carousel-card aria-label="Portfolio immersif : projet personnel">
+                        <article class="projects-carousel__card" data-carousel-card aria-labelledby="project-01-title">
                             <div class="projects-carousel__surface" data-carousel-surface>
                                 <div class="projects-carousel__visual projects-carousel__visual--image">
                                     <img src="./assets/images/portfolio-screenshot.webp"
-                                         alt="Capture d’écran de l’accueil du portfolio"
+                                         alt="Aperçu de la page d’accueil du portfolio"
                                          loading="lazy" decoding="async">
                                 </div>
                                 <div class="projects-carousel__details">
-                                    <h3>Portfolio immersif</h3>
+                                    <h3 id="project-01-title">Portfolio immersif</h3>
                                     <p>J’ai créé ce portfolio pour présenter mes compétences en développement web, partager mes projets et montrer ce que je suis capable de réaliser, du design à la programmation.</p>
-                                    <div class="projects-carousel__skills" aria-label="Technologies utilisées pour ce portfolio">
+                                    <div class="projects-carousel__skills">
                                         <span class="projects-carousel__skills-title">Compétences</span>
                                         <ul class="projects-carousel__skill-list projects-carousel__skill-list--icons">
                                             <li><img src="./assets/icon/skills/html.svg" width="22" height="22" alt="" loading="lazy" decoding="async"><span>HTML5</span></li>
@@ -237,8 +218,8 @@
                                             <li><img src="./assets/icon/skills/gsap.svg" width="22" height="22" alt="" loading="lazy" decoding="async"><span>GSAP</span></li>
                                         </ul>
                                     </div>
-                                    <a class="projects-carousel__source" href="https://github.com/Enzo131106/Portfolio" target="_blank" rel="noopener noreferrer" aria-label="Voir le code source du portfolio sur GitHub">
-                                        Voir le code source <span aria-hidden="true">↗</span>
+                                    <a class="projects-carousel__source" href="https://github.com/Enzo131106/Portfolio" target="_blank" rel="noopener noreferrer">
+                                        Voir le code sur GitHub <span aria-hidden="true">↗</span>
                                     </a>
                                 </div>
                             </div>
@@ -247,15 +228,15 @@
                             </div>
                         </article>
 
-                        <article class="projects-carousel__card projects-carousel__card--game" data-carousel-card aria-label="Projet 02, contenu provisoire">
+                        <article class="projects-carousel__card" data-carousel-card aria-labelledby="project-02-title">
                             <div class="projects-carousel__surface" data-carousel-surface>
                                 <div class="projects-carousel__visual" aria-hidden="true">
                                     <span class="projects-carousel__number">02</span>
                                 </div>
                                 <div class="projects-carousel__details">
-                                    <h3>Projet 02</h3>
+                                    <h3 id="project-02-title">Projet 02</h3>
                                     <p>Description du projet à compléter.</p>
-                                    <div class="projects-carousel__skills" aria-label="Compétences, exemples à remplacer">
+                                    <div class="projects-carousel__skills">
                                         <span class="projects-carousel__skills-title">Compétences</span>
                                         <ul class="projects-carousel__skill-list">
                                             <li>Compétence A</li>
@@ -270,15 +251,15 @@
                             </div>
                         </article>
 
-                        <article class="projects-carousel__card projects-carousel__card--mmi" data-carousel-card aria-label="Projet 03, contenu provisoire">
+                        <article class="projects-carousel__card" data-carousel-card aria-labelledby="project-03-title">
                             <div class="projects-carousel__surface" data-carousel-surface>
                                 <div class="projects-carousel__visual" aria-hidden="true">
                                     <span class="projects-carousel__number">03</span>
                                 </div>
                                 <div class="projects-carousel__details">
-                                    <h3>Projet 03</h3>
+                                    <h3 id="project-03-title">Projet 03</h3>
                                     <p>Description du projet à compléter.</p>
-                                    <div class="projects-carousel__skills" aria-label="Compétences, exemples à remplacer">
+                                    <div class="projects-carousel__skills">
                                         <span class="projects-carousel__skills-title">Compétences</span>
                                         <ul class="projects-carousel__skill-list">
                                             <li>Compétence A</li>
@@ -293,15 +274,15 @@
                             </div>
                         </article>
 
-                        <article class="projects-carousel__card projects-carousel__card--lab" data-carousel-card aria-label="Projet 04, contenu provisoire">
+                        <article class="projects-carousel__card" data-carousel-card aria-labelledby="project-04-title">
                             <div class="projects-carousel__surface" data-carousel-surface>
                                 <div class="projects-carousel__visual" aria-hidden="true">
                                     <span class="projects-carousel__number">04</span>
                                 </div>
                                 <div class="projects-carousel__details">
-                                    <h3>Projet 04</h3>
+                                    <h3 id="project-04-title">Projet 04</h3>
                                     <p>Description du projet à compléter.</p>
-                                    <div class="projects-carousel__skills" aria-label="Compétences, exemples à remplacer">
+                                    <div class="projects-carousel__skills">
                                         <span class="projects-carousel__skills-title">Compétences</span>
                                         <ul class="projects-carousel__skill-list">
                                             <li>Compétence A</li>
@@ -316,15 +297,15 @@
                             </div>
                         </article>
 
-                        <article class="projects-carousel__card projects-carousel__card--code" data-carousel-card aria-label="Projet 05, contenu provisoire">
+                        <article class="projects-carousel__card" data-carousel-card aria-labelledby="project-05-title">
                             <div class="projects-carousel__surface" data-carousel-surface>
                                 <div class="projects-carousel__visual" aria-hidden="true">
                                     <span class="projects-carousel__number">05</span>
                                 </div>
                                 <div class="projects-carousel__details">
-                                    <h3>Projet 05</h3>
+                                    <h3 id="project-05-title">Projet 05</h3>
                                     <p>Description du projet à compléter.</p>
-                                    <div class="projects-carousel__skills" aria-label="Compétences, exemples à remplacer">
+                                    <div class="projects-carousel__skills">
                                         <span class="projects-carousel__skills-title">Compétences</span>
                                         <ul class="projects-carousel__skill-list">
                                             <li>Compétence A</li>
@@ -339,15 +320,15 @@
                             </div>
                         </article>
 
-                        <article class="projects-carousel__card projects-carousel__card--personal" data-carousel-card aria-label="Projet 06, contenu provisoire">
+                        <article class="projects-carousel__card" data-carousel-card aria-labelledby="project-06-title">
                             <div class="projects-carousel__surface" data-carousel-surface>
                                 <div class="projects-carousel__visual" aria-hidden="true">
                                     <span class="projects-carousel__number">06</span>
                                 </div>
                                 <div class="projects-carousel__details">
-                                    <h3>Projet 06</h3>
+                                    <h3 id="project-06-title">Projet 06</h3>
                                     <p>Description du projet à compléter.</p>
-                                    <div class="projects-carousel__skills" aria-label="Compétences, exemples à remplacer">
+                                    <div class="projects-carousel__skills">
                                         <span class="projects-carousel__skills-title">Compétences</span>
                                         <ul class="projects-carousel__skill-list">
                                             <li>Compétence A</li>
@@ -364,7 +345,6 @@
 
                     </div>
 
-                    <!-- Les flèches restent de chaque côté du carrousel, sans barre de commandes en bas. -->
                     <button type="button" class="projects-carousel__arrow projects-carousel__arrow--prev" data-carousel-prev aria-label="Projet précédent" aria-controls="projects-carousel-scene">
                         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                             <path d="M15 5 8 12l7 7M8 12h11"></path>
@@ -380,30 +360,26 @@
             </div>
         </section>
 
-        <!-- Parcours -->
         <section id="parcours" aria-label="Parcours"></section>
     </main>
 
-    <!-- Contact -->
     <footer id="contact"></footer>
 
-    <!-- Bootstrap JS -->
     <script id="bootstrap-js" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"
         defer></script>
 
-    <!-- JavaScript -->
-    <script src="./assets/JS/scroll-reset.js?v=1"></script>
-    <script src="./assets/JS/loading-screen.js?v=20261025-7" defer></script>
-    <script src="./assets/JS/resource-fallbacks.js?v=2"
+    <script src="./assets/js/scroll-restoration.js"></script>
+    <script src="./assets/js/loading-screen.js" defer></script>
+    <script src="./assets/js/resource-loader.js"
         data-gsap-cdn="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"
         data-scrolltrigger-cdn="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/ScrollTrigger.min.js"></script>
-    <script src="./assets/JS/privacy-popup.js"></script>
-    <script src="./assets/JS/navigation.js"></script>
-    <script src="./assets/JS/byte-invaders.js" defer></script>
-    <script src="./assets/JS/scroll-depth.js?v=24" defer></script>
-    <script src="./assets/JS/projects-carousel.js?v=12" defer></script>
-    <script id="three-background-script" type="module" src="./assets/JS/background.js?v=20261121-2"></script>
+    <script src="./assets/js/privacy-popup.js"></script>
+    <script src="./assets/js/navigation.js"></script>
+    <script src="./assets/js/byte-invaders.js" defer></script>
+    <script src="./assets/js/scroll-depth.js" defer></script>
+    <script src="./assets/js/projects-carousel.js" defer></script>
+    <script id="three-background-script" type="module" src="./assets/js/space-background.js"></script>
 </body>
 
 </html>
