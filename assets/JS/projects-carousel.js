@@ -105,7 +105,8 @@
             const rotation = -Math.max(-1.35, Math.min(1.35, offset)) * 35;
 
             card.style.transform = `translate3d(${x.toFixed(1)}px, 0, ${z.toFixed(1)}px) rotateY(${rotation.toFixed(2)}deg)`;
-            card.style.opacity = String(visible ? Math.max(0.48, 1 - distanceFromCenter * 0.35) : 0);
+            // Les aperçus restent bien opaques tout en conservant un léger recul visuel.
+            card.style.opacity = String(visible ? Math.max(0.86, 1 - distanceFromCenter * 0.12) : 0);
             card.style.visibility = visible ? "visible" : "hidden";
             card.style.zIndex = String(Math.round(100 - distanceFromCenter * 30));
 
@@ -134,7 +135,9 @@
             // Le même angle pilote la position sur le cercle et la rotation Y.
             card.style.transform = `translate3d(${x.toFixed(1)}px, 0, ${z.toFixed(1)}px) rotateY(${rotation.toFixed(2)}deg)`;
             // Les dos restent visibles au fond et passent derrière les cartes proches.
-            card.style.opacity = String(0.46 + 0.54 * (cos + 1) / 2);
+            // Les cartes arrière restent présentes : un léger dégradé d'opacité
+            // suffit à suggérer la profondeur, sans effet de transparence excessif.
+            card.style.opacity = String(0.84 + 0.16 * (cos + 1) / 2);
             card.style.zIndex = String(Math.round(100 + cos * 50));
 
             // Les côtés lointains et les dos restent visibles, mais ne réagissent
