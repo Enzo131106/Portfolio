@@ -1,3 +1,5 @@
+"use strict";
+
 // Three.js utilise le CDN en priorité et une copie locale en secours.
 let THREE;
 
