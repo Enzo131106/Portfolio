@@ -158,6 +158,32 @@
     opacity: 1;
 }
 
+/* La capture occupe exactement la zone prévue pour les visuels des projets. */
+.projects-carousel__visual--image {
+    padding: 0;
+    background: #0a1428;
+}
+
+.projects-carousel__visual--image img {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Une ombre douce relie la capture au bleu profond de la carte, sans cadre. */
+.projects-carousel__visual--image::before {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    inset: 70% 0 0;
+    background: linear-gradient(to bottom, transparent, rgba(10, 20, 40, .35));
+    pointer-events: none;
+}
+
 .projects-carousel__number {
     color: #0a1428;
     font-size: clamp(110px, 15vw, 220px);
