@@ -324,14 +324,118 @@ body {
     }
 }
 
-@media (min-width: 1280px) {
-    .legal-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+.legal-page .privacy-container {
+    max-width: 960px;
+}
+
+.legal-card {
+    min-width: 0;
+    padding: clamp(16px, 2.5vw, 32px);
+    border: 1px solid var(--privacy-border);
+    border-radius: 16px;
+    background: var(--privacy-card);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.35) transparent;
+}
+
+.legal-card:focus-visible {
+    outline: 2px solid #ABD2FA;
+    outline-offset: 3px;
+}
+
+.legal-card .privacy-card {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    gap: 10px 12px;
+}
+
+.legal-card .privacy-card + .privacy-card {
+    margin-top: 22px;
+    padding-top: 22px;
+    border-top: 1px solid var(--privacy-border);
+}
+
+.legal-card .privacy-card h2 {
+    font-size: 1.05rem;
+}
+
+.legal-card .privacy-card p,
+.legal-card .contact-address {
+    font-size: 0.95rem;
+    line-height: 1.65;
+}
+
+@media (min-width: 700px) and (min-height: 600px) {
+    .legal-page {
+        height: 100vh;
+        height: 100dvh;
+    }
+
+    .legal-page .privacy-container {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        max-height: 100%;
+    }
+
+    .legal-page .privacy-intro,
+    .legal-page .privacy-footer,
+    .legal-page .back-button {
+        flex-shrink: 0;
+    }
+
+    .legal-card {
+        flex: 0 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        overscroll-behavior-y: contain;
+        scrollbar-gutter: stable;
     }
 }
 
-@media (min-width: 700px) and (max-width: 1279px) {
-    .legal-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+@media (min-width: 1920px) and (min-height: 900px) {
+    .legal-page .privacy-container {
+        max-width: 1120px;
+    }
+
+    .legal-card .privacy-card h2 {
+        font-size: 1.2rem;
+    }
+
+    .legal-card .privacy-card p,
+    .legal-card .contact-address {
+        font-size: 1rem;
+    }
+}
+
+@media (min-width: 3000px) and (min-height: 1500px) {
+    .legal-page .privacy-container {
+        max-width: 1400px;
+    }
+
+    .legal-card {
+        padding: 40px;
+    }
+
+    .legal-card .privacy-card h2 {
+        font-size: 1.5rem;
+    }
+
+    .legal-card .privacy-card p,
+    .legal-card .contact-address {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 699px) {
+    .legal-card .privacy-card h2 {
+        font-size: 1rem;
+    }
+
+    .legal-card .privacy-card + .privacy-card {
+        margin-top: 18px;
+        padding-top: 18px;
     }
 }
