@@ -137,30 +137,46 @@ function initializeScrollDepth() {
         return top;
     }
 
-    function positionTitle(title, body, contentTop) {
+    function positionSection(shell, title, body, contentTop, contentBottom) {
+        const shellTop = layoutTop(shell);
         const margin = parseFloat(getComputedStyle(title).marginBottom) || 0;
-        const normalBottom = layoutTop(body) - margin;
+        const normalBottom = layoutTop(body) - shellTop - margin;
         const gap = Math.max(22, Math.min(36, stage.clientWidth * 0.022));
-        const offset = Math.max(0, Math.floor(contentTop - normalBottom - gap));
-        const value = offset + "px";
+        const titleOffset = Math.max(0, Math.floor(contentTop - normalBottom - gap));
+        const titleTop = normalBottom - title.offsetHeight + titleOffset;
+        const groupTop = Math.min(titleTop, contentTop);
+        const groupBottom = Math.max(normalBottom + titleOffset, contentBottom);
+        const targetTop = Math.max(32, Math.min(60, stage.clientHeight * 0.09));
+        const bottomReserve = 24;
+        const freeBottom = stage.clientHeight - groupBottom - bottomReserve;
+        const groupOffset = Math.max(0, Math.floor(Math.min(targetTop - groupTop, freeBottom)));
 
-        if (title.style.getPropertyValue("--section-title-offset") !== value) {
-            title.style.setProperty("--section-title-offset", value);
+        const titleValue = titleOffset + "px";
+        const groupValue = groupOffset + "px";
+        if (title.style.getPropertyValue("--section-title-offset") !== titleValue) {
+            title.style.setProperty("--section-title-offset", titleValue);
+        }
+        if (shell.style.getPropertyValue("--section-group-offset") !== groupValue) {
+            shell.style.setProperty("--section-group-offset", groupValue);
         }
     }
 
     function syncTitlePositions() {
         if (projectScene && projectCards.length) {
             const cardHeight = Math.max(...projectCards.map(card => card.offsetHeight));
-            const contentTop = layoutTop(projectScene) + (projectScene.clientHeight - cardHeight) / 2;
-            positionTitle(projectTitle, projectBody, contentTop);
+            const sceneCenter = layoutTop(projectScene) - layoutTop(projectInner) + projectScene.clientHeight / 2;
+            positionSection(projectInner, projectTitle, projectBody,
+                sceneCenter - cardHeight / 2, sceneCenter + cardHeight / 2);
         }
 
-        const contentTop = Math.min(
-            layoutTop(line.parentElement),
-            ...entries.map(item => layoutTop(item.entry))
-        );
-        positionTitle(parcoursTitle, viewport, contentTop);
+        const shellTop = layoutTop(parcoursInner);
+        const lineTop = layoutTop(line.parentElement) - shellTop;
+        const entryTops = entries.map(item => layoutTop(item.entry) - shellTop);
+        const contentTop = Math.min(lineTop, ...entryTops);
+        const contentBottom = Math.max(lineTop + 7, ...entries.map((item, index) =>
+            entryTops[index] + item.entry.offsetHeight + 22
+        ));
+        positionSection(parcoursInner, parcoursTitle, viewport, contentTop, contentBottom);
     }
 
     function measure() {

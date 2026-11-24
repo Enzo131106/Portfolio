@@ -94,6 +94,8 @@ html, body {
 
 .depth-stage-panel--project > .projects-content,
 .depth-stage-panel--parcours > .parcours-content {
+    position: relative;
+    top: var(--section-group-offset, 0px);
     transform-style: preserve-3d;
     backface-visibility: visible;
     will-change: auto;
