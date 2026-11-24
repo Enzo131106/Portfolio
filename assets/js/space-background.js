@@ -602,7 +602,7 @@ function animate(currentTime) {
         elapsedTime;
 
     const introProgress = Math.max(0, Math.min(1, motion.intro || 0));
-    const scrollProgress = Math.max(0, Math.min(1, motion.scroll || 0));
+    const scrollProgress = Math.max(0, Math.min(1.9, motion.scroll || 0));
     camera.position.z = cameraIntroZ
         - (cameraIntroZ - cameraHeroZ) * introProgress
         - cameraScrollDistance * scrollProgress;

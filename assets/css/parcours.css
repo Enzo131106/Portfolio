@@ -1,0 +1,306 @@
+/* Chronologie du parcours scolaire et professionnel. */
+.parcours-section {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    padding: 120px 5.5vw 70px;
+    color: #f4f7ff;
+    box-sizing: border-box;
+}
+
+.parcours-content {
+    --parcours-step-width: clamp(300px, 43vw, 610px);
+    --parcours-axis: 50%;
+    --parcours-inset: clamp(18px, 3vw, 48px);
+    width: min(100%, 1550px);
+    min-width: 0;
+    margin: 0 auto;
+}
+
+.parcours-title {
+    margin: 0 0 clamp(24px, 4svh, 48px);
+    color: #f4f7ff;
+    font-size: clamp(38px, 4.8vw, 78px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -.055em;
+    text-align: center;
+}
+
+.parcours-viewport {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.parcours-track {
+    position: relative;
+}
+
+.parcours-list {
+    position: relative;
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 30px;
+    border-left: 1px solid rgba(171, 210, 250, .5);
+}
+
+.parcours-step {
+    position: relative;
+    min-width: 0;
+    padding: 0 0 40px;
+}
+
+.parcours-step:last-child {
+    padding-bottom: 0;
+}
+
+.parcours-entry {
+    max-width: 480px;
+    overflow-wrap: anywhere;
+}
+
+.parcours-date {
+    margin: 0 0 8px;
+    color: #ABD2FA;
+    font-size: clamp(14px, 1.15vw, 18px);
+    font-weight: 650;
+    font-variant-numeric: tabular-nums;
+}
+
+.parcours-entry h3 {
+    margin: 0 0 8px;
+    color: #f4f7ff;
+    font-size: clamp(24px, 2.4vw, 38px);
+    font-weight: 750;
+    letter-spacing: -.04em;
+    line-height: 1.13;
+}
+
+.parcours-place {
+    margin: 0 0 10px;
+    color: #c6def5;
+    font-size: clamp(14px, 1.15vw, 18px);
+    font-weight: 600;
+}
+
+.parcours-description {
+    margin: 0;
+    color: #d5e2f2;
+    font-size: clamp(14px, 1.15vw, 17px);
+    line-height: 1.55;
+}
+
+.parcours-step--pending .parcours-date {
+    font-weight: 500;
+}
+
+.parcours-point {
+    position: absolute;
+    top: 4px;
+    left: -36px;
+    width: 11px;
+    height: 11px;
+    border: 2px solid #ABD2FA;
+    border-radius: 50%;
+    background: #0b172b;
+    box-sizing: border-box;
+}
+
+.parcours-line,
+.parcours-hint {
+    display: none;
+}
+
+.parcours-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 18px;
+    margin-top: 32px;
+    color: #c6def5;
+    font-size: clamp(12px, 1vw, 15px);
+}
+
+.parcours-footer a {
+    color: #d7edff;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.parcours-footer a:hover {
+    color: #fff;
+}
+
+.parcours-footer a:focus-visible {
+    outline: 2px solid #ABD2FA;
+    outline-offset: 4px;
+}
+
+.depth-stage-panel--parcours > .parcours-content {
+    display: flex;
+    flex-direction: column;
+    width: min(calc(100vw - 11vw), 1550px);
+    height: 100svh;
+    max-width: 100%;
+    padding: clamp(90px, 12svh, 138px) 0 clamp(23px, 4svh, 48px);
+    box-sizing: border-box;
+    pointer-events: auto;
+    transform-origin: center;
+    backface-visibility: hidden;
+    touch-action: pan-y pinch-zoom;
+}
+
+.depth-stage-panel--parcours .parcours-viewport {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.depth-stage-panel--parcours .parcours-track {
+    width: max-content;
+    min-width: 100%;
+    height: 100%;
+}
+
+.depth-stage-panel--parcours .parcours-list {
+    display: flex;
+    align-items: stretch;
+    width: max-content;
+    min-width: 100%;
+    height: 100%;
+    padding: 0 var(--parcours-inset);
+    border: 0;
+}
+
+.depth-stage-panel--parcours .parcours-step {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) 28px minmax(0, 1fr);
+    width: var(--parcours-step-width);
+    flex: 0 0 auto;
+    padding: 0 clamp(24px, 4vw, 64px) 0 0;
+}
+
+.depth-stage-panel--parcours .parcours-entry {
+    grid-row: 1;
+    align-self: end;
+    padding-bottom: clamp(10px, 2.2svh, 26px);
+}
+
+.depth-stage-panel--parcours .parcours-step:nth-child(even) .parcours-entry {
+    grid-row: 3;
+    align-self: start;
+    padding: clamp(10px, 2.2svh, 26px) 0 0;
+}
+
+.depth-stage-panel--parcours .parcours-point {
+    position: static;
+    grid-row: 2;
+    align-self: center;
+    justify-self: start;
+    width: 13px;
+    height: 13px;
+    margin-left: -6px;
+    border: 2px solid #ABD2FA;
+    box-shadow: 0 0 12px rgba(112, 216, 255, .3);
+}
+
+.depth-stage-panel--parcours .parcours-line {
+    display: block;
+    position: absolute;
+    top: var(--parcours-axis);
+    left: var(--parcours-inset);
+    right: var(--parcours-inset);
+    height: 2px;
+    transform: translateY(-50%);
+    background: rgba(171, 210, 250, .22);
+    pointer-events: none;
+}
+
+.parcours-line-fill {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: #ABD2FA;
+    box-shadow: 0 0 12px rgba(112, 216, 255, .4);
+    transform: scaleX(0);
+    transform-origin: left center;
+}
+
+.depth-stage-panel--parcours .parcours-footer {
+    flex: 0 0 auto;
+    justify-content: space-between;
+    margin-top: clamp(12px, 2svh, 28px);
+}
+
+.depth-stage-panel--parcours .parcours-hint {
+    display: block;
+    margin: 0;
+}
+
+.parcours-hint span {
+    display: inline-block;
+    margin-left: 8px;
+    color: #ABD2FA;
+    font-size: 1.4em;
+    line-height: 1;
+}
+
+@media (max-width: 760px), (max-height: 680px) {
+    .depth-stage-panel--parcours > .parcours-content {
+        --parcours-axis: 24px;
+        --parcours-step-width: clamp(245px, 68vw, 420px);
+        --parcours-inset: 12px;
+    }
+
+    .depth-stage-panel--parcours .parcours-step {
+        grid-template-rows: 48px minmax(0, 1fr);
+        padding-right: 24px;
+    }
+
+    .depth-stage-panel--parcours .parcours-entry,
+    .depth-stage-panel--parcours .parcours-step:nth-child(even) .parcours-entry {
+        grid-row: 2;
+        align-self: start;
+        padding: 14px 0 0;
+    }
+
+    .depth-stage-panel--parcours .parcours-point {
+        grid-row: 1;
+    }
+
+    .depth-stage-panel--parcours .parcours-title {
+        margin-bottom: clamp(14px, 3svh, 30px);
+    }
+}
+
+@media (max-width: 760px) {
+    .parcours-section { padding: 115px 24px 64px; }
+    .depth-stage-panel--parcours > .parcours-content {
+        width: calc(100vw - 44px);
+        --parcours-step-width: min(79vw, 350px);
+        padding-top: clamp(88px, 12svh, 116px);
+    }
+
+    .parcours-title { font-size: clamp(38px, 9vw, 60px); }
+    .parcours-entry h3 { font-size: clamp(24px, 6vw, 31px); }
+    .parcours-footer { flex-wrap: wrap; }
+}
+
+@media (max-height: 680px) {
+    .depth-stage-panel--parcours > .parcours-content {
+        padding-top: 75px;
+        padding-bottom: 12px;
+    }
+
+    .depth-stage-panel--parcours .parcours-title { font-size: clamp(32px, 4vw, 52px); }
+    .depth-stage-panel--parcours .parcours-entry h3 { font-size: 24px; }
+    .depth-stage-panel--parcours .parcours-description { font-size: 14px; }
+}
+
+@media (min-width: 1920px) {
+    .depth-stage-panel--parcours > .parcours-content {
+        width: min(calc(100vw - 11vw), 1950px);
+        --parcours-step-width: clamp(610px, 35vw, 800px);
+    }
+}

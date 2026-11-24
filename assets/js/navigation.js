@@ -23,7 +23,9 @@
     function updateActiveLink() {
         scrollFrame = 0;
 
-        const activationPoint = window.innerHeight * 0.4;
+        const activationPoint = document.body.classList.contains("depth-stage-active")
+            ? 2
+            : window.innerHeight * 0.4;
         let activeItem = navigationItems[0];
 
         navigationItems.forEach(item => {

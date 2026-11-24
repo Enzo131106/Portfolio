@@ -60,6 +60,7 @@
     <link rel="stylesheet" href="./assets/css/byte-invaders.css">
     <link rel="stylesheet" href="./assets/css/scroll-depth.css">
     <link rel="stylesheet" href="./assets/css/projects-carousel.css">
+    <link rel="stylesheet" href="./assets/css/parcours.css">
 
     <link id="inter-fonts" href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800" rel="stylesheet" />
 
@@ -369,7 +370,51 @@
             </div>
         </section>
 
-        <section id="parcours" aria-label="Parcours"></section>
+        <section id="parcours" class="parcours-section" aria-labelledby="parcours-title">
+            <div class="parcours-content" data-depth-content>
+                <h2 id="parcours-title" class="parcours-title">Mon parcours</h2>
+                <div class="parcours-viewport">
+                    <div class="parcours-track">
+                        <div class="parcours-line" aria-hidden="true">
+                            <span class="parcours-line-fill"></span>
+                        </div>
+                        <ol class="parcours-list">
+                            <li class="parcours-step parcours-step--pending">
+                                <div class="parcours-entry">
+                                    <p class="parcours-date">Dates à préciser</p>
+                                    <h3>Formation précédente</h3>
+                                    <p class="parcours-place">Établissement · Ville à préciser</p>
+                                    <p class="parcours-description">Diplôme et formation à compléter.</p>
+                                </div>
+                                <span class="parcours-point" aria-hidden="true"></span>
+                            </li>
+                            <li class="parcours-step">
+                                <div class="parcours-entry">
+                                    <p class="parcours-date">En cours</p>
+                                    <h3>BUT MMI</h3>
+                                    <p class="parcours-place">IUT de Tarbes · Tarbes</p>
+                                    <p class="parcours-description">Métiers du multimédia et de l'Internet : développement web et création numérique.</p>
+                                </div>
+                                <span class="parcours-point" aria-hidden="true"></span>
+                            </li>
+                            <li class="parcours-step parcours-step--pending">
+                                <div class="parcours-entry">
+                                    <p class="parcours-date">Dates à préciser</p>
+                                    <h3>Expérience professionnelle</h3>
+                                    <p class="parcours-place">Entreprise · Ville à préciser</p>
+                                    <p class="parcours-description">Poste et missions à compléter.</p>
+                                </div>
+                                <span class="parcours-point" aria-hidden="true"></span>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="parcours-footer">
+                    <p class="parcours-hint">Défiler pour découvrir la suite <span aria-hidden="true">→</span></p>
+                    <a href="https://www.linkedin.com/in/enzo-camilo-4190a939b/" target="_blank" rel="noopener noreferrer">Voir mon parcours sur LinkedIn</a>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer id="contact"></footer>

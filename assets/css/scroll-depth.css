@@ -1,4 +1,4 @@
-/* Mise en profondeur de l'accueil et des projets. */
+/* Scène et transitions en profondeur. */
 #projects.projects-section {
     position: relative;
     min-height: 100svh;
@@ -145,4 +145,25 @@ html, body {
     transform-origin: center center;
     backface-visibility: hidden;
     will-change: transform;
+}
+
+/* Les sections gardent leur place dans le défilement natif. */
+.depth-stage-active #accueil,
+.depth-stage-active #projects {
+    height: 100svh;
+    min-height: 100svh;
+    padding: 0;
+    scroll-margin-top: 0;
+}
+
+.depth-stage-active #parcours {
+    height: var(--parcours-scroll-length, 280svh);
+    min-height: 0;
+    padding: 0;
+    scroll-margin-top: 0;
+}
+
+.depth-stage-active #contact {
+    min-height: 100svh;
+    scroll-margin-top: 0;
 }
