@@ -12,11 +12,11 @@
 
     <meta http-equiv="Content-Security-Policy" content="
             default-src 'self';
-            script-src 'self' https://cdn.jsdelivr.net;
-            style-src 'self' https://cdn.jsdelivr.net https://fonts.bunny.net;
+            script-src 'self';
+            style-src 'self' https://fonts.bunny.net;
             img-src 'self';
-            font-src 'self' https://cdn.jsdelivr.net https://fonts.bunny.net;
-            connect-src 'self' https://cdn.jsdelivr.net https://fonts.bunny.net;
+            font-src 'self' https://fonts.bunny.net;
+            connect-src 'self';
             object-src 'none';
             base-uri 'self';
             upgrade-insecure-requests;
@@ -42,15 +42,14 @@
     <link rel="preload" as="image" href="./assets/icons/logo.svg" fetchpriority="high">
     <link rel="stylesheet" href="./assets/css/loading-screen.css">
 
-    <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="preconnect" href="https://fonts.bunny.net">
 
     <link id="bootstrap-css" rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        href="./vendor/bootstrap/bootstrap.min.css"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 
     <link id="bootstrap-icons" rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+        href="./vendor/bootstrap-icons/bootstrap-icons.min.css"
         integrity="sha384-CK2SzKma4jA5H/MXDUU7i1TqZlCFaD4T01vtyDFvPlD97JQyS+IsSh1nI2EFbpyk" crossorigin="anonymous">
 
     <link rel="stylesheet" href="./assets/css/privacy-popup.css">
@@ -94,9 +93,9 @@
                 Votre navigateur conserve uniquement la fermeture de ce message et votre meilleur score à Byte Invaders.
             </p>
             <p id="privacy-details" class="privacy-details mb-4">
-                Le site est hébergé sur GitHub Pages et utilise des ressources externes
-                via jsDelivr et Bunny Fonts. Ces services peuvent recevoir des données
-                techniques telles que votre adresse IP.
+                Le site est hébergé sur GitHub Pages. Les bibliothèques sont hébergées
+                localement et la police de la page d'accueil peut être chargée via Bunny Fonts.
+                Ces prestataires peuvent recevoir des données techniques telles que votre adresse IP.
             </p>
             <div class="privacy-actions">
                 <button id="privacy-button" class="privacy-button" type="button">Compris</button>
@@ -485,14 +484,17 @@
         </div>
     </footer>
 
-    <script id="bootstrap-js" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    <script id="bootstrap-js" src="./vendor/bootstrap/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"
         defer></script>
 
     <script src="./assets/js/scroll-restoration.js"></script>
-    <script src="./assets/js/resource-loader.js"
-        data-gsap-cdn="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"
-        data-scrolltrigger-cdn="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/ScrollTrigger.min.js"></script>
+    <script src="./vendor/gsap/gsap.min.js"
+        integrity="sha384-sG0Hv1tP1lZCk9KQmrIbY/XNwi+OY84GQqhMscbnsoBFqAz8KNCil1kvfL3Hbbk2"
+        defer></script>
+    <script src="./vendor/gsap/ScrollTrigger.min.js"
+        integrity="sha384-xNHNOfrykny9oFwnmpfNbkSc6isny38d1GZvTRVuFV0l9fTMIZKhULvomyQJSMRl"
+        defer></script>
     <script src="./assets/js/privacy-popup.js"></script>
     <script src="./assets/js/navigation.js"></script>
     <script src="./assets/js/byte-invaders.js" defer></script>

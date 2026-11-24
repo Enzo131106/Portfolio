@@ -15,10 +15,6 @@
     let finished = false;
 
     function onDocumentReady() {
-        Promise.resolve(window._portfolioGsapReady).then(onAnimationsReady, onAnimationsReady);
-    }
-
-    function onAnimationsReady() {
         animationsReady = true;
         finishLoading();
     }

@@ -434,8 +434,4 @@ function startScrollDepth() {
     });
 }
 
-if (window._portfolioGsapReady) {
-    window._portfolioGsapReady.then(startScrollDepth, startScrollDepth);
-} else {
-    startScrollDepth();
-}
+startScrollDepth();

@@ -12,11 +12,11 @@
 
     <meta http-equiv="Content-Security-Policy" content="
         default-src 'self';
-        script-src 'self' https://cdn.jsdelivr.net;
-        style-src 'self' https://cdn.jsdelivr.net https://fonts.bunny.net;
+        script-src 'self';
+        style-src 'self';
         img-src 'self';
-        font-src 'self' https://cdn.jsdelivr.net https://fonts.bunny.net;
-        connect-src 'self' https://cdn.jsdelivr.net https://fonts.bunny.net;
+        font-src 'self';
+        connect-src 'self';
         object-src 'none';
         base-uri 'self';
         upgrade-insecure-requests;
@@ -35,24 +35,20 @@
     <meta name="twitter:description"
         content="Informations sur la confidentialité, le stockage local et le fonctionnement du portfolio d'Enzo Camilo.">
 
-    <link rel="preconnect" href="https://cdn.jsdelivr.net">
-    <link rel="preconnect" href="https://fonts.bunny.net">
 
 
     <link id="bootstrap-css" rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        href="./vendor/bootstrap/bootstrap.min.css"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 
 
     <link id="bootstrap-icons" rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+        href="./vendor/bootstrap-icons/bootstrap-icons.min.css"
         integrity="sha384-CK2SzKma4jA5H/MXDUU7i1TqZlCFaD4T01vtyDFvPlD97JQyS+IsSh1nI2EFbpyk" crossorigin="anonymous">
 
     <link rel="stylesheet" href="./assets/css/contact.css">
     <link rel="stylesheet" href="./assets/css/privacy-page.css">
     <link rel="stylesheet" href="./assets/css/fonts.css">
-
-    <link id="inter-fonts" href="https://fonts.bunny.net/css?family=inter:700" rel="stylesheet">
 
     <link rel="icon" href="./assets/icons/logo.svg" type="image/svg+xml">
 
@@ -62,13 +58,13 @@
     <main class="privacy-page">
         <div class="privacy-container">
 
-            <button id="privacy-back" class="back-button" type="button" aria-label="Retour au portfolio">
+            <a id="privacy-back" class="back-button" href="./index.html" aria-label="Retour au portfolio">
 
                 <i class="bi bi-arrow-left" aria-hidden="true"></i>
 
                 Retour
 
-            </button>
+            </a>
 
             <header class="privacy-intro">
 
@@ -148,7 +144,7 @@
                         </p>
 
                         <p>
-                            Le contrôle d'intégrité (<strong>SRI</strong>) vérifie certaines ressources externes.
+                            Le contrôle d'intégrité (<strong>SRI</strong>) vérifie les fichiers Bootstrap, Bootstrap Icons, GSAP et ScrollTrigger chargés localement.
                         </p>
 
                     </div>
@@ -230,14 +226,13 @@
                         </h2>
 
                         <p>
-                            Les bibliothèques sont chargées depuis <a href="https://www.jsdelivr.com/terms/privacy-policy" target="_blank" rel="noopener noreferrer">jsDelivr</a>
-                            et la police Inter depuis <a href="https://fonts.bunny.net/about" target="_blank" rel="noopener noreferrer">Bunny Fonts</a>. Ces services reçoivent des données de connexion,
+                            Les bibliothèques sont hébergées avec le portfolio sur GitHub Pages.
+                            Seule la police Inter de la page d'accueil est chargée depuis <a href="https://fonts.bunny.net/about" target="_blank" rel="noopener noreferrer" aria-label="Bunny Fonts : présentation du service (nouvel onglet)">Bunny Fonts</a>, qui peut recevoir des données de connexion,
                             dont votre adresse IP.
                         </p>
 
                         <p>
-                            La page principale utilise les copies locales des bibliothèques et de la police
-                            en cas d'échec du chargement externe.
+                            Les pages secondaires utilisent la police locale. Une copie locale de la police est également disponible sur la page d'accueil en cas d'échec du chargement externe.
                         </p>
 
                         <p>
