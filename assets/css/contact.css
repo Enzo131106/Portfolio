@@ -69,7 +69,7 @@
     align-items: center;
     justify-content: center;
     gap: 4px 8px;
-    margin-bottom: 38px;
+    margin-bottom: 24px;
 }
 
 .contact-email {
@@ -130,6 +130,7 @@
 }
 
 .contact-footline {
+    position: relative;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -191,7 +192,7 @@
     }
 
     .contact-address {
-        margin-bottom: 38px;
+        margin-bottom: 20px;
     }
 
     .contact-footline {
@@ -245,7 +246,7 @@
 .contact-copy-status {
     position: absolute;
     z-index: 1;
-    top: calc(100% + 3px);
+    bottom: calc(100% + 16px);
     left: 50%;
     width: max-content;
     max-width: 100%;
