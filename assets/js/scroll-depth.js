@@ -9,6 +9,8 @@ function initializeScrollDepth() {
     const projectInner = project?.querySelector("[data-depth-content]");
     const projectTitle = projectInner?.querySelector(".projects-title");
     const projectBody = projectInner?.querySelector("[data-projects-carousel]");
+    const projectScene = projectBody?.querySelector("[data-carousel-scene]");
+    const projectCards = projectScene ? [...projectScene.querySelectorAll("[data-carousel-card]")] : [];
     const parcours = document.querySelector("#parcours");
     const parcoursInner = parcours?.querySelector("[data-depth-content]");
     const parcoursTitle = parcoursInner?.querySelector(".parcours-title");
@@ -127,9 +129,44 @@ function initializeScrollDepth() {
         }
     }
 
+    function layoutTop(element) {
+        let top = 0;
+        for (let node = element; node; node = node.offsetParent) {
+            top += node.offsetTop;
+        }
+        return top;
+    }
+
+    function positionTitle(title, body, contentTop) {
+        const margin = parseFloat(getComputedStyle(title).marginBottom) || 0;
+        const normalBottom = layoutTop(body) - margin;
+        const gap = Math.max(22, Math.min(36, stage.clientWidth * 0.022));
+        const offset = Math.max(0, Math.floor(contentTop - normalBottom - gap));
+        const value = offset + "px";
+
+        if (title.style.getPropertyValue("--section-title-offset") !== value) {
+            title.style.setProperty("--section-title-offset", value);
+        }
+    }
+
+    function syncTitlePositions() {
+        if (projectScene && projectCards.length) {
+            const cardHeight = Math.max(...projectCards.map(card => card.offsetHeight));
+            const contentTop = layoutTop(projectScene) + (projectScene.clientHeight - cardHeight) / 2;
+            positionTitle(projectTitle, projectBody, contentTop);
+        }
+
+        const contentTop = Math.min(
+            layoutTop(line.parentElement),
+            ...entries.map(item => layoutTop(item.entry))
+        );
+        positionTitle(parcoursTitle, viewport, contentTop);
+    }
+
     function measure() {
         syncSafeArea();
         centerParcours();
+        syncTitlePositions();
         viewportWidth = viewport.clientWidth;
         compactParcours = window.matchMedia("(max-width: 760px), (max-height: 480px) and (orientation: landscape)").matches;
         horizontalDistance = Math.max(0, track.offsetWidth - viewportWidth);
@@ -311,8 +348,11 @@ function initializeScrollDepth() {
         const layoutObserver = new ResizeObserver(() => {
             syncSafeArea();
             centerParcours();
+            syncTitlePositions();
         });
         if (navbar) layoutObserver.observe(navbar);
+        if (projectScene) layoutObserver.observe(projectScene);
+        projectCards.forEach(card => layoutObserver.observe(card));
         layoutObserver.observe(viewport);
         entries.forEach(item => layoutObserver.observe(item.entry));
     }

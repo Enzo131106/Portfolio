@@ -103,6 +103,7 @@ html, body {
 .depth-stage-panel .projects-title,
 .depth-stage-panel .parcours-title {
     position: relative;
+    top: var(--section-title-offset, 0px);
     transform-origin: center top;
     pointer-events: none;
     will-change: transform, opacity;
