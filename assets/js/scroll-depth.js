@@ -144,7 +144,8 @@ function initializeScrollDepth() {
                 top += node.offsetTop;
             }
             const previous = parseFloat(getComputedStyle(title).top) || 0;
-            const lift = Math.max(0, Math.min(38, Math.floor(top - previous - 20)));
+            const clearance = Math.max(24, Math.min(44, Math.round(stage.clientHeight * 0.065)));
+            const lift = Math.max(0, Math.floor(top - previous - clearance));
             const offset = -lift + "px";
             if (title.style.getPropertyValue("--mobile-title-top") !== offset) {
                 title.style.setProperty("--mobile-title-top", offset);
