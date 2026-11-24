@@ -565,7 +565,9 @@ const particles = new THREE.Points(
 
 scene.add(particles);
 
-let isAnimationPaused = false;
+const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+let animationFrame = 0;
+let isAnimationPaused = document.hidden;
 
 let lastFrameTime = 0;
 
@@ -575,33 +577,16 @@ let hasSignaledBackgroundReady = false;
 
 material.uniforms.uOpacity.value = 1;
 
-function animate(currentTime) {
-
-    requestAnimationFrame(animate);
-
-    if (isAnimationPaused) {
-        return;
+function renderBackground(currentTime, still = false) {
+    if (!still) {
+        particles.rotation.z += 0.0008;
+        const elapsedTime = currentTime * 0.001;
+        backgroundMaterial.uniforms.uTime.value = elapsedTime;
+        material.uniforms.uTime.value = elapsedTime;
     }
 
-    if (currentTime - lastFrameTime < frameInterval) {
-        return;
-    }
-
-    lastFrameTime = currentTime;
-
-    particles.rotation.z += 0.0008;
-
-    const elapsedTime =
-        currentTime * 0.001;
-
-    backgroundMaterial.uniforms.uTime.value =
-        elapsedTime;
-
-    material.uniforms.uTime.value =
-        elapsedTime;
-
-    const introProgress = Math.max(0, Math.min(1, motion.intro || 0));
-    const scrollProgress = Math.max(0, Math.min(1.9, motion.scroll || 0));
+    const introProgress = still ? 1 : Math.max(0, Math.min(1, motion.intro || 0));
+    const scrollProgress = still ? 0 : Math.max(0, Math.min(1.9, motion.scroll || 0));
     camera.position.z = cameraIntroZ
         - (cameraIntroZ - cameraHeroZ) * introProgress
         - cameraScrollDistance * scrollProgress;
@@ -620,16 +605,40 @@ function animate(currentTime) {
     }
 }
 
-document.addEventListener(
-    "visibilitychange",
-    () => {
+function animate(currentTime) {
+    animationFrame = 0;
+    if (isAnimationPaused || motionPreference.matches) return;
 
-        isAnimationPaused =
-            document.visibilityState === "hidden";
+    if (currentTime - lastFrameTime >= frameInterval) {
+        lastFrameTime = currentTime;
+        renderBackground(currentTime);
     }
-);
 
-requestAnimationFrame(animate);
+    animationFrame = requestAnimationFrame(animate);
+}
+
+function syncAnimation() {
+    if (animationFrame) cancelAnimationFrame(animationFrame);
+    animationFrame = 0;
+    lastFrameTime = 0;
+
+    if (isAnimationPaused) return;
+
+    if (motionPreference.matches) {
+        renderBackground(0, true);
+    } else {
+        animationFrame = requestAnimationFrame(animate);
+    }
+}
+
+document.addEventListener("visibilitychange", () => {
+    isAnimationPaused = document.hidden;
+    syncAnimation();
+});
+
+motionPreference.addEventListener?.("change", syncAnimation);
+
+syncAnimation();
 
 function handleResize() {
 
@@ -652,6 +661,10 @@ function handleResize() {
             currentPixelRatio
         )
     );
+
+    if (motionPreference.matches && !isAnimationPaused) {
+        renderBackground(0, true);
+    }
 }
 
 window.addEventListener(

@@ -7,7 +7,9 @@
     const previous = carousel?.querySelector("[data-carousel-prev]");
     const next = carousel?.querySelector("[data-carousel-next]");
     const status = carousel?.querySelector("[data-carousel-status]");
-    if (!carousel || !scene || cards.length < 2 || !previous || !next) return;
+    const pauseButton = carousel?.querySelector("[data-carousel-pause]");
+    const pauseSymbol = pauseButton?.querySelector("[data-pause-symbol]");
+    if (!carousel || !scene || cards.length < 2 || !previous || !next || !pauseButton || !pauseSymbol) return;
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -24,6 +26,7 @@
     const mobileTravelDuration = 800;
     const hoverMaxAngle = Math.min(Math.PI * 0.42, step * 1.2);
 
+    let rotationPaused = reducedMotion;
     let position = 0;
     let transition = null;
     let pausedUntil = 0;
@@ -218,7 +221,7 @@
         const dt = lastFrameTime ? Math.min((now - lastFrameTime) / 1000, 0.05) : 0;
         lastFrameTime = now;
 
-        applyHoverIntent(now);
+        if (!rotationPaused) applyHoverIntent(now);
 
         if (transition) {
             const progress = Math.max(0, Math.min(1, (now - transition.started) / transition.duration));
@@ -235,7 +238,7 @@
                 }
                 if (mobileScreen.matches) mobileNextAt = now + mobileHold;
             }
-        } else if (mobileScreen.matches && !reducedMotion && !hoveredCard && !hoverIntent) {
+        } else if (mobileScreen.matches && !rotationPaused && !reducedMotion && !hoveredCard && !hoverIntent) {
             if (!mobileNextAt) mobileNextAt = now + mobileHold;
             if (now >= mobileNextAt) {
                 const nextIndex = Math.round(position / step) + 1;
@@ -247,19 +250,59 @@
                 };
                 mobileNextAt = 0;
             }
-        } else if (!mobileScreen.matches && !reducedMotion && !hoveredCard && !hoverIntent && now >= pausedUntil) {
+        } else if (!mobileScreen.matches && !rotationPaused && !reducedMotion && !hoveredCard && !hoverIntent && now >= pausedUntil) {
             position += dt * speed;
         }
 
         render();
-        frame = window.requestAnimationFrame(loop);
+        if (!rotationPaused || transition) frame = window.requestAnimationFrame(loop);
     }
 
     function startLoop() {
-        if (!visible || document.hidden || frame) return;
+        if (!visible || document.hidden || frame || (rotationPaused && !transition)) return;
         lastFrameTime = 0;
         frame = window.requestAnimationFrame(loop);
     }
+
+    function updatePauseButton() {
+        const label = rotationPaused ? "Reprendre la rotation automatique" : "Mettre en pause la rotation automatique";
+        pauseButton.setAttribute("aria-label", label);
+        pauseButton.title = label;
+        pauseSymbol.setAttribute("d", rotationPaused ? "M9 5l11 7-11 7Z" : "M9 5v14M15 5v14");
+        carousel.classList.toggle("is-paused", rotationPaused);
+    }
+
+    function pauseRotation(card = null) {
+        rotationPaused = true;
+        transition = null;
+        hoverIntent = null;
+        lastPointerPosition = null;
+        clearHover();
+        position = card
+            ? position + normalizeAngle(cards.indexOf(card) * step - position)
+            : Math.round(position / step) * step;
+        mobileNextAt = 0;
+        stopLoop();
+        updatePauseButton();
+        render();
+    }
+
+    pauseButton.addEventListener("click", () => {
+        if (!rotationPaused) {
+            pauseRotation();
+        } else {
+            rotationPaused = false;
+            pausedUntil = 0;
+            mobileNextAt = 0;
+            updatePauseButton();
+            startLoop();
+        }
+    });
+
+    carousel.addEventListener("focusin", event => {
+        const card = event.target.closest?.("[data-carousel-card]");
+        if (!rotationPaused && cards.includes(card)) pauseRotation(card);
+    });
 
     function move(direction) {
         clearHover();
@@ -298,7 +341,7 @@
 
     if (finePointer && !reducedMotion) {
         scene.addEventListener("pointermove", event => {
-            if (event.pointerType === "touch") return;
+            if (rotationPaused || event.pointerType === "touch") return;
             const now = performance.now();
             const pointer = { x: event.clientX, y: event.clientY };
             const previousPosition = lastPointerPosition;
@@ -415,6 +458,9 @@
         measureRing();
         render();
     });
+    carousel.classList.add("is-ready");
+    updatePauseButton();
+    pauseButton.hidden = reducedMotion;
     measureCards();
     measureRing();
     render();

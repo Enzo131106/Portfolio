@@ -533,3 +533,87 @@
     .projects-carousel_arrow svg { width: 24px; height: 24px; }
     .projects-carousel_arrow::before, .projects-carousel_arrow::after { height: 12px; }
 }
+
+.projects-carousel_pause {
+    position: absolute;
+    z-index: 201;
+    top: -44px;
+    right: 0;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #f4faff;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.projects-carousel_pause[hidden] {
+    display: none;
+}
+
+.projects-carousel_pause svg {
+    width: 23px;
+    height: 23px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.85;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.projects-carousel_pause:hover {
+    color: #a9e4ff;
+}
+
+.projects-carousel_pause:focus-visible {
+    outline: 2px solid #93d8ff;
+    outline-offset: 2px;
+}
+
+@media (max-width: 760px), (max-height: 500px) and (pointer: coarse) {
+    .projects-carousel.is-paused .projects-carousel_arrow {
+        display: grid;
+        width: 28px;
+        height: 64px;
+    }
+
+    .projects-carousel.is-paused .projects-carousel_arrow svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .projects-carousel.is-paused .projects-carousel_arrow::before,
+    .projects-carousel.is-paused .projects-carousel_arrow::after {
+        height: 12px;
+    }
+}
+
+.projects-carousel:not(.is-ready) .projects-carousel_scene {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    align-items: start;
+    gap: 24px;
+    perspective: none;
+    user-select: auto;
+    -webkit-user-select: auto;
+}
+
+.projects-carousel:not(.is-ready) .projects-carousel_card {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    translate: none;
+    pointer-events: auto;
+    will-change: auto;
+}
+
+.projects-carousel:not(.is-ready) .projects-carousel_back,
+.projects-carousel:not(.is-ready) .projects-carousel_arrow,
+.projects-carousel:not(.is-ready) .projects-carousel_pause {
+    display: none;
+}

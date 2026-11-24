@@ -273,3 +273,15 @@
     .hero-description { max-width: 760px; font-size: 21px; }
     .hero-button { min-height: 62px; padding-inline: 26px; font-size: 17px; }
 }
+
+.arcade-card:not(.is-ready) {
+    display: none;
+}
+
+.hero-inner:has(.arcade-card:not(.is-ready)) {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.hero-inner:has(.arcade-card:not(.is-ready)) .hero-copy {
+    margin-inline: auto;
+}

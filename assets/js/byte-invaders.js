@@ -477,6 +477,7 @@
     });
     window.addEventListener("resize", resize);
     if ("ResizeObserver" in window) new ResizeObserver(resize).observe(screen);
+    arcade?.classList.add("is-ready");
     resize();
     draw();
 })();

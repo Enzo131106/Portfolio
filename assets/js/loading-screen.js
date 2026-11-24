@@ -7,24 +7,23 @@
     const logo = document.getElementById("loading-logo");
     const progress = loader.querySelector(".loading-progress");
     const progressBar = loader.querySelector(".loading-progress-bar");
-    const backgroundScript = document.getElementById("three-background-script");
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 
     let pageLoaded = document.readyState === "complete";
     let backgroundReady = window._portfolioBackgroundReady === true;
-    let animationsReady = !window._portfolioGsapReady;
+    let animationsReady = false;
     let finished = false;
 
-    if (window._portfolioGsapReady) {
-        window._portfolioGsapReady.then(() => {
-            animationsReady = true;
-            finishLoading();
-        }, () => {
-            animationsReady = true;
-            finishLoading();
-        });
+    function onDocumentReady() {
+        Promise.resolve(window._portfolioGsapReady).then(onAnimationsReady, onAnimationsReady);
     }
+
+    function onAnimationsReady() {
+        animationsReady = true;
+        finishLoading();
+    }
+
+    document.addEventListener("DOMContentLoaded", onDocumentReady, { once: true });
 
     if (logo) {
         logo.addEventListener("error", () => {
@@ -32,6 +31,8 @@
         }, { once: true });
     }
 
+    document.body.classList.add("hero-intro-pending");
+    loader.hidden = false;
     loader.classList.add("is-loading");
 
     const blockIntroScroll = (event) => {
@@ -74,6 +75,12 @@
             window.setTimeout(() => {
                 loader.remove();
                 window.dispatchEvent(new Event("portfolio-loader-hidden"));
+                window.setTimeout(() => {
+                    if (document.body.classList.contains("hero-intro-pending")) {
+                        document.body.classList.remove("hero-intro-pending");
+                        document.querySelector(".hero-scroll")?.classList.add("is-ready");
+                    }
+                }, 4000);
             }, 460);
         }, 180);
     }
@@ -102,15 +109,15 @@
         window.addEventListener("portfolio-background-ready", onBackgroundReady, { once: true });
     }
 
-    if (backgroundScript) {
-        backgroundScript.addEventListener("error", () => {
-            backgroundReady = true;
-            finishLoading();
-        }, { once: true });
-    }
+    document.addEventListener("error", event => {
+        if (event.target?.id !== "three-background-script") return;
+        backgroundReady = true;
+        finishLoading();
+    }, true);
 
     window.setTimeout(() => {
         if (finished) return;
+        pageLoaded = true;
         backgroundReady = true;
         animationsReady = true;
         finishLoading();

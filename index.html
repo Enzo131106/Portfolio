@@ -70,8 +70,8 @@
     <link rel="icon" href="./assets/icons/logo.svg" type="image/svg+xml">
 </head>
 
-<body class="hero-intro-pending">
-    <div id="loading-screen" class="loading-screen">
+<body>
+    <div id="loading-screen" class="loading-screen" hidden>
         <div class="loading-content">
             <img id="loading-logo" class="loading-logo" src="./assets/icons/logo.svg" alt="" width="120" height="120">
             <p class="loading-title">ENZO CAMILO - PORTFOLIO</p>
@@ -81,6 +81,8 @@
             <p class="loading-caption" role="status">Chargement en cours...</p>
         </div>
     </div>
+
+    <script src="./assets/js/loading-screen.js"></script>
 
     <div id="privacy-popup" class="privacy-popup" role="dialog" aria-modal="true" aria-labelledby="privacy-title" aria-describedby="privacy-summary privacy-details" aria-hidden="true" inert>
         <div class="privacy-box p-4 p-md-5">
@@ -201,6 +203,11 @@
                 <h2 id="projects-title" class="projects-title">Mes projets</h2>
 
                 <div class="projects-carousel" data-projects-carousel role="region" aria-label="Carrousel des projets">
+                    <button type="button" class="projects-carousel_pause" data-carousel-pause aria-label="Mettre en pause la rotation automatique" aria-controls="projects-carousel-scene" title="Mettre en pause la rotation automatique" hidden>
+                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path data-pause-symbol d="M9 5v14M15 5v14"></path>
+                        </svg>
+                    </button>
                     <div class="projects-carousel_scene" id="projects-carousel-scene" data-carousel-scene>
                         <article class="projects-carousel_card" data-carousel-card aria-labelledby="project-01-title">
                             <div class="projects-carousel_surface" data-carousel-surface>
@@ -484,7 +491,6 @@
         defer></script>
 
     <script src="./assets/js/scroll-restoration.js"></script>
-    <script src="./assets/js/loading-screen.js" defer></script>
     <script src="./assets/js/resource-loader.js"
         data-gsap-cdn="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"
         data-scrolltrigger-cdn="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/ScrollTrigger.min.js"></script>
