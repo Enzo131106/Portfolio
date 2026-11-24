@@ -31,12 +31,14 @@
     <meta property="og:site_name" content="Enzo Camilo">
     <meta property="og:locale" content="fr_FR">
     <meta property="og:image" content="https://enzo131106.github.io/Portfolio/assets/images/portfolio-screenshot.webp">
+    <meta property="og:image:alt" content="Capture de la page d’accueil du portfolio d’Enzo Camilo">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Enzo Camilo | Portfolio">
     <meta name="twitter:description"
         content="Portfolio d'Enzo Camilo, étudiant en MMI à l'IUT de Tarbes. Découvrez mes projets en développement logiciel, création de jeux vidéo et création numérique.">
     <meta name="twitter:image" content="https://enzo131106.github.io/Portfolio/assets/images/portfolio-screenshot.webp">
+    <meta name="twitter:image:alt" content="Capture de la page d’accueil du portfolio d’Enzo Camilo">
 
     <link rel="preload" as="image" href="./assets/icon/logo.svg" fetchpriority="high">
     <link rel="stylesheet" href="./assets/css/loading-screen.css">
@@ -69,35 +71,35 @@
 </head>
 
 <body class="hero-intro-pending">
-    <div id="loading-screen" class="loading-screen" role="status" aria-live="polite" aria-label="Chargement du portfolio">
+    <div id="loading-screen" class="loading-screen">
         <div class="loading-content">
-            <img id="loading-logo" class="loading-logo" src="./assets/icon/logo.svg" alt="Logo du portfolio" width="120" height="120">
+            <img id="loading-logo" class="loading-logo" src="./assets/icon/logo.svg" alt="" width="120" height="120">
             <p class="loading-title">ENZO CAMILO - PORTFOLIO</p>
-            <div class="loading-progress" role="progressbar" aria-label="Chargement de la page" aria-valuemin="0" aria-valuemax="100" aria-valuenow="8">
+            <div class="loading-progress" role="progressbar" aria-label="Chargement du portfolio" aria-valuemin="0" aria-valuemax="100" aria-valuenow="8">
                 <span class="loading-progress-bar"></span>
             </div>
-            <p class="loading-caption">Chargement en cours...</p>
+            <p class="loading-caption" role="status">Chargement en cours...</p>
         </div>
     </div>
 
-    <div id="privacy-popup" class="privacy-popup">
+    <div id="privacy-popup" class="privacy-popup" role="dialog" aria-modal="true" aria-labelledby="privacy-title" aria-describedby="privacy-summary privacy-details" aria-hidden="true" inert>
         <div class="privacy-box p-4 p-md-5">
             <div class="privacy-icon mb-3">
                 <i class="bi bi-shield-lock" aria-hidden="true"></i>
             </div>
-            <h2 class="privacy-title mb-3">Votre confidentialité</h2>
-            <p class="privacy-text mb-3">
+            <h2 id="privacy-title" class="privacy-title mb-3">Votre confidentialité</h2>
+            <p id="privacy-summary" class="privacy-text mb-3">
                 Ce site n'utilise aucun cookie de suivi ni outil de mesure d'audience.
                 Votre navigateur conserve uniquement la fermeture de ce message et votre meilleur score à Byte Invaders.
             </p>
-            <p class="privacy-details mb-4">
+            <p id="privacy-details" class="privacy-details mb-4">
                 Le site est hébergé sur GitHub Pages et utilise des ressources externes
                 via jsDelivr et Bunny Fonts. Ces services peuvent recevoir des données
                 techniques telles que votre adresse IP.
             </p>
             <div class="privacy-actions">
                 <button id="privacy-button" class="privacy-button" type="button">Compris</button>
-                <a href="./privacy.html" class="privacy-more" target="_blank" rel="noopener noreferrer">
+                <a href="./privacy.html" class="privacy-more" target="_blank" rel="noopener noreferrer" aria-label="En savoir plus sur la confidentialité (nouvel onglet)">
                     En savoir plus
                 </a>
             </div>
@@ -105,11 +107,11 @@
     </div>
 
     <header>
-        <nav class="navbar fixed-top" aria-label="Navigation principale">
+        <nav class="navbar fixed-top" aria-label="Principale">
             <div class="navbar-container">
                 <div class="navbar-identity">
                     <img class="profile-photo" src="./assets/images/photo-profil.avif"
-                        alt="Photo de profil" width="38" height="38">
+                        alt="Portrait d’Enzo Camilo" width="38" height="38">
                     <span class="brand-name">ENZO <span>CAMILO</span></span>
                 </div>
 
@@ -122,11 +124,11 @@
 
                 <div class="navbar-socials" role="group" aria-label="Réseaux sociaux">
                     <a class="social-link" href="https://www.linkedin.com/in/enzo-camilo-4190a939b/" target="_blank"
-                        rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn">
+                        rel="noopener noreferrer" aria-label="LinkedIn : profil d’Enzo Camilo (nouvel onglet)" title="Profil LinkedIn">
                         <i class="bi bi-linkedin" aria-hidden="true"></i>
                     </a>
                     <a class="social-link" href="https://github.com/Enzo131106" target="_blank"
-                        rel="noopener noreferrer" aria-label="GitHub" title="GitHub">
+                        rel="noopener noreferrer" aria-label="GitHub : profil d’Enzo Camilo (nouvel onglet)" title="Profil GitHub">
                         <i class="bi bi-github" aria-hidden="true"></i>
                     </a>
                 </div>
@@ -146,34 +148,35 @@
                         domaines à ma manière, en cours comme dans mes projets personnels.
                     </p>
                     <div class="hero-actions">
-                        <a class="hero-button hero-button-secondary" href="./assets/documents/CV-Enzo-Camilo.pdf" download>
+                        <a class="hero-button hero-button-secondary" href="./assets/documents/CV-Enzo-Camilo.pdf" download aria-label="Télécharger mon CV (PDF)">
                             Télécharger mon CV <i class="bi bi-download" aria-hidden="true"></i>
                         </a>
                     </div>
                 </div>
 
-                <aside class="arcade-card" aria-label="Mini-jeu BYTE INVADERS">
+                <aside class="arcade-card" aria-labelledby="arcade-title">
                     <div class="arcade-topbar">
                         <div class="arcade-brand">
-                            <p class="arcade-title">BYTE INVADERS</p>
+                            <p id="arcade-title" class="arcade-title" lang="en">BYTE INVADERS</p>
                         </div>
-                        <span class="arcade-status"><span aria-hidden="true"></span> <span id="arcade-status-text">READY</span></span>
+                        <span class="arcade-status"><span aria-hidden="true"></span> <span id="arcade-status-text" role="status" lang="en">READY</span></span>
                     </div>
-                    <div class="arcade-scorebar" aria-live="polite">
+                    <div class="arcade-scorebar" role="group" aria-label="Score, record et vies">
                         <div><span class="arcade-label">SCORE</span><strong id="arcade-score">0</strong></div>
                         <div><span class="arcade-label">RECORD</span><strong id="arcade-best">0</strong></div>
-                        <div><span class="arcade-label">VIES</span><strong id="arcade-lives" aria-label="3 vies">♥ ♥ ♥</strong></div>
+                        <div><span class="arcade-label">VIES</span><strong id="arcade-lives" role="img" aria-label="3 vies">♥ ♥ ♥</strong></div>
                     </div>
                     <div class="arcade-screen" id="arcade-screen">
-                        <canvas id="byte-invaders-canvas" aria-label="Jeu spatial BYTE INVADERS. Déplacez le vaisseau avec les flèches ou A et D, tirez avec espace." role="img"></canvas>
+                        <canvas id="byte-invaders-canvas" role="group" aria-label="Zone de jeu" aria-describedby="arcade-instructions"></canvas>
+                        <p id="arcade-instructions" class="visually-hidden">Déplacez le vaisseau avec les flèches gauche et droite (Q ou A à gauche, D à droite). Tirez avec la barre d’espace. Sur un écran tactile, utilisez les commandes sous le jeu lorsqu’elles sont affichées.</p>
                         <div class="arcade-overlay" id="arcade-overlay">
-                            <p class="arcade-overlay-title" id="arcade-overlay-title">READY, PLAYER ONE?</p>
+                            <p class="arcade-overlay-title" id="arcade-overlay-title" lang="en">READY, PLAYER ONE?</p>
                             <p class="arcade-overlay-copy" id="arcade-overlay-copy">Élimine les vagues de données ennemies.</p>
                             <div class="arcade-result-actions" id="arcade-result-actions" role="group" aria-label="Actions sur le score">
                                 <button class="arcade-result-button" id="arcade-share-score" type="button"><i class="bi bi-share" aria-hidden="true"></i> PARTAGER</button>
-                                <button class="arcade-result-button" id="arcade-download-score" type="button"><i class="bi bi-download" aria-hidden="true"></i> TÉLÉCHARGER</button>
+                                <button class="arcade-result-button" id="arcade-download-score" type="button" aria-label="Télécharger le score (image PNG)"><i class="bi bi-download" aria-hidden="true"></i> TÉLÉCHARGER</button>
                             </div>
-                            <button class="arcade-start" id="arcade-start" type="button">PRESS TO START</button>
+                            <button class="arcade-start" id="arcade-start" type="button" lang="en">PRESS TO START</button>
                         </div>
                     </div>
                     <div class="arcade-controls">
@@ -181,14 +184,14 @@
                         <span><kbd>SPACE</kbd> TIRER</span>
                     </div>
                     <div class="arcade-mobile-controls" role="group" aria-label="Commandes tactiles">
-                        <button type="button" data-game-control="left" aria-label="Déplacer à gauche">←</button>
-                        <button type="button" data-game-control="shoot" aria-label="Tirer">FIRE</button>
-                        <button type="button" data-game-control="right" aria-label="Déplacer à droite">→</button>
+                        <button type="button" data-game-control="left" aria-label="Déplacer le vaisseau à gauche">←</button>
+                        <button type="button" data-game-control="shoot" aria-label="FIRE : tirer">FIRE</button>
+                        <button type="button" data-game-control="right" aria-label="Déplacer le vaisseau à droite">→</button>
                     </div>
                 </aside>
             </div>
 
-            <a class="hero-scroll" href="#projects" aria-label="Faire défiler vers les projets">
+            <a class="hero-scroll" href="#projects" aria-label="Aller aux projets">
                 <span class="hero-scroll-mouse" aria-hidden="true"><span></span></span>
             </a>
         </section>
@@ -204,9 +207,9 @@
                                 <a class="projects-carousel_visual projects-carousel_visual--image"
                                    href="https://github.com/Enzo131106/Portfolio"
                                    target="_blank" rel="noopener noreferrer"
-                                   aria-label="Voir le dépôt GitHub du portfolio (nouvel onglet)">
+                                   aria-label="Voir le code sur GitHub : portfolio immersif (nouvel onglet)">
                                     <img src="./assets/images/portfolio-screenshot.webp"
-                                         alt="Aperçu de la page d’accueil du portfolio"
+                                         alt="Capture de la page d’accueil du portfolio"
                                          loading="lazy" decoding="async">
                                 </a>
                                 <div class="projects-carousel_details">
@@ -223,7 +226,7 @@
                                             <li><img src="./assets/icon/skills/gsap.svg" width="22" height="22" alt="" loading="lazy" decoding="async"><span>GSAP</span></li>
                                         </ul>
                                     </div>
-                                    <a class="projects-carousel_source" href="https://github.com/Enzo131106/Portfolio" target="_blank" rel="noopener noreferrer">
+                                    <a class="projects-carousel_source" href="https://github.com/Enzo131106/Portfolio" target="_blank" rel="noopener noreferrer" aria-label="Voir le code sur GitHub : portfolio immersif (nouvel onglet)">
                                         Voir le code sur GitHub
                                     </a>
                                 </div>
@@ -238,9 +241,9 @@
                                 <a class="projects-carousel_visual projects-carousel_visual--image"
                                    href="https://enzocml.itch.io/tears-land"
                                    target="_blank" rel="noopener noreferrer"
-                                   aria-label="Voir Tears Land sur itch.io (nouvel onglet)">
+                                   aria-label="Voir le projet sur itch.io : Tears' Land (nouvel onglet)">
                                     <img src="./assets/images/tearsland-screenshot.webp"
-                                         alt="Aperçu du jeu Scratch Tears Land"
+                                         alt="Capture du jeu Tears' Land"
                                          loading="lazy" decoding="async">
                                 </a>
                                 <div class="projects-carousel_details">
@@ -252,7 +255,7 @@
                                             <li><img src="./assets/icon/skills/scratch.svg" width="22" height="22" alt="" loading="lazy" decoding="async"><span>Scratch</span></li>
                                         </ul>
                                     </div>
-                                    <a class="projects-carousel_source" href="https://enzocml.itch.io/tears-land" target="_blank" rel="noopener noreferrer">
+                                    <a class="projects-carousel_source" href="https://enzocml.itch.io/tears-land" target="_blank" rel="noopener noreferrer" aria-label="Voir le projet sur itch.io : Tears' Land (nouvel onglet)">
                                         Voir le projet sur itch.io
                                     </a>
                                 </div>
@@ -452,15 +455,15 @@
                     <div class="contact-details">
                         <p>Pour me joindre :</p>
                         <div class="contact-address">
-                            <button class="contact-email" type="button" aria-label="Copier l'adresse e-mail enzo.camilo1306@gmail.com" title="Copier l'adresse e-mail" disabled>enzo.camilo1306@gmail.com</button>
+                            <button class="contact-email" type="button" aria-label="enzo.camilo1306@gmail.com : copier l’adresse e-mail" title="Copier l'adresse e-mail" disabled>enzo.camilo1306@gmail.com</button>
                             <button class="contact-copy" type="button" aria-label="Copier l'adresse e-mail" title="Copier l'adresse e-mail" hidden>
                                 <i class="bi bi-copy" aria-hidden="true"></i>
                             </button>
                         </div>
                         <div class="contact-links">
-                            <a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=enzo.camilo1306%40gmail.com" target="_blank" rel="noopener noreferrer">Gmail</a>
-                            <a href="https://www.linkedin.com/in/enzo-camilo-4190a939b/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-                            <a href="https://github.com/Enzo131106" target="_blank" rel="noopener noreferrer">GitHub</a>
+                            <a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=enzo.camilo1306%40gmail.com" target="_blank" rel="noopener noreferrer" aria-label="Gmail : envoyer un e-mail (nouvel onglet)">Gmail</a>
+                            <a href="https://www.linkedin.com/in/enzo-camilo-4190a939b/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn : profil d’Enzo Camilo (nouvel onglet)">LinkedIn</a>
+                            <a href="https://github.com/Enzo131106" target="_blank" rel="noopener noreferrer" aria-label="GitHub : profil d’Enzo Camilo (nouvel onglet)">GitHub</a>
                         </div>
                     </div>
                 </div>
@@ -469,8 +472,8 @@
                 <span class="contact-copy-status" role="status"></span>
                 <span>© 2026 Enzo Camilo</span>
                 <div class="contact-legal">
-                    <a href="./privacy.html" target="_blank" rel="noopener noreferrer">Confidentialité</a>
-                    <span aria-disabled="true" title="Page à venir">Mentions légales</span>
+                    <a href="./privacy.html" target="_blank" rel="noopener noreferrer" aria-label="Confidentialité (nouvel onglet)">Confidentialité</a>
+                    <span role="link" aria-disabled="true" title="Page à venir">Mentions légales<span class="visually-hidden"> (bientôt disponibles)</span></span>
                 </div>
             </div>
         </div>

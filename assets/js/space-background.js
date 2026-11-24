@@ -60,6 +60,7 @@ renderer.setPixelRatio(
 );
 
 renderer.domElement.id = "background";
+renderer.domElement.setAttribute("aria-hidden", "true");
 document.body.prepend(renderer.domElement);
 
 scene.background = new THREE.Color(0x050914);
