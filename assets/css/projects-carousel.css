@@ -198,7 +198,7 @@
 .projects-carousel_details h3 {
     margin: 0 0 7px;
     color: #f4f8ff;
-    font-size: clamp(24px, 2.35vw, 35px);
+    font-size: clamp(27px, 2.6vw, 39px);
     font-weight: 750;
     line-height: 1.13;
     letter-spacing: -.035em;
@@ -207,7 +207,7 @@
 .projects-carousel_details p {
     margin: 0;
     color: rgba(226, 239, 255, .78);
-    font-size: clamp(12px, 1vw, 15px);
+    font-size: clamp(14px, 1.15vw, 17px);
     line-height: 1.5;
 }
 
@@ -225,7 +225,7 @@
     align-items: center;
     line-height: 1.25;
     color: #b3cde8;
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 600;
     letter-spacing: 0;
 }
@@ -242,7 +242,7 @@
 
 .projects-carousel_skill-list li {
     color: #f1f6ff;
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 500;
     line-height: 1.4;
 }
@@ -293,7 +293,7 @@
     margin-top: 12px;
     padding: 4px 0;
     color: #d7edff;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 650;
     line-height: 1.3;
     text-decoration: none;
@@ -302,7 +302,7 @@
 
 .projects-carousel_source span {
     display: inline-block;
-    font-size: 17px;
+    font-size: 20px;
     line-height: 1;
     transition: transform 180ms ease;
 }
@@ -331,13 +331,13 @@
     transform: translateY(-50%);
     display: grid;
     place-items: center;
-    width: 56px;
-    height: 116px;
+    width: 68px;
+    height: 132px;
     padding: 0;
     border: 0;
     border-radius: 0;
     background: transparent;
-    color: rgba(219, 232, 249, .8);
+    color: rgba(235, 245, 255, .94);
     cursor: pointer;
     touch-action: manipulation;
     transition: color 220ms ease;
@@ -349,8 +349,8 @@
     position: absolute;
     left: calc(50% - .5px);
     width: 1px;
-    height: 25px;
-    background: rgba(174, 202, 232, .36);
+    height: 29px;
+    background: rgba(190, 217, 245, .55);
     transition: background-color 220ms ease, height 220ms ease;
 }
 
@@ -359,11 +359,11 @@
 
 .projects-carousel_arrow svg {
     display: block;
-    width: 30px;
-    height: 30px;
+    width: 42px;
+    height: 42px;
     fill: none;
     stroke: currentColor;
-    stroke-width: 1.45;
+    stroke-width: 1.6;
     stroke-linecap: round;
     stroke-linejoin: round;
     transition: transform 220ms ease;
@@ -379,8 +379,8 @@
 
 .projects-carousel_arrow:hover::before,
 .projects-carousel_arrow:hover::after {
-    height: 30px;
-    background: rgba(169, 228, 255, .7);
+    height: 34px;
+    background: rgba(169, 228, 255, .85);
 }
 
 .projects-carousel_arrow--prev:hover svg { transform: translateX(-4px); }
@@ -437,16 +437,16 @@
     .projects-carousel_number { font-size: clamp(82px, 25vw, 132px); }
     .projects-carousel_back-number { font-size: clamp(60px, 20vw, 100px); }
     .projects-carousel_details { padding: 8px 17px 20px; }
-    .projects-carousel_details h3 { margin-bottom: 6px; font-size: 21px; }
-    .projects-carousel_details p { font-size: 12px; }
+    .projects-carousel_details h3 { margin-bottom: 6px; font-size: 23px; }
+    .projects-carousel_details p { font-size: 13.5px; line-height: 1.5; }
     .projects-carousel_skills { gap: 4px 9px; margin-top: 12px; }
     .projects-carousel_skills-title,
-    .projects-carousel_skill-list li { font-size: 10px; }
+    .projects-carousel_skill-list li { font-size: 11.5px; }
     .projects-carousel_skill-list li + li::before { padding-inline: 6px; }
     .projects-carousel_skill-list--icons { gap: 7px 11px; }
     .projects-carousel_skill-list--icons li { gap: 5px; }
     .projects-carousel_skill-list--icons img { width: 18px; height: 18px; flex-basis: 18px; }
-    .projects-carousel_source { min-height: 32px; margin-top: 8px; font-size: 11px; }
+    .projects-carousel_source { min-height: 32px; margin-top: 8px; font-size: 12.5px; }
     
     .projects-carousel_arrow { display: none; }
 }
@@ -461,11 +461,11 @@
     .projects-carousel_card { width: min(33vw, 440px); }
     .projects-carousel_visual { aspect-ratio: 16 / 9; }
     .projects-carousel_details { padding: 8px 14px 13px; }
-    .projects-carousel_details h3 { font-size: 18px; }
-    .projects-carousel_details p { font-size: 11px; }
+    .projects-carousel_details h3 { font-size: 20px; }
+    .projects-carousel_details p { font-size: 12px; }
     .projects-carousel_skills { margin-top: 8px; }
     .projects-carousel_skills-title,
-    .projects-carousel_skill-list li { font-size: 9px; }
+    .projects-carousel_skill-list li { font-size: 10px; }
     .projects-carousel_skill-list--icons { gap: 6px 9px; }
     .projects-carousel_skill-list--icons img { width: 16px; height: 16px; flex-basis: 16px; }
     .projects-carousel_source { margin-top: 5px; }
