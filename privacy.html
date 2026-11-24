@@ -49,6 +49,7 @@
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
         integrity="sha384-CK2SzKma4jA5H/MXDUU7i1TqZlCFaD4T01vtyDFvPlD97JQyS+IsSh1nI2EFbpyk" crossorigin="anonymous">
 
+    <link rel="stylesheet" href="./assets/css/contact.css">
     <link rel="stylesheet" href="./assets/css/privacy-page.css">
     <link rel="stylesheet" href="./assets/css/fonts.css">
 
@@ -60,15 +61,15 @@
 
 <body>
     <main class="privacy-page">
-        <button id="privacy-back" class="back-button" type="button">
-
-            <i class="bi bi-arrow-left" aria-hidden="true"></i>
-
-            Retour
-
-        </button>
-
         <div class="privacy-container">
+
+            <button id="privacy-back" class="back-button" type="button">
+
+                <i class="bi bi-arrow-left" aria-hidden="true"></i>
+
+                Retour
+
+            </button>
 
             <header class="privacy-intro">
 
@@ -111,13 +112,67 @@
                         </h2>
 
                         <p>
-                            Le portfolio ne comporte ni compte utilisateur, ni formulaire de contact.
-                            Je n'utilise aucun outil de mesure d'audience, de suivi publicitaire ou de profilage.
+                            Le site ne comporte ni compte utilisateur, ni formulaire de contact,
+                            ni outil de mesure d'audience, de suivi publicitaire ou de profilage.
                         </p>
 
                         <p>
-                            Le site est hébergé sur <strong>GitHub Pages</strong>. GitHub enregistre les adresses IP des visiteurs
-                            à des fins de sécurité. Pour en savoir plus, consultez <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener noreferrer">sa politique de confidentialité</a>.
+                            <strong>GitHub Pages</strong> héberge le site et GitHub enregistre les adresses IP à des fins de sécurité.
+                            Voir <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener noreferrer">sa politique de confidentialité</a>.
+                        </p>
+
+                    </div>
+
+                </section>
+
+                <section class="privacy-card">
+
+                    <div class="card-icon">
+
+                        <i class="bi bi-shield-check" aria-hidden="true"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Sécurité
+                        </h2>
+
+                        <p>
+                            Le site utilise <strong>HTTPS</strong> et une <strong>Content Security Policy (CSP)</strong>
+                            pour limiter les sources de contenu autorisées.
+                        </p>
+
+                        <p>
+                            Le contrôle d'intégrité (<strong>SRI</strong>) vérifie certaines ressources externes.
+                        </p>
+
+                    </div>
+
+                </section>
+
+                <section class="privacy-card">
+
+                    <div class="card-icon">
+
+                        <i class="bi bi-code-slash" aria-hidden="true"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Technologies
+                        </h2>
+
+                        <p>
+                            Le portfolio utilise <strong>HTML, CSS et JavaScript</strong>, Bootstrap et Bootstrap Icons
+                            pour l'interface, Three.js pour le décor 3D et GSAP pour les animations.
+                        </p>
+
+                        <p>
+                            Le code source est consultable sur <a href="https://github.com/Enzo131106/Portfolio" target="_blank" rel="noopener noreferrer">GitHub</a>.
                         </p>
 
                     </div>
@@ -139,19 +194,18 @@
                         </h2>
 
                         <p>
-                            Le <strong>localStorage</strong> de votre navigateur conserve deux informations :
-                            la fermeture du message de confidentialité et votre meilleur score à Byte Invaders.
+                            Le <strong>localStorage</strong> mémorise la fermeture du message de confidentialité
+                            et votre meilleur score à Byte Invaders.
                         </p>
 
                         <p>
-                            Ces informations ne sont pas envoyées à un serveur par le jeu ou la fenêtre de confidentialité.
-                            Elles n'ont pas de date d'expiration définie et peuvent être supprimées dans les paramètres de votre navigateur.
+                            Ces données restent dans votre navigateur, sans expiration définie.
+                            Vous pouvez les supprimer dans ses paramètres.
                         </p>
 
                         <p>
-                            Le téléchargement du score crée une image directement sur votre appareil.
-                            Si vous choisissez de partager votre score, il est transmis à l'application que vous sélectionnez,
-                            ou copié dans votre presse-papiers.
+                            L'image du score est générée sur votre appareil. Si vous partagez le score,
+                            il est envoyé à l'application choisie ou copié dans le presse-papiers.
                         </p>
 
                     </div>
@@ -174,18 +228,18 @@
 
                         <p>
                             Les bibliothèques sont chargées depuis <a href="https://www.jsdelivr.com/terms/privacy-policy" target="_blank" rel="noopener noreferrer">jsDelivr</a>
-                            et la police Inter depuis <a href="https://fonts.bunny.net/about" target="_blank" rel="noopener noreferrer">Bunny Fonts</a>. Ces services reçoivent les données techniques
-                            nécessaires aux connexions, notamment votre adresse IP.
+                            et la police Inter depuis <a href="https://fonts.bunny.net/about" target="_blank" rel="noopener noreferrer">Bunny Fonts</a>. Ces services reçoivent des données de connexion,
+                            dont votre adresse IP.
                         </p>
 
                         <p>
-                            Des copies locales des bibliothèques et de la police sont présentes dans le projet.
-                            Sur la page principale, elles servent de secours si le chargement externe échoue.
+                            La page principale utilise les copies locales des bibliothèques et de la police
+                            en cas d'échec du chargement externe.
                         </p>
 
                         <p>
-                            Les prestataires peuvent traiter certaines données en dehors de l'Union européenne.
-                            Leurs politiques de confidentialité précisent leurs pratiques respectives.
+                            Certaines données peuvent être traitées hors de l'Union européenne,
+                            selon les politiques de confidentialité de ces prestataires.
                         </p>
 
                     </div>
@@ -207,76 +261,26 @@
                         </h2>
 
                         <p>
-                            Si vous me contactez, votre adresse e-mail, votre nom s'il est communiqué et votre message
-                            sont traités via Gmail pour répondre à votre demande, sur la base de mon intérêt légitime.
-                            Ils sont conservés le temps nécessaire aux échanges, sauf obligation légale ou besoin justifié.
+                            Via Gmail, je traite votre adresse e-mail, votre nom si communiqué et votre message pour vous répondre
+                            (intérêt légitime). Ils sont conservés le temps des échanges, sauf obligation légale ou besoin justifié.
                         </p>
 
                         <p>
-                            Vous pouvez me contacter à <a href="mailto:enzo.camilo1306@gmail.com">enzo.camilo1306@gmail.com</a>
-                            pour demander l'accès, la rectification, l'effacement ou la limitation du traitement de vos données,
-                            ou vous opposer à leur traitement lorsque ces droits s'appliquent.
+                            Pour exercer vos droits d'accès, de rectification, d'effacement, de limitation ou d'opposition
+                            lorsqu'ils s'appliquent, contactez-moi :
                         </p>
 
-                        <p>
-                            Vous pouvez également adresser une réclamation à la <a href="https://www.cnil.fr/fr/adresser-une-plainte" target="_blank" rel="noopener noreferrer">CNIL</a>.
-                            Les liens vers d'autres sites, dont LinkedIn et GitHub, sont soumis aux règles de confidentialité de ces sites.
-                        </p>
-
-                    </div>
-
-                </section>
-
-                <section class="privacy-card">
-
-                    <div class="card-icon">
-
-                        <i class="bi bi-shield-check" aria-hidden="true"></i>
-
-                    </div>
-
-                    <div>
-
-                        <h2>
-                            Sécurité
-                        </h2>
+                        <div class="contact-address">
+                            <button class="contact-email" type="button" aria-label="Copier l'adresse e-mail enzo.camilo1306@gmail.com" title="Copier l'adresse e-mail" disabled>enzo.camilo1306@gmail.com</button>
+                            <button class="contact-copy" type="button" aria-label="Copier l'adresse e-mail" title="Copier l'adresse e-mail" hidden>
+                                <i class="bi bi-copy" aria-hidden="true"></i>
+                            </button>
+                            <span class="contact-copy-status" role="status"></span>
+                        </div>
 
                         <p>
-                            Le site est accessible en <strong>HTTPS</strong> et utilise une <strong>Content Security Policy (CSP)</strong>
-                            pour limiter les sources de contenu autorisées.
-                        </p>
-
-                        <p>
-                            Le contrôle d'intégrité (<strong>SRI</strong>) est utilisé sur certaines ressources externes
-                            pour vérifier qu'elles correspondent aux fichiers attendus.
-                        </p>
-
-                    </div>
-
-                </section>
-
-                <section class="privacy-card">
-
-                    <div class="card-icon">
-
-                        <i class="bi bi-code-slash" aria-hidden="true"></i>
-
-                    </div>
-
-                    <div>
-
-                        <h2>
-                            Technologies
-                        </h2>
-
-                        <p>
-                            Le portfolio est développé en <strong>HTML, CSS et JavaScript</strong>.
-                            Bootstrap et Bootstrap Icons sont utilisés pour l'interface, Three.js pour le décor 3D
-                            et GSAP pour les animations.
-                        </p>
-
-                        <p>
-                            Le code source est consultable sur <a href="https://github.com/Enzo131106/Portfolio" target="_blank" rel="noopener noreferrer">GitHub</a>.
+                            Vous pouvez saisir la <a href="https://www.cnil.fr/fr/adresser-une-plainte" target="_blank" rel="noopener noreferrer">CNIL</a>.
+                            Les sites externes, dont LinkedIn et GitHub, appliquent leurs propres politiques de confidentialité.
                         </p>
 
                     </div>
@@ -289,9 +293,7 @@
 
                 <a href="https://www.opquast.com/" target="_blank" rel="noopener noreferrer">
 
-                    À propos d'Opquast
-
-                    <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
+                    À propos d'<span>Opquast</span>
 
                 </a>
 
@@ -301,6 +303,7 @@
     </main>
 
     <script src="./assets/js/privacy-page.js"></script>
+    <script src="./assets/js/contact.js" defer></script>
 </body>
 
 </html>
