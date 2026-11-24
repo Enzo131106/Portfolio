@@ -1,3 +1,19 @@
+SVG ICONS — SOURCES AND LICENSES
+
+All SVG icons in assets/icon/skills are listed below.
+
+1. Skill Icons (tandpfun)
+Source: https://github.com/tandpfun/skill-icons
+License: MIT
+
+- bootstrap.svg   — Bootstrap
+- css.svg         — CSS
+- html.svg        — HTML
+- javascript.svg  — JavaScript
+- threejs.svg     — Three.js
+
+MIT license text:
+
 MIT License
 
 Copyright (c) 2022 tandpfun
@@ -20,10 +36,17 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-SVG logos reproduced from https://github.com/tandpfun/skill-icons
-Files: html.svg, css.svg, javascript.svg, bootstrap.svg, threejs.svg
+2. Simple Icons
+Source: https://github.com/simple-icons/simple-icons
+License: CC0 1.0 Universal
+License details: https://creativecommons.org/publicdomain/zero/1.0/
 
-GSAP logo is sourced from Simple Icons (https://github.com/simple-icons/simple-icons),
-distributed under CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/).
-Files: gsap.svg, scratch.svg. Brand trademarks remain the property of their respective owners.
-Scratch icon is shown solely to identify the programming language used in the project; this portfolio is not affiliated with or endorsed by the Scratch Foundation.
+- gsap.svg        — GSAP
+- scratch.svg     — Scratch
+
+Both icons use the Simple Icons artwork, adapted to the square backgrounds
+used for the other skill icons in this portfolio.
+
+The names and logos of the technologies above may be trademarks of their
+respective owners. Their inclusion identifies technologies used in projects
+and does not imply affiliation or endorsement.
