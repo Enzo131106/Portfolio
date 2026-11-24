@@ -195,6 +195,8 @@ body {
 .privacy-footer {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 20px;
     margin-top: 10px;
 }
 
@@ -319,5 +321,17 @@ body {
     .back-button,
     .privacy-footer a {
         transition: none;
+    }
+}
+
+@media (min-width: 1280px) {
+    .legal-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 700px) and (max-width: 1279px) {
+    .legal-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
