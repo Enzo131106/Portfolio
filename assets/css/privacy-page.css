@@ -446,3 +446,156 @@ body {
         padding-top: 18px;
     }
 }
+
+@media print {
+    @page {
+        margin: 15mm;
+    }
+
+    :root {
+        --privacy-background: #ffffff;
+        --privacy-card: #ffffff;
+        --privacy-border: #cccccc;
+        --privacy-text: #222222;
+        --privacy-muted: #333333;
+        --privacy-title: #111111;
+    }
+
+    html,
+    body {
+        min-height: 0;
+        background: #ffffff;
+        color: #222222;
+        font-family: Arial, sans-serif;
+        font-size: 11pt;
+        font-weight: 400;
+    }
+
+    .privacy-page,
+    .legal-page {
+        display: block;
+        height: auto;
+        min-height: 0;
+        padding: 0;
+    }
+
+    .privacy-container,
+    .legal-page .privacy-container {
+        display: block;
+        width: 100%;
+        max-width: none;
+        min-height: 0;
+        max-height: none;
+        margin: 0;
+    }
+
+    .privacy-intro {
+        display: block;
+        padding: 0;
+        margin-bottom: 16pt;
+    }
+
+    .privacy-intro h1 {
+        font-size: 20pt;
+        break-after: avoid;
+    }
+
+    .privacy-intro p:last-child {
+        max-width: none;
+        font-size: 10.5pt;
+        line-height: 1.5;
+    }
+
+    .privacy-grid {
+        display: block;
+    }
+
+    .legal-card {
+        display: block;
+        height: auto;
+        min-height: 0;
+        max-height: none;
+        overflow: visible;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        scrollbar-gutter: auto;
+    }
+
+    .privacy-card,
+    .legal-card .privacy-card {
+        display: block;
+        margin: 0 0 12pt;
+        padding: 0 0 10pt;
+        border: 0;
+        border-bottom: 1px solid var(--privacy-border);
+        border-radius: 0;
+        background: transparent;
+        break-inside: avoid;
+    }
+
+    .legal-card .privacy-card + .privacy-card {
+        margin-top: 0;
+        padding-top: 0;
+        border-top: 0;
+    }
+
+    .privacy-card > div:last-child {
+        display: block;
+    }
+
+    .privacy-card h2,
+    .legal-card .privacy-card h2 {
+        margin: 0 0 6pt;
+        font-size: 13pt;
+        break-after: avoid;
+    }
+
+    .privacy-card p,
+    .legal-card .privacy-card p {
+        margin: 0 0 5pt;
+        font-size: 10.5pt;
+        line-height: 1.5;
+        orphans: 3;
+        widows: 3;
+    }
+
+    .privacy-card strong,
+    .privacy-intro strong {
+        font-weight: 700;
+    }
+
+    .privacy-card .contact-address,
+    .legal-card .contact-address {
+        display: block;
+        font-size: 10.5pt;
+        margin: 0 0 5pt;
+    }
+
+    .privacy-card .contact-email,
+    .privacy-card .contact-email:disabled {
+        display: inline;
+        color: #222222;
+        background: transparent;
+        border: 0;
+        padding: 0;
+        font: inherit;
+        opacity: 1;
+        overflow-wrap: anywhere;
+    }
+
+    .back-button,
+    .privacy-icon,
+    .privacy-card .card-icon,
+    .privacy-card .contact-copy,
+    .privacy-card .contact-copy-status,
+    .privacy-footer {
+        display: none;
+    }
+
+    .privacy-card a {
+        color: #222222;
+        text-decoration: underline;
+    }
+}
