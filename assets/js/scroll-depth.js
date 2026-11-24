@@ -137,46 +137,47 @@ function initializeScrollDepth() {
         return top;
     }
 
-    function positionSection(shell, title, body, contentTop, contentBottom) {
-        const shellTop = layoutTop(shell);
+    function positionTitle(title, body, contentTop) {
         const margin = parseFloat(getComputedStyle(title).marginBottom) || 0;
-        const normalBottom = layoutTop(body) - shellTop - margin;
+        const normalBottom = layoutTop(body) - margin;
         const gap = Math.max(22, Math.min(36, stage.clientWidth * 0.022));
-        const titleOffset = Math.max(0, Math.floor(contentTop - normalBottom - gap));
-        const titleTop = normalBottom - title.offsetHeight + titleOffset;
-        const groupTop = Math.min(titleTop, contentTop);
-        const groupBottom = Math.max(normalBottom + titleOffset, contentBottom);
-        const targetTop = Math.max(32, Math.min(60, stage.clientHeight * 0.09));
-        const bottomReserve = 24;
-        const freeBottom = stage.clientHeight - groupBottom - bottomReserve;
-        const groupOffset = Math.max(0, Math.floor(Math.min(targetTop - groupTop, freeBottom)));
+        const offset = Math.max(0, Math.floor(contentTop - normalBottom - gap));
+        const value = offset + "px";
 
-        const titleValue = titleOffset + "px";
-        const groupValue = groupOffset + "px";
-        if (title.style.getPropertyValue("--section-title-offset") !== titleValue) {
-            title.style.setProperty("--section-title-offset", titleValue);
-        }
-        if (shell.style.getPropertyValue("--section-group-offset") !== groupValue) {
-            shell.style.setProperty("--section-group-offset", groupValue);
+        if (title.style.getPropertyValue("--section-title-offset") !== value) {
+            title.style.setProperty("--section-title-offset", value);
         }
     }
 
     function syncTitlePositions() {
-        if (projectScene && projectCards.length) {
-            const cardHeight = Math.max(...projectCards.map(card => card.offsetHeight));
-            const sceneCenter = layoutTop(projectScene) - layoutTop(projectInner) + projectScene.clientHeight / 2;
-            positionSection(projectInner, projectTitle, projectBody,
-                sceneCenter - cardHeight / 2, sceneCenter + cardHeight / 2);
+        const mobile = window.matchMedia("(max-width: 760px)").matches;
+
+        if (mobile) {
+            const cardHeight = Math.max(0, ...projectCards.map(card => card.offsetHeight));
+            const value = cardHeight + "px";
+            if (projectBody.style.getPropertyValue("--project-card-height") !== value) {
+                projectBody.style.setProperty("--project-card-height", value);
+            }
+
+            for (const title of [projectTitle, parcoursTitle]) {
+                if (title.style.getPropertyValue("--section-title-offset") !== "0px") {
+                    title.style.setProperty("--section-title-offset", "0px");
+                }
+            }
+            return;
         }
 
-        const shellTop = layoutTop(parcoursInner);
-        const lineTop = layoutTop(line.parentElement) - shellTop;
-        const entryTops = entries.map(item => layoutTop(item.entry) - shellTop);
-        const contentTop = Math.min(lineTop, ...entryTops);
-        const contentBottom = Math.max(lineTop + 7, ...entries.map((item, index) =>
-            entryTops[index] + item.entry.offsetHeight + 22
-        ));
-        positionSection(parcoursInner, parcoursTitle, viewport, contentTop, contentBottom);
+        if (projectScene && projectCards.length) {
+            const cardHeight = Math.max(...projectCards.map(card => card.offsetHeight));
+            const contentTop = layoutTop(projectScene) + (projectScene.clientHeight - cardHeight) / 2;
+            positionTitle(projectTitle, projectBody, contentTop);
+        }
+
+        const contentTop = Math.min(
+            layoutTop(line.parentElement),
+            ...entries.map(item => layoutTop(item.entry))
+        );
+        positionTitle(parcoursTitle, viewport, contentTop);
     }
 
     function measure() {
