@@ -7,9 +7,10 @@
     if (!button || !email || !status || !navigator.clipboard?.writeText) return;
 
     button.hidden = false;
+    email.disabled = false;
     let resetTimer;
 
-    button.addEventListener("click", async () => {
+    async function copyEmail() {
         clearTimeout(resetTimer);
         const icon = button.querySelector("i");
         try {
@@ -24,5 +25,8 @@
             status.textContent = "";
             icon.className = "bi bi-copy";
         }, 2500);
-    });
+    }
+
+    email.addEventListener("click", copyEmail);
+    button.addEventListener("click", copyEmail);
 })();

@@ -77,7 +77,11 @@
     width: fit-content;
     max-width: 100%;
     margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
     color: #ABD2FA;
+    font: inherit;
     font-size: clamp(18px, 2.2vw, 30px);
     font-weight: 650;
     line-height: 1.35;
@@ -85,6 +89,12 @@
     overflow-wrap: anywhere;
     text-decoration: none;
     text-underline-offset: 5px;
+    cursor: pointer;
+    user-select: text;
+}
+
+.contact-email:disabled {
+    cursor: text;
 }
 
 .contact-links {
@@ -97,7 +107,6 @@
 .contact-links a {
     display: inline-flex;
     align-items: center;
-    gap: 7px;
     min-height: 36px;
     color: #e2eeff;
     font-size: 15px;
@@ -113,6 +122,7 @@
 }
 
 .contact-inner a:focus-visible,
+.contact-email:focus-visible,
 .contact-copy:focus-visible {
     outline: 2px solid #ABD2FA;
     outline-offset: 5px;
