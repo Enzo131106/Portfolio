@@ -1,7 +1,5 @@
 "use strict";
 
-// Dépendances externes avec ressources locales de secours (Bootstrap, Inter, GSAP).
-
 function loadCSSWithFallback(element, local) {
 
     element.addEventListener("error", () => {

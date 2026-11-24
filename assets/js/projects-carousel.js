@@ -1,7 +1,5 @@
 "use strict";
 
-// PC : anneau 3D et pause au survol. Mobile : défilement carte par carte.
-
 (() => {
     const carousel = document.querySelector("[data-projects-carousel]");
     const scene = carousel?.querySelector("[data-carousel-scene]");
@@ -81,7 +79,6 @@
         }
     }
 
-    // Le coverflow mobile n'affiche que les cartes adjacentes.
     function renderMobile() {
         const cardWidth = cards[0].offsetWidth || scene.clientWidth * 0.73;
         const gap = Math.max(18, Math.min(30, scene.clientWidth * 0.065));
@@ -211,7 +208,6 @@
         lastFrameTime = 0;
     }
 
-    // Tant qu'une carte est survolée, la rotation automatique reste suspendue.
     function loop(now) {
         frame = 0;
         if (!visible || document.hidden) {
@@ -310,7 +306,6 @@
 
             if (previousPosition && pointer.x === previousPosition.x && pointer.y === previousPosition.y) return;
 
-            // Le mouvement des cartes ne doit pas changer la cible du recentrage.
             if (transition) return;
 
             const candidate = event.target.closest?.("[data-carousel-card]");
@@ -396,7 +391,6 @@
             startLoop();
         }
     });
-    // Réserve la hauteur des cartes lorsque le carrousel reste dans le flux normal.
     function measureCards() {
         const height = Math.max(...cards.map(card => card.offsetHeight));
         const value = height + "px";

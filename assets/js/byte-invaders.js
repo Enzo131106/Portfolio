@@ -1,7 +1,5 @@
 "use strict";
 
-// Mini-jeu Canvas autonome : logique, rendu et commandes clavier/tactiles.
-
 (() => {
     const canvas = document.getElementById("byte-invaders-canvas");
     const screen = document.getElementById("arcade-screen");
@@ -33,7 +31,7 @@
     let height = 340;
     let dpr = 1;
     let best = 0;
-    try { best = Number(localStorage.getItem("byteInvadersBest")) || 0; } catch (_) { /* stockage facultatif */ }
+    try { best = Number(localStorage.getItem("byteInvadersBest")) || 0; } catch (_) {}
     bestText.textContent = formatScore(best);
 
     function formatScore(value) { return String(Math.max(0, Math.floor(Number(value) || 0))); }
@@ -129,7 +127,7 @@
         if (state.score > best) {
             best = state.score;
             bestText.textContent = formatScore(best);
-            try { localStorage.setItem("byteInvadersBest", String(best)); } catch (_) { /* stockage facultatif */ }
+            try { localStorage.setItem("byteInvadersBest", String(best)); } catch (_) {}
         }
         updateHud();
     }
@@ -359,7 +357,7 @@
             try {
                 await navigator.clipboard.writeText(text);
                 return true;
-            } catch (_) { /* essayer la méthode de compatibilité */ }
+            } catch (_) {}
         }
         const textarea = document.createElement("textarea");
         textarea.value = text;

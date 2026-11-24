@@ -1,7 +1,5 @@
 "use strict";
 
-// Une scène fixe, pilotée par le défilement natif.
-
 const shortScreenQuery = window.matchMedia("(max-height: 479px), (max-width: 380px) and (max-height: 580px)");
 
 function initializeScrollDepth() {
@@ -155,7 +153,6 @@ function initializeScrollDepth() {
         }
 
         for (const title of [projectTitle, parcoursTitle]) {
-            // Mesure sans tenir compte de la perspective ou de l'animation GSAP.
             let top = 0;
             for (let node = title; node && node !== stage; node = node.offsetParent) {
                 top += node.offsetTop;
@@ -250,7 +247,6 @@ function initializeScrollDepth() {
         updateLine(progress, immediate);
         animateParcours(shift);
 
-        // Les éléments invisibles ne doivent pas recevoir le focus.
         heroPanel.inert = time >= 0.65;
         projectPanel.inert = time < 0.72 || time >= 1.76;
         parcoursPanel.inert = time < 1.85 || time >= 3.65;
@@ -275,7 +271,6 @@ function initializeScrollDepth() {
         story.fromTo(parcoursTitle, titleDistant, { ...titleArrived, duration: 0.35, immediateRender: false }, 1.65);
         story.to(motion, { scroll: 1.55, duration: 0.75 }, 1.25);
 
-        // Le déplacement en profondeur reste immobile pendant la chronologie.
         story.fromTo(timelineMotion, { progress: 0 }, {
             progress: 1, duration: 0.85, immediateRender: false
         }, 2);
@@ -386,7 +381,6 @@ function initializeScrollDepth() {
     if (!loadingScreen || loadingScreen.classList.contains("is-hidden") ||
         !document.body.classList.contains("hero-intro-pending")) startIntro();
 
-    // Rétablit le flux normal lorsque la fenêtre devient trop basse.
     return () => {
         destroyed = true;
         layoutObserver?.disconnect();

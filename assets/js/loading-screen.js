@@ -1,7 +1,5 @@
 "use strict";
 
-// L'accueil s'affiche après le chargement de la page et le premier rendu WebGL.
-
 (() => {
     const loader = document.getElementById("loading-screen");
     if (!loader) return;

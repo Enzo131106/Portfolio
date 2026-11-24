@@ -1,4 +1,3 @@
-/* Scène 3D, cartes et navigation du carrousel. */
 #projects .projects-content,
 .depth-stage-panel--project > .projects-content {
     display: flex;
@@ -512,7 +511,6 @@
     .projects-carousel_back { display: none; }
 }
 
-/* Le carrousel garde la hauteur de sa plus grande carte sans scène fixe. */
 #projects .projects-carousel_scene {
     min-height: max(305px, var(--carousel-card-height, 0px));
 }

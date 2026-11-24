@@ -1,7 +1,5 @@
 "use strict";
 
-// Conserve localement la validation du message de confidentialité.
-
 const privacyPopup = document.getElementById("privacy-popup");
 const privacyButton = document.getElementById("privacy-button");
 

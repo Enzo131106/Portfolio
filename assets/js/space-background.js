@@ -1,7 +1,5 @@
 "use strict";
 
-// Scène WebGL : rendu spatial synchronisé avec l'animation de la page.
-
 import THREE from "./three-loader.js";
 
 const FULL_CIRCLE = Math.PI * 2;

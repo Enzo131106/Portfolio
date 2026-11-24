@@ -1,7 +1,5 @@
 "use strict";
 
-// Met à jour le lien actif selon la section visible.
-
 (() => {
     const navigationLinks = document.querySelectorAll(
         '.navbar-nav .nav-link[href^="#"]'
