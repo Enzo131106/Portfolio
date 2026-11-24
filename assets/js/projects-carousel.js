@@ -9,6 +9,7 @@
     const status = carousel?.querySelector("[data-carousel-status]");
     const pauseButton = carousel?.querySelector("[data-carousel-pause]");
     const pauseSymbol = pauseButton?.querySelector("[data-pause-symbol]");
+    const pauseLabel = pauseButton?.querySelector("[data-pause-label]");
     if (!carousel || !scene || cards.length < 2 || !previous || !next || !pauseButton || !pauseSymbol) return;
 
     const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -269,6 +270,7 @@
         const label = rotationPaused ? "Reprendre la rotation automatique" : "Mettre en pause la rotation automatique";
         pauseButton.setAttribute("aria-label", label);
         pauseButton.title = label;
+        if (pauseLabel) pauseLabel.textContent = rotationPaused ? "Reprendre" : "Pause";
         pauseSymbol.setAttribute("d", rotationPaused ? "M9 5l11 7-11 7Z" : "M9 5v14M15 5v14");
         carousel.classList.toggle("is-paused", rotationPaused);
     }
