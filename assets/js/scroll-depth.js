@@ -15,6 +15,8 @@ function initializeScrollDepth() {
     const parcoursInner = parcours?.querySelector("[data-depth-content]");
     const parcoursTitle = parcoursInner?.querySelector(".parcours-title");
     const contact = document.querySelector("#contact");
+    const contactContent = contact?.querySelector(".contact-content");
+    const contactFootline = contact?.querySelector(".contact-footline");
     const cue = document.querySelector(".hero-scroll");
     const main = document.querySelector("main");
     const navbar = document.querySelector(".navbar");
@@ -81,11 +83,22 @@ function initializeScrollDepth() {
     const titleDistant = { scale: 0.78, autoAlpha: 0 };
     const titleArrived = { scale: 1, autoAlpha: 1 };
     const titleDeparted = { scale: 1.06, autoAlpha: 0 };
+    const contactDistant = { transformPerspective: 1200, z: -360, scale: 0.78, y: 24, autoAlpha: 0 };
+    const contactArrived = { transformPerspective: 1200, z: 0, scale: 1, y: 0, autoAlpha: 1 };
+    const footlineDistant = { y: 12, autoAlpha: 0 };
+    const footlineArrived = { y: 0, autoAlpha: 1 };
 
     gsap.set([projectBody, viewport], { ...distant, transformOrigin: "center center" });
     gsap.set([projectTitle, parcoursTitle], { ...titleDistant, transformOrigin: "center top" });
     projectPanel.inert = true;
     parcoursPanel.inert = true;
+
+    if (contactContent && contactFootline) {
+        gsap.set(contactContent, { ...contactDistant, transformOrigin: "center center" });
+        gsap.set(contactFootline, footlineDistant);
+        contactContent.inert = true;
+        contactFootline.inert = true;
+    }
 
     const timelineMotion = { progress: 0 };
     const playhead = { value: 0 };
@@ -237,6 +250,10 @@ function initializeScrollDepth() {
         heroPanel.inert = time >= 0.65;
         projectPanel.inert = time < 0.72 || time >= 1.76;
         parcoursPanel.inert = time < 1.85 || time >= 3.65;
+        if (contactContent && contactFootline) {
+            contactContent.inert = time < 3.8;
+            contactFootline.inert = time < 3.95;
+        }
     }
 
     function setupScroll() {
@@ -265,6 +282,15 @@ function initializeScrollDepth() {
         story.fromTo(parcoursTitle, titleArrived, { ...titleDeparted, duration: 0.22, immediateRender: false }, 3);
         story.fromTo(viewport, arrived, { ...departed, duration: 0.65, immediateRender: false }, 3);
         story.to(motion, { scroll: 1.9, duration: 1 }, 3);
+
+        if (contactContent && contactFootline) {
+            story.fromTo(contactContent, contactDistant, {
+                ...contactArrived, duration: 0.8, ease: "power1.out", immediateRender: false
+            }, 3.2);
+            story.fromTo(contactFootline, footlineDistant, {
+                ...footlineArrived, duration: 0.35, ease: "power1.out", immediateRender: false
+            }, 3.65);
+        }
 
         const move = gsap.quickTo(playhead, "value", {
             duration: 0.35,
