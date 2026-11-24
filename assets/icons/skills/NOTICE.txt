@@ -1,6 +1,6 @@
 SVG ICONS — SOURCES AND LICENSES
 
-All SVG icons in assets/icon/skills are listed below.
+All SVG icons in assets/icons/skills are listed below.
 
 1. Skill Icons (tandpfun)
 Source: https://github.com/tandpfun/skill-icons
