@@ -137,20 +137,6 @@ body {
 
 }
 
-.privacy-label {
-
-    margin: 0 0 6px;
-
-    color: var(--privacy-muted);
-
-    font-size: 0.68rem;
-
-    font-weight: 600;
-
-    letter-spacing: 0.15em;
-
-}
-
 .privacy-intro h1 {
 
     margin: 0 0 8px;
@@ -278,34 +264,22 @@ body {
 
 }
 
+.privacy-card a {
 
-.technology-list {
+    color: var(--privacy-text);
 
-    display: flex;
+    text-decoration: underline;
 
-    flex-wrap: wrap;
-
-    gap: 6px;
-
-    margin-top: 13px;
+    overflow-wrap: anywhere;
 
 }
 
-.technology-list span {
+.privacy-card a:hover {
 
-    padding: 5px 9px;
-
-    border: 1px solid rgba(255, 255, 255, 0.08);
-
-    border-radius: 999px;
-
-    background: rgba(255, 255, 255, 0.04);
-
-    color: rgba(255, 255, 255, 0.58);
-
-    font-size: 0.68rem;
+    color: var(--privacy-title);
 
 }
+
 
 
 .privacy-footer {
@@ -319,20 +293,6 @@ body {
     gap: 30px;
 
     margin-top: 22px;
-
-}
-
-.privacy-footer p {
-
-    max-width: 650px;
-
-    margin: 0;
-
-    color: var(--privacy-muted);
-
-    font-size: 0.7rem;
-
-    line-height: 1.5;
 
 }
 
@@ -466,7 +426,6 @@ body {
     .privacy-intro h1 { font-size: 3rem; }
     .privacy-card h2 { font-size: 1.2rem; }
     .privacy-card p { font-size: .95rem; }
-    .privacy-footer p { font-size: .85rem; }
 }
 @media (min-width: 3000px) {
     .privacy-container { max-width: 1650px; }
@@ -474,5 +433,4 @@ body {
     .privacy-intro h1 { font-size: 3.8rem; }
     .privacy-card h2 { font-size: 1.5rem; }
     .privacy-card p { font-size: 1.15rem; }
-    .privacy-footer p { font-size: 1rem; }
 }
