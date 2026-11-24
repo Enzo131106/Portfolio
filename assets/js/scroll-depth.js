@@ -146,17 +146,6 @@ function initializeScrollDepth() {
             progress: 1, duration: 0.85, immediateRender: false
         }, 2);
 
-        steps.forEach((step, index) => {
-            if (!index) return;
-            const entry = step.querySelector(".parcours-entry");
-            const point = step.querySelector(".parcours-point");
-            const start = 2 + (index / steps.length) * 0.78;
-            gsap.set(entry, { autoAlpha: 0, y: 12 });
-            gsap.set(point, { autoAlpha: 0 });
-            story.to(entry, { autoAlpha: 1, y: 0, duration: 0.17, ease: "power2.out" }, start);
-            story.to(point, { autoAlpha: 1, duration: 0.1 }, start);
-        });
-
         story.fromTo(parcoursInner, arrived, { ...departed, duration: 0.65, immediateRender: false }, 3);
         story.to(motion, { scroll: 1.9, duration: 1 }, 3);
 
