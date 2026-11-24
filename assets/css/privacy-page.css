@@ -20,6 +20,8 @@ body {
 }
 
 .privacy-page {
+    display: flex;
+    flex-direction: column;
     min-height: 100vh;
     min-height: 100svh;
     min-height: 100dvh;
@@ -51,7 +53,7 @@ body {
     width: 100%;
     max-width: 1320px;
     position: relative;
-    margin: 0 auto;
+    margin: auto;
 }
 
 .privacy-intro {
@@ -249,6 +251,10 @@ body {
 @media (max-width: 699px) {
     .privacy-page {
         padding: 20px 15px max(20px, env(safe-area-inset-bottom));
+    }
+
+    .privacy-container {
+        margin: 0 auto;
     }
 
     .privacy-intro {
