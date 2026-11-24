@@ -103,7 +103,6 @@ html, body {
 .depth-stage-panel .projects-title,
 .depth-stage-panel .parcours-title {
     position: relative;
-    top: var(--section-title-offset, 0px);
     transform-origin: center top;
     pointer-events: none;
     will-change: transform, opacity;
@@ -212,7 +211,7 @@ html, body {
     .depth-stage .depth-stage-panel--parcours > .parcours-content {
         justify-content: safe center;
         padding-top: 12px;
-        padding-bottom: max(20px, env(safe-area-inset-bottom));
+        padding-bottom: max(clamp(20px, 10svh, 92px), env(safe-area-inset-bottom));
     }
 
     .depth-stage .depth-stage-panel--project .projects-title,
@@ -245,6 +244,13 @@ html, body {
     .depth-stage .depth-stage-panel--parcours .parcours-viewport {
         flex: 0 0 auto;
         height: calc(36px + var(--parcours-entry-height, 220px));
+    }
+}
+
+@media (max-width: 760px) and (max-height: 600px) {
+    .depth-stage .depth-stage-panel--project > .projects-content,
+    .depth-stage .depth-stage-panel--parcours > .parcours-content {
+        padding-bottom: max(20px, env(safe-area-inset-bottom));
     }
 }
 

@@ -129,61 +129,19 @@ function initializeScrollDepth() {
         }
     }
 
-    function layoutTop(element) {
-        let top = 0;
-        for (let node = element; node; node = node.offsetParent) {
-            top += node.offsetTop;
+    function measureMobileProjects() {
+        if (!window.matchMedia("(max-width: 760px)").matches) return;
+        const height = Math.max(0, ...projectCards.map(card => card.offsetHeight));
+        const value = height + "px";
+        if (projectBody.style.getPropertyValue("--project-card-height") !== value) {
+            projectBody.style.setProperty("--project-card-height", value);
         }
-        return top;
-    }
-
-    function positionTitle(title, body, contentTop) {
-        const margin = parseFloat(getComputedStyle(title).marginBottom) || 0;
-        const normalBottom = layoutTop(body) - margin;
-        const gap = Math.max(22, Math.min(36, stage.clientWidth * 0.022));
-        const offset = Math.max(0, Math.floor(contentTop - normalBottom - gap));
-        const value = offset + "px";
-
-        if (title.style.getPropertyValue("--section-title-offset") !== value) {
-            title.style.setProperty("--section-title-offset", value);
-        }
-    }
-
-    function syncTitlePositions() {
-        const mobile = window.matchMedia("(max-width: 760px)").matches;
-
-        if (mobile) {
-            const cardHeight = Math.max(0, ...projectCards.map(card => card.offsetHeight));
-            const value = cardHeight + "px";
-            if (projectBody.style.getPropertyValue("--project-card-height") !== value) {
-                projectBody.style.setProperty("--project-card-height", value);
-            }
-
-            for (const title of [projectTitle, parcoursTitle]) {
-                if (title.style.getPropertyValue("--section-title-offset") !== "0px") {
-                    title.style.setProperty("--section-title-offset", "0px");
-                }
-            }
-            return;
-        }
-
-        if (projectScene && projectCards.length) {
-            const cardHeight = Math.max(...projectCards.map(card => card.offsetHeight));
-            const contentTop = layoutTop(projectScene) + (projectScene.clientHeight - cardHeight) / 2;
-            positionTitle(projectTitle, projectBody, contentTop);
-        }
-
-        const contentTop = Math.min(
-            layoutTop(line.parentElement),
-            ...entries.map(item => layoutTop(item.entry))
-        );
-        positionTitle(parcoursTitle, viewport, contentTop);
     }
 
     function measure() {
         syncSafeArea();
         centerParcours();
-        syncTitlePositions();
+        measureMobileProjects();
         viewportWidth = viewport.clientWidth;
         compactParcours = window.matchMedia("(max-width: 760px), (max-height: 480px) and (orientation: landscape)").matches;
         horizontalDistance = Math.max(0, track.offsetWidth - viewportWidth);
@@ -365,10 +323,9 @@ function initializeScrollDepth() {
         const layoutObserver = new ResizeObserver(() => {
             syncSafeArea();
             centerParcours();
-            syncTitlePositions();
+            measureMobileProjects();
         });
         if (navbar) layoutObserver.observe(navbar);
-        if (projectScene) layoutObserver.observe(projectScene);
         projectCards.forEach(card => layoutObserver.observe(card));
         layoutObserver.observe(viewport);
         entries.forEach(item => layoutObserver.observe(item.entry));
