@@ -121,13 +121,10 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 100svh;
+    height: 100%;
     max-width: none;
-    padding: clamp(90px, 12svh, 138px) 0 clamp(23px, 4svh, 48px);
+    padding: max(0px, calc(clamp(90px, 12svh, 138px) - var(--depth-safe-top))) 0 clamp(23px, 4svh, 48px);
     box-sizing: border-box;
-    pointer-events: auto;
-    transform-origin: center;
-    backface-visibility: hidden;
     touch-action: pan-y pinch-zoom;
 }
 
@@ -240,7 +237,7 @@
 
 @media (max-height: 680px) {
     .depth-stage-panel--parcours > .parcours-content {
-        padding-top: 75px;
+        padding-top: max(0px, calc(75px - var(--depth-safe-top)));
         padding-bottom: 12px;
     }
 
@@ -254,8 +251,8 @@
 
     .depth-stage-panel--parcours > .parcours-content {
         --parcours-step-width: 100cqw;
-        --parcours-axis: clamp(24px, 9svh, 76px);
-        padding: clamp(100px, 14svh, 124px) 0 max(20px, env(safe-area-inset-bottom));
+        --parcours-axis: max(12px, calc((100% - var(--parcours-entry-height, 220px) - 24px) * 0.57 + 12px));
+        padding: 4px 0 max(20px, env(safe-area-inset-bottom));
     }
 
     .depth-stage-panel--parcours .parcours-title {
@@ -306,15 +303,8 @@
     }
 }
 
-@media (max-width: 650px) {
-    .depth-stage-panel--parcours > .parcours-content {
-        padding-top: max(118px, 14svh);
-    }
-}
-
 @media (max-width: 760px) and (max-height: 600px) {
     .depth-stage-panel--parcours > .parcours-content {
-        --parcours-axis: 20px;
         padding-bottom: max(10px, env(safe-area-inset-bottom));
     }
 
@@ -353,8 +343,8 @@
 @media (max-height: 480px) and (orientation: landscape) {
     .depth-stage-panel--parcours > .parcours-content {
         --parcours-step-width: 100cqw;
-        --parcours-axis: 9px;
-        padding-top: 80px;
+        --parcours-axis: max(9px, calc((100% - var(--parcours-entry-height, 160px)) / 2));
+        padding-top: 0;
         padding-bottom: 8px;
     }
 
@@ -364,16 +354,16 @@
     }
 
     .depth-stage-panel--parcours .parcours-step {
-        grid-template-rows: 18px minmax(0, 1fr);
+        grid-template-rows: calc(var(--parcours-axis) - 9px) 18px minmax(0, 1fr);
         box-sizing: border-box;
         padding-inline: 24px;
     }
 
-    .depth-stage-panel--parcours .parcours-point { grid-row: 1; }
+    .depth-stage-panel--parcours .parcours-point { grid-row: 2; }
 
     .depth-stage-panel--parcours .parcours-entry,
     .depth-stage-panel--parcours .parcours-step:nth-child(even) .parcours-entry {
-        grid-row: 2;
+        grid-row: 3;
         align-self: start;
         padding: 8px 0 0;
         max-width: 640px;
@@ -400,10 +390,6 @@
         font-size: 13px;
         line-height: 1.4;
     }
-}
-
-@media (max-width: 650px) and (max-height: 480px) and (orientation: landscape) {
-    .depth-stage-panel--parcours > .parcours-content { padding-top: 110px; }
 }
 
 @media (min-width: 1920px) and (min-height: 481px) {

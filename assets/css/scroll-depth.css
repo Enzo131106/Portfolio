@@ -50,11 +50,14 @@ html, body {
 
 
 .depth-stage {
+    --depth-safe-top: 0px;
     position: fixed;
-    inset: 0;
+    inset: var(--depth-safe-top) 0 auto;
+    height: calc(100svh - var(--depth-safe-top));
+    height: calc(100dvh - var(--depth-safe-top));
     z-index: 10;
     perspective: clamp(1200px, 100vw, 2100px);
-    perspective-origin: 50% 50%;
+    perspective-origin: 50% calc(50% - var(--depth-safe-top) / 2);
     pointer-events: none;
     overflow: clip;
 }
@@ -67,6 +70,10 @@ html, body {
     justify-content: center;
     pointer-events: none;
     transform-style: preserve-3d;
+}
+
+.depth-stage-panel--hero {
+    top: calc(-1 * var(--depth-safe-top));
 }
 
 .depth-stage-panel > .hero-inner,
@@ -83,6 +90,29 @@ html, body {
 
 .depth-stage-panel > .projects-content {
     width: min(100%, 1040px);
+}
+
+.depth-stage-panel--project > .projects-content,
+.depth-stage-panel--parcours > .parcours-content {
+    transform-style: preserve-3d;
+    backface-visibility: visible;
+    will-change: auto;
+    pointer-events: none;
+}
+
+.depth-stage-panel .projects-title,
+.depth-stage-panel .parcours-title {
+    position: relative;
+    transform-origin: center top;
+    pointer-events: none;
+    will-change: transform, opacity;
+}
+
+.depth-stage-panel--project .projects-carousel,
+.depth-stage-panel--parcours .parcours-viewport {
+    pointer-events: auto;
+    transform-origin: center;
+    will-change: transform, opacity;
 }
 
 @media (max-width: 1050px) {
@@ -114,13 +144,16 @@ html, body {
     .depth-stage-panel,
     .depth-stage-panel > .hero-inner,
     .depth-stage-panel > .projects-content,
+    .depth-stage-panel > .parcours-content,
     .depth-stage-panel .hero-copy {
         touch-action: pan-y pinch-zoom;
     }
 
     .depth-stage-panel .hero-copy h1,
     .depth-stage-panel .hero-description,
-    .depth-stage-panel .projects-title {
+    .depth-stage-panel .projects-title,
+    .depth-stage-panel .parcours-title,
+    .depth-stage-panel .parcours-entry {
         pointer-events: none;
         -webkit-user-select: none;
         user-select: none;
@@ -131,7 +164,7 @@ html, body {
     .depth-stage-panel a,
     .depth-stage-panel button {
         pointer-events: auto;
-        touch-action: manipulation;
+        touch-action: pan-y pinch-zoom;
     }
 }
 
@@ -148,6 +181,10 @@ html, body {
 }
 
 /* Les sections gardent leur place dans le défilement natif. */
+.depth-stage-active {
+    overflow-anchor: none;
+}
+
 .depth-stage-active #accueil,
 .depth-stage-active #projects {
     height: 100svh;
@@ -165,5 +202,6 @@ html, body {
 
 .depth-stage-active #contact {
     min-height: 100svh;
+    min-height: 100dvh;
     scroll-margin-top: 0;
 }

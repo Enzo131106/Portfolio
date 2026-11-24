@@ -13,9 +13,9 @@
 }
 
 .depth-stage-panel--project > .projects-content {
-    height: 100svh;
+    height: 100%;
     min-height: 0;
-    padding: clamp(90px, 12svh, 138px) 0 clamp(23px, 4svh, 48px);
+    padding: max(0px, calc(clamp(90px, 12svh, 138px) - var(--depth-safe-top))) 0 clamp(23px, 4svh, 48px);
 }
 
 .projects-content > .projects-title {
@@ -23,6 +23,7 @@
     width: 100%;
     max-width: none;
     margin: 0 0 clamp(6px, 1.8svh, 20px);
+    pointer-events: none;
     text-align: center;
     font-size: clamp(38px, 4.8vw, 78px);
     font-weight: 800;
@@ -405,7 +406,7 @@
     }
 
     .depth-stage-panel--project > .projects-content {
-        padding-top: clamp(88px, 12svh, 116px);
+        padding-top: 4px;
         padding-bottom: clamp(12px, 3svh, 28px);
     }
 
@@ -448,7 +449,7 @@
 
 @media (max-height: 680px) {
     .depth-stage-panel--project > .projects-content {
-        padding-top: 75px;
+        padding-top: max(0px, calc(75px - var(--depth-safe-top)));
         padding-bottom: 11px;
     }
     .projects-content > .projects-title { font-size: clamp(32px, 4vw, 52px); }
@@ -467,10 +468,20 @@
 }
 
 @media (max-height: 680px) and (max-width: 760px) {
-    
-    .projects-content > .projects-title { font-size: clamp(38px, 8.8vw, 50px); }
+    .depth-stage-panel--project > .projects-content { padding-top: 4px; }
+    .projects-content > .projects-title { font-size: clamp(32px, 8.5vw, 46px); }
     .projects-carousel_card { width: min(68vw, 290px); }
     .projects-carousel_number { font-size: 72px; }
+    .depth-stage-panel--project .projects-carousel_visual {
+        aspect-ratio: auto;
+        height: clamp(66px, 17svh, 122px);
+    }
+}
+
+@media (max-width: 760px) {
+    .depth-stage-panel--project .projects-carousel_scene {
+        min-height: 0;
+    }
 }
 
 @media (min-width: 1920px) {

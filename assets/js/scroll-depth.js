@@ -7,11 +7,15 @@ function initializeScrollDepth() {
     const heroInner = hero?.querySelector(".hero-inner");
     const project = document.querySelector("#projects");
     const projectInner = project?.querySelector("[data-depth-content]");
+    const projectTitle = projectInner?.querySelector(".projects-title");
+    const projectBody = projectInner?.querySelector("[data-projects-carousel]");
     const parcours = document.querySelector("#parcours");
     const parcoursInner = parcours?.querySelector("[data-depth-content]");
+    const parcoursTitle = parcoursInner?.querySelector(".parcours-title");
     const contact = document.querySelector("#contact");
     const cue = document.querySelector(".hero-scroll");
     const main = document.querySelector("main");
+    const navbar = document.querySelector(".navbar");
     const viewport = parcoursInner?.querySelector(".parcours-viewport");
     const track = parcoursInner?.querySelector(".parcours-track");
     const line = track?.querySelector(".parcours-line-fill");
@@ -35,7 +39,8 @@ function initializeScrollDepth() {
     }
 
     if (!window.gsap || !window.ScrollTrigger || !hero || !heroInner ||
-        !project || !projectInner || !parcours || !parcoursInner || !contact ||
+        !project || !projectInner || !projectTitle || !projectBody ||
+        !parcours || !parcoursInner || !parcoursTitle || !contact ||
         !main || !viewport || !track || !line || !steps.length ||
         reducedMotion || shortScreen) {
         motion.intro = 1;
@@ -45,6 +50,7 @@ function initializeScrollDepth() {
     }
 
     gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.config({ ignoreMobileResize: true });
 
     const stage = document.createElement("div");
     stage.className = "depth-stage";
@@ -70,7 +76,12 @@ function initializeScrollDepth() {
     const arrived = { z: 0, scale: 1, autoAlpha: 1 };
     const departed = { z: 570, scale: 1.65, autoAlpha: 0 };
 
-    gsap.set([projectInner, parcoursInner], { ...distant, transformOrigin: "center center" });
+    const titleDistant = { scale: 0.78, autoAlpha: 0 };
+    const titleArrived = { scale: 1, autoAlpha: 1 };
+    const titleDeparted = { scale: 1.06, autoAlpha: 0 };
+
+    gsap.set([projectBody, viewport], { ...distant, transformOrigin: "center center" });
+    gsap.set([projectTitle, parcoursTitle], { ...titleDistant, transformOrigin: "center top" });
     projectPanel.inert = true;
     parcoursPanel.inert = true;
 
@@ -99,7 +110,26 @@ function initializeScrollDepth() {
     let exitLength = 0;
     let story;
 
+    function syncSafeArea() {
+        const bottom = navbar?.getBoundingClientRect().bottom || 0;
+        const safeTop = Math.max(0, Math.ceil(bottom) + 10);
+        const value = safeTop + "px";
+        if (stage.style.getPropertyValue("--depth-safe-top") !== value) {
+            stage.style.setProperty("--depth-safe-top", value);
+        }
+    }
+
+    function centerParcours() {
+        const height = Math.max(...entries.map(item => item.entry.offsetHeight));
+        const value = Math.ceil(height) + "px";
+        if (parcoursInner.style.getPropertyValue("--parcours-entry-height") !== value) {
+            parcoursInner.style.setProperty("--parcours-entry-height", value);
+        }
+    }
+
     function measure() {
+        syncSafeArea();
+        centerParcours();
         viewportWidth = viewport.clientWidth;
         compactParcours = window.matchMedia("(max-width: 760px), (max-height: 480px) and (orientation: landscape)").matches;
         horizontalDistance = Math.max(0, track.offsetWidth - viewportWidth);
@@ -107,7 +137,7 @@ function initializeScrollDepth() {
             item.center = item.step.offsetLeft + item.step.offsetWidth / 2;
             item.width = item.entry.offsetWidth;
         });
-        const height = compactParcours ? parcoursInner.clientHeight : window.innerHeight;
+        const height = hero.offsetHeight || window.innerHeight;
         const revealLength = compactParcours
             ? Math.max(height * 1.5, height * steps.length * 0.5, horizontalDistance * 1.35)
             : Math.max(height * 1.5, height * steps.length * 0.68, horizontalDistance * 1.45);
@@ -190,11 +220,14 @@ function initializeScrollDepth() {
             story.fromTo(cue, arrived, { ...departed, duration: 0.65, immediateRender: false }, 0);
         }
 
-        story.fromTo(projectInner, distant, { ...arrived, duration: 0.65, immediateRender: false }, 0.35);
+        story.fromTo(projectBody, distant, { ...arrived, duration: 0.65, immediateRender: false }, 0.35);
+        story.fromTo(projectTitle, titleDistant, { ...titleArrived, duration: 0.35, immediateRender: false }, 0.65);
         story.to(motion, { scroll: 1, duration: 1 }, 0);
 
-        story.fromTo(projectInner, arrived, { ...departed, duration: 0.55, immediateRender: false }, 1.25);
-        story.fromTo(parcoursInner, distant, { ...arrived, duration: 0.6, immediateRender: false }, 1.4);
+        story.fromTo(projectTitle, titleArrived, { ...titleDeparted, duration: 0.22, immediateRender: false }, 1.25);
+        story.fromTo(projectBody, arrived, { ...departed, duration: 0.55, immediateRender: false }, 1.25);
+        story.fromTo(viewport, distant, { ...arrived, duration: 0.6, immediateRender: false }, 1.4);
+        story.fromTo(parcoursTitle, titleDistant, { ...titleArrived, duration: 0.35, immediateRender: false }, 1.65);
         story.to(motion, { scroll: 1.55, duration: 0.75 }, 1.25);
 
         // Le déplacement en profondeur reste immobile pendant la chronologie.
@@ -202,7 +235,8 @@ function initializeScrollDepth() {
             progress: 1, duration: 0.85, immediateRender: false
         }, 2);
 
-        story.fromTo(parcoursInner, arrived, { ...departed, duration: 0.65, immediateRender: false }, 3);
+        story.fromTo(parcoursTitle, titleArrived, { ...titleDeparted, duration: 0.22, immediateRender: false }, 3);
+        story.fromTo(viewport, arrived, { ...departed, duration: 0.65, immediateRender: false }, 3);
         story.to(motion, { scroll: 1.9, duration: 1 }, 3);
 
         const move = gsap.quickTo(playhead, "value", {
@@ -272,6 +306,17 @@ function initializeScrollDepth() {
     }
 
     measure();
+
+    if ("ResizeObserver" in window) {
+        const layoutObserver = new ResizeObserver(() => {
+            syncSafeArea();
+            centerParcours();
+        });
+        if (navbar) layoutObserver.observe(navbar);
+        layoutObserver.observe(viewport);
+        entries.forEach(item => layoutObserver.observe(item.entry));
+    }
+
     window.addEventListener("portfolio-loader-hiding", startIntro, { once: true });
     window.addEventListener("portfolio-loader-hidden", startIntro, { once: true });
     const loadingScreen = document.getElementById("loading-screen");
