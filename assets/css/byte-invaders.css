@@ -325,3 +325,9 @@
     .arcade-label { font-size: 14px; }
     .arcade-scorebar strong { font-size: 21px; }
 }
+
+@media (min-width: 761px) and (pointer: coarse) {
+    .arcade-controls { display: none; }
+    .arcade-mobile-controls { display: grid; padding-top: 10px; }
+    .arcade-mobile-controls button { min-height: 44px; touch-action: none; }
+}

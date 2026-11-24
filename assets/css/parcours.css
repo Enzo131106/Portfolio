@@ -397,3 +397,11 @@
         --parcours-step-width: clamp(610px, 35vw, 800px);
     }
 }
+
+@media (min-width: 3000px) and (min-height: 1200px) {
+    .parcours-title { font-size: 94px; }
+    .depth-stage-panel--parcours .parcours-entry { max-width: 620px; }
+    .parcours-date, .parcours-place { font-size: 22px; }
+    .parcours-entry h3 { font-size: 46px; }
+    .parcours-description { font-size: 21px; }
+}

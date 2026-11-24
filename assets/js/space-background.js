@@ -570,7 +570,7 @@ let isAnimationPaused = false;
 
 let lastFrameTime = 0;
 
-const frameInterval = 1000 / (window.innerWidth >= 3000 ? 35 : 60);
+let frameInterval = 1000 / (window.innerWidth >= 3000 ? 35 : 60);
 
 let hasSignaledBackgroundReady = false;
 
@@ -633,6 +633,8 @@ document.addEventListener(
 requestAnimationFrame(animate);
 
 function handleResize() {
+
+    frameInterval = 1000 / (window.innerWidth >= 3000 ? 35 : 60);
 
     camera.aspect =
         window.innerWidth / window.innerHeight;

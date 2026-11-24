@@ -339,3 +339,13 @@
         padding-bottom: max(12px, env(safe-area-inset-bottom));
     }
 }
+
+@media (min-width: 3000px) and (min-height: 1200px) {
+    .contact-inner { width: min(1600px, 100%); }
+    .depth-stage-panel--contact > .contact-inner { width: min(1600px, calc(100% - 192px)); }
+    .contact-content { width: min(100%, 960px); }
+    .contact-heading h2 { font-size: 120px; }
+    .contact-heading p, .contact-details p, .contact-links a { font-size: 19px; }
+    .contact-details .contact-email { font-size: 38px; }
+    .contact-footline { width: min(100%, 1050px); font-size: 15px; }
+}

@@ -2,6 +2,8 @@
 
 // Une scène fixe, pilotée par le défilement natif.
 
+const shortScreenQuery = window.matchMedia("(max-height: 479px), (max-width: 380px) and (max-height: 580px)");
+
 function initializeScrollDepth() {
     const hero = document.querySelector("#accueil");
     const heroInner = hero?.querySelector(".hero-inner");
@@ -26,7 +28,7 @@ function initializeScrollDepth() {
     const line = track?.querySelector(".parcours-line-fill");
     const steps = track ? [...track.querySelectorAll(".parcours-step")] : [];
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const shortScreen = window.innerHeight < 480;
+    const shortScreen = shortScreenQuery.matches;
     let introStarted = false;
     let released = false;
 
@@ -121,6 +123,11 @@ function initializeScrollDepth() {
     let horizontalDistance = 0;
     let exitLength = 0;
     let story;
+    let intro;
+    let move;
+    let scrollTrigger;
+    let layoutObserver;
+    let destroyed = false;
 
     function syncSafeArea() {
         const bottom = navbar?.getBoundingClientRect().bottom || 0;
@@ -279,7 +286,7 @@ function initializeScrollDepth() {
 
         story.fromTo(contactInner, distant, { ...arrived, duration: 0.65, immediateRender: false }, 3.35);
 
-        const move = gsap.quickTo(playhead, "value", {
+        move = gsap.quickTo(playhead, "value", {
             duration: 0.35,
             ease: "power2.out",
             onUpdate: renderStory
@@ -288,7 +295,7 @@ function initializeScrollDepth() {
         measure();
         updateBounds();
 
-        ScrollTrigger.create({
+        scrollTrigger = ScrollTrigger.create({
             trigger: hero,
             start: "top top",
             end: () => Math.min(sectionTop(contact), ScrollTrigger.maxScroll(window)),
@@ -305,14 +312,25 @@ function initializeScrollDepth() {
         });
 
         ScrollTrigger.refresh();
-        document.fonts?.ready.then(() => ScrollTrigger.refresh());
+        document.fonts?.ready.then(() => {
+            if (!destroyed) ScrollTrigger.refresh();
+        });
     }
 
     function startIntro() {
-        if (introStarted) return;
+        if (introStarted || destroyed) return;
         introStarted = true;
 
-        const intro = gsap.timeline({
+        if (!document.body.classList.contains("hero-intro-pending")) {
+            motion.intro = 1;
+            gsap.set(heroInner, arrived);
+            if (cue) gsap.set(cue, arrived);
+            released = true;
+            setupScroll();
+            return;
+        }
+
+        intro = gsap.timeline({
             onComplete() {
                 gsap.set(heroInner, arrived);
                 release();
@@ -348,7 +366,7 @@ function initializeScrollDepth() {
     measure();
 
     if ("ResizeObserver" in window) {
-        const layoutObserver = new ResizeObserver(() => {
+        layoutObserver = new ResizeObserver(() => {
             syncSafeArea();
             centerParcours();
             measureMobileLayout();
@@ -365,11 +383,65 @@ function initializeScrollDepth() {
     window.addEventListener("portfolio-loader-hiding", startIntro, { once: true });
     window.addEventListener("portfolio-loader-hidden", startIntro, { once: true });
     const loadingScreen = document.getElementById("loading-screen");
-    if (!loadingScreen || loadingScreen.classList.contains("is-hidden")) startIntro();
+    if (!loadingScreen || loadingScreen.classList.contains("is-hidden") ||
+        !document.body.classList.contains("hero-intro-pending")) startIntro();
+
+    // Rétablit le flux normal lorsque la fenêtre devient trop basse.
+    return () => {
+        destroyed = true;
+        layoutObserver?.disconnect();
+        window.removeEventListener("portfolio-loader-hiding", startIntro);
+        window.removeEventListener("portfolio-loader-hidden", startIntro);
+        scrollTrigger?.kill();
+        move?.tween.kill();
+        moveLine.tween.kill();
+        story?.kill();
+        intro?.kill();
+        const animated = [heroInner, cue, projectBody, projectTitle, parcoursTitle,
+            viewport, track, line, contactInner, ...entries.map(item => item.entry)].filter(Boolean);
+        gsap.set(animated, { clearProps: "transform,opacity,visibility,transformOrigin" });
+        projectTitle.style.removeProperty("--mobile-title-top");
+        parcoursTitle.style.removeProperty("--mobile-title-top");
+        projectBody.style.removeProperty("--project-card-height");
+        parcoursInner.style.removeProperty("--parcours-entry-height");
+        parcours.style.removeProperty("--parcours-scroll-length");
+        hero.appendChild(heroInner);
+        if (cue) hero.appendChild(cue);
+        project.appendChild(projectInner);
+        parcours.appendChild(parcoursInner);
+        contact.appendChild(contactInner);
+        contact.removeAttribute("aria-hidden");
+        stage.remove();
+        document.body.classList.remove("depth-stage-active");
+        motion.intro = 1;
+        motion.scroll = 0;
+        release();
+    };
+}
+
+function startScrollDepth() {
+    let destroy = initializeScrollDepth();
+
+    shortScreenQuery.addEventListener("change", () => {
+        const activeLink = document.querySelector(".navbar-nav .nav-link.active");
+        const section = activeLink ? document.querySelector(activeLink.getAttribute("href")) : null;
+        const progress = section
+            ? Math.max(0, Math.min(1, -section.getBoundingClientRect().top / Math.max(1, section.offsetHeight)))
+            : 0;
+
+        destroy?.();
+        destroy = initializeScrollDepth();
+
+        if (section) {
+            const top = section.getBoundingClientRect().top + window.scrollY;
+            window.scrollTo({ top: top + progress * section.offsetHeight, behavior: "instant" });
+            if (destroy) window.ScrollTrigger?.refresh();
+        }
+    });
 }
 
 if (window._portfolioGsapReady) {
-    window._portfolioGsapReady.then(initializeScrollDepth, initializeScrollDepth);
+    window._portfolioGsapReady.then(startScrollDepth, startScrollDepth);
 } else {
-    initializeScrollDepth();
+    startScrollDepth();
 }

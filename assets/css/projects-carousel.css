@@ -511,3 +511,27 @@
     }
     .projects-carousel_back { display: none; }
 }
+
+/* Le carrousel garde la hauteur de sa plus grande carte sans scène fixe. */
+#projects .projects-carousel_scene {
+    min-height: max(305px, var(--carousel-card-height, 0px));
+}
+
+@media (max-width: 760px) {
+    #projects .projects-carousel_scene {
+        min-height: max(260px, var(--carousel-card-height, 0px));
+    }
+}
+
+@media (max-height: 680px) {
+    #projects .projects-carousel_scene {
+        min-height: max(210px, var(--carousel-card-height, 0px));
+    }
+}
+
+@media (prefers-reduced-motion: reduce) and (max-width: 760px),
+       (prefers-reduced-motion: reduce) and (max-height: 500px) and (pointer: coarse) {
+    .projects-carousel_arrow { display: grid; width: 28px; height: 64px; }
+    .projects-carousel_arrow svg { width: 24px; height: 24px; }
+    .projects-carousel_arrow::before, .projects-carousel_arrow::after { height: 12px; }
+}

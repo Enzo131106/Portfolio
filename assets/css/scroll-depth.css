@@ -262,3 +262,16 @@ html, body {
         height: calc(30px + var(--parcours-entry-height, 160px));
     }
 }
+
+@media (max-width: 760px) and (max-height: 680px) {
+    .depth-stage-panel--hero {
+        top: 0;
+        padding: 8px 0 48px;
+    }
+
+    .depth-stage-panel--hero > .hero-inner {
+        max-height: 100%;
+        overflow-y: auto;
+        align-content: safe center;
+    }
+}

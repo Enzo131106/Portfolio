@@ -18,6 +18,8 @@
     const ctx = canvas && canvas.getContext("2d");
     if (!canvas || !ctx || !screen) return;
 
+    const arcade = canvas.closest(".arcade-card");
+    canvas.tabIndex = 0;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const keys = new Set();
     const pointerControls = new Set();
@@ -38,7 +40,19 @@
     function resize() {
         const layoutWidth = screen.offsetWidth;
         const layoutHeight = screen.offsetHeight;
-        if (!layoutWidth || !layoutHeight) return;
+        if (!layoutWidth || !layoutHeight) {
+            keys.clear();
+            pointerControls.clear();
+            return;
+        }
+        if (state.running && (layoutWidth !== width || layoutHeight !== height)) {
+            const scaleX = layoutWidth / width;
+            const scaleY = layoutHeight / height;
+            for (const item of [state.player, ...state.enemies, ...state.bullets, ...state.particles]) {
+                item.x *= scaleX;
+                item.y *= scaleY;
+            }
+        }
         dpr = Math.min(window.devicePixelRatio || 1, 2);
         width = layoutWidth;
         height = layoutHeight;
@@ -424,10 +438,20 @@
     if (downloadScoreButton) downloadScoreButton.addEventListener("click", downloadScore);
     startButton.addEventListener("click", startGame);
     window.addEventListener("keydown", event => {
+        if (!arcade?.contains(document.activeElement) || !screen.offsetWidth || arcade.closest("[inert]")) return;
         const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
-        if (["ArrowLeft", "ArrowRight", " ", "ArrowUp", "ArrowDown"].includes(key)) event.preventDefault();
-        if (key === "Enter" && !state.running) { startGame(); return; }
+        if (event.target !== canvas) return;
+        if (key === "Enter" && !state.running) {
+            event.preventDefault();
+            startGame();
+            return;
+        }
+        if (!state.running || !["ArrowLeft", "ArrowRight", "a", "q", "d", " "].includes(key)) return;
+        event.preventDefault();
         keys.add(key);
+    });
+    arcade?.addEventListener("focusout", event => {
+        if (!arcade.contains(event.relatedTarget)) keys.clear();
     });
     window.addEventListener("keyup", event => {
         const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
@@ -439,11 +463,17 @@
     });
     document.querySelectorAll("[data-game-control]").forEach(button => {
         const control = button.dataset.gameControl;
-        const down = event => { event.preventDefault(); pointerControls.add(control); };
+        const down = event => {
+            event.preventDefault();
+            if (!state.running) return;
+            button.setPointerCapture?.(event.pointerId);
+            pointerControls.add(control);
+        };
         const up = event => { event.preventDefault(); pointerControls.delete(control); };
         button.addEventListener("pointerdown", down);
         button.addEventListener("pointerup", up);
         button.addEventListener("pointercancel", up);
+        button.addEventListener("lostpointercapture", up);
         button.addEventListener("pointerleave", up);
         button.addEventListener("contextmenu", event => event.preventDefault());
     });

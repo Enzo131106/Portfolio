@@ -396,7 +396,21 @@
             startLoop();
         }
     });
-    window.addEventListener("resize", () => { measureRing(); render(); }, { passive: true });
+    // Réserve la hauteur des cartes lorsque le carrousel reste dans le flux normal.
+    function measureCards() {
+        const height = Math.max(...cards.map(card => card.offsetHeight));
+        const value = height + "px";
+        if (scene.style.getPropertyValue("--carousel-card-height") !== value) {
+            scene.style.setProperty("--carousel-card-height", value);
+        }
+    }
+
+    if ("ResizeObserver" in window) {
+        const observer = new ResizeObserver(measureCards);
+        cards.forEach(card => observer.observe(card));
+    }
+    document.fonts?.ready.then(measureCards);
+    window.addEventListener("resize", () => { measureCards(); measureRing(); render(); }, { passive: true });
     mobileScreen.addEventListener?.("change", () => {
         clearHover();
         hoverIntent = null;
@@ -407,6 +421,7 @@
         measureRing();
         render();
     });
+    measureCards();
     measureRing();
     render();
     startLoop();
