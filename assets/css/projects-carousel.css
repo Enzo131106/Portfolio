@@ -331,7 +331,7 @@
     border: 0;
     border-radius: 0;
     background: transparent;
-    color: rgba(235, 245, 255, .94);
+    color: #f4faff;
     cursor: pointer;
     touch-action: manipulation;
     transition: color 220ms ease;
@@ -344,7 +344,7 @@
     left: calc(50% - .5px);
     width: 1px;
     height: 29px;
-    background: rgba(190, 217, 245, .55);
+    background: rgba(205, 228, 252, .72);
     transition: background-color 220ms ease, height 220ms ease;
 }
 
@@ -357,9 +357,10 @@
     height: 42px;
     fill: none;
     stroke: currentColor;
-    stroke-width: 1.6;
+    stroke-width: 1.85;
     stroke-linecap: round;
     stroke-linejoin: round;
+    filter: drop-shadow(0 0 4px rgba(152, 208, 255, .28));
     transition: transform 220ms ease;
 }
 
@@ -374,7 +375,7 @@
 .projects-carousel_arrow:hover::before,
 .projects-carousel_arrow:hover::after {
     height: 34px;
-    background: rgba(169, 228, 255, .85);
+    background: rgba(169, 228, 255, .95);
 }
 
 .projects-carousel_arrow--prev:hover svg { transform: translateX(-4px); }
