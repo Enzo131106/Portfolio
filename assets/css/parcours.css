@@ -91,10 +91,6 @@
     line-height: 1.55;
 }
 
-.parcours-step--pending .parcours-date {
-    font-weight: 500;
-}
-
 .parcours-point {
     position: absolute;
     top: 4px;
@@ -107,34 +103,8 @@
     box-sizing: border-box;
 }
 
-.parcours-line,
-.parcours-hint {
+.parcours-line {
     display: none;
-}
-
-.parcours-footer {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 18px;
-    margin-top: 32px;
-    color: #c6def5;
-    font-size: clamp(12px, 1vw, 15px);
-}
-
-.parcours-footer a {
-    color: #d7edff;
-    text-decoration: underline;
-    text-underline-offset: 4px;
-}
-
-.parcours-footer a:hover {
-    color: #fff;
-}
-
-.parcours-footer a:focus-visible {
-    outline: 2px solid #ABD2FA;
-    outline-offset: 4px;
 }
 
 .depth-stage-panel--parcours > .parcours-content {
@@ -227,25 +197,6 @@
     transform-origin: left center;
 }
 
-.depth-stage-panel--parcours .parcours-footer {
-    flex: 0 0 auto;
-    justify-content: space-between;
-    margin-top: clamp(12px, 2svh, 28px);
-}
-
-.depth-stage-panel--parcours .parcours-hint {
-    display: block;
-    margin: 0;
-}
-
-.parcours-hint span {
-    display: inline-block;
-    margin-left: 8px;
-    color: #ABD2FA;
-    font-size: 1.4em;
-    line-height: 1;
-}
-
 @media (max-width: 760px), (max-height: 680px) {
     .depth-stage-panel--parcours > .parcours-content {
         --parcours-axis: 24px;
@@ -284,7 +235,6 @@
 
     .parcours-title { font-size: clamp(38px, 9vw, 60px); }
     .parcours-entry h3 { font-size: clamp(24px, 6vw, 31px); }
-    .parcours-footer { flex-wrap: wrap; }
 }
 
 @media (max-height: 680px) {
