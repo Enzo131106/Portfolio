@@ -11,7 +11,8 @@
     const pauseSymbol = pauseButton?.querySelector("[data-pause-symbol]");
     if (!carousel || !scene || cards.length < 2 || !previous || !next || !pauseButton || !pauseSymbol) return;
 
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let reducedMotion = motionPreference.matches;
     const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
     const mobileScreen = window.matchMedia("(max-width: 760px), (max-height: 500px) and (pointer: coarse)");
     const step = (Math.PI * 2) / cards.length;
@@ -301,7 +302,11 @@
 
     carousel.addEventListener("focusin", event => {
         const card = event.target.closest?.("[data-carousel-card]");
-        if (!rotationPaused && cards.includes(card)) pauseRotation(card);
+        if (cards.includes(card)) {
+            if (!rotationPaused || transition) pauseRotation(card);
+        } else if (!rotationPaused && event.target.matches(":focus-visible")) {
+            pauseRotation();
+        }
     });
 
     function move(direction) {
@@ -336,12 +341,17 @@
     carousel.addEventListener("keydown", event => {
         if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
         event.preventDefault();
-        move(event.key === "ArrowRight" ? 1 : -1);
+        if (!rotationPaused) pauseRotation();
+        const direction = event.key === "ArrowRight" ? 1 : -1;
+        if (event.target.closest?.("[data-carousel-card]")) {
+            (direction === 1 ? next : previous).focus({ preventScroll: true });
+        }
+        move(direction);
     });
 
-    if (finePointer && !reducedMotion) {
+    if (finePointer) {
         scene.addEventListener("pointermove", event => {
-            if (rotationPaused || event.pointerType === "touch") return;
+            if (rotationPaused || reducedMotion || event.pointerType === "touch") return;
             const now = performance.now();
             const pointer = { x: event.clientX, y: event.clientY };
             const previousPosition = lastPointerPosition;
@@ -457,6 +467,14 @@
         mobileNextAt = 0;
         measureRing();
         render();
+    });
+    motionPreference.addEventListener?.("change", () => {
+        reducedMotion = motionPreference.matches;
+        if (reducedMotion) {
+            pauseRotation();
+            if (document.activeElement === pauseButton) previous.focus({ preventScroll: true });
+        }
+        pauseButton.hidden = reducedMotion;
     });
     carousel.classList.add("is-ready");
     updatePauseButton();

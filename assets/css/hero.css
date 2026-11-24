@@ -104,9 +104,14 @@
 
 .hero-button:focus-visible,
 .hero-scroll:focus-visible,
-.arcade-card button:focus-visible {
+.arcade-card button:focus-visible,
+.arcade-card canvas:focus-visible {
     outline: 2px solid var(--hero-focus);
     outline-offset: 4px;
+}
+
+.arcade-card canvas:focus-visible {
+    outline-offset: -4px;
 }
 
 .hero-button-secondary {

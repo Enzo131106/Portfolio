@@ -18,7 +18,8 @@
 
     const arcade = canvas.closest(".arcade-card");
     canvas.tabIndex = 0;
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let gameVisible = true;
     const keys = new Set();
     const pointerControls = new Set();
     const state = {
@@ -290,7 +291,7 @@
             ctx.globalAlpha = 1;
             if (state.invulnerable <= 0 || Math.floor(performance.now() / 90) % 2 === 0) drawShip(state.player.x, state.player.y);
         } else {
-            const t = reducedMotion ? 0 : performance.now() / 1000;
+            const t = motionPreference.matches ? 0 : performance.now() / 1000;
             for (let row = 0; row < 2; row++) {
                 for (let col = 0; col < 7; col++) {
                     drawEnemy({ x: width * .24 + col * width * .087, y: height * .32 + row * 28, row, phase: t + col });
@@ -303,6 +304,12 @@
         if (!state.running) return;
         const dt = Math.min((now - state.lastTime) / 1000 || 0, .035);
         state.lastTime = now;
+        if (!gameVisible || document.hidden || arcade?.closest("[inert]") || !screen.offsetWidth) {
+            keys.clear();
+            pointerControls.clear();
+            state.animationId = requestAnimationFrame(loop);
+            return;
+        }
         update(dt);
         draw();
         if (state.running) state.animationId = requestAnimationFrame(loop);
@@ -477,6 +484,11 @@
     });
     window.addEventListener("resize", resize);
     if ("ResizeObserver" in window) new ResizeObserver(resize).observe(screen);
+    if ("IntersectionObserver" in window) {
+        new IntersectionObserver(entries => {
+            gameVisible = entries[0].isIntersecting;
+        }).observe(screen);
+    }
     arcade?.classList.add("is-ready");
     resize();
     draw();

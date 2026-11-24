@@ -1,6 +1,7 @@
 "use strict";
 
 const shortScreenQuery = window.matchMedia("(max-height: 479px), (max-width: 380px) and (max-height: 580px)");
+const depthMotionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
 
 function initializeScrollDepth() {
     const hero = document.querySelector("#accueil");
@@ -25,7 +26,7 @@ function initializeScrollDepth() {
     const track = parcoursInner?.querySelector(".parcours-track");
     const line = track?.querySelector(".parcours-line-fill");
     const steps = track ? [...track.querySelectorAll(".parcours-step")] : [];
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reducedMotion = depthMotionPreference.matches;
     const shortScreen = shortScreenQuery.matches;
     let introStarted = false;
     let released = false;
@@ -253,6 +254,21 @@ function initializeScrollDepth() {
         contactPanel.inert = time < 3.82;
     }
 
+    function revealFocusedStep(event) {
+        if (!story || !move || parcoursPanel.inert || !horizontalDistance ||
+            !event.target.matches(":focus-visible")) return;
+        const entry = entries.find(item => item.step.contains(event.target));
+        if (!entry) return;
+        const progress = gsap.utils.clamp(0, 1, (entry.center - viewportWidth / 2) / horizontalDistance);
+        const target = bounds.parcours + (bounds.exit - bounds.parcours) * 0.85 * progress;
+        window.scrollTo({ top: target, behavior: "instant" });
+        move.tween.pause();
+        playhead.value = scrollTime(target);
+        renderStory(true);
+    }
+
+    parcoursPanel.addEventListener("focusin", revealFocusedStep);
+
     function setupScroll() {
         story = gsap.timeline({ paused: true, defaults: { ease: "none" } });
 
@@ -383,6 +399,7 @@ function initializeScrollDepth() {
 
     return () => {
         destroyed = true;
+        parcoursPanel.removeEventListener("focusin", revealFocusedStep);
         layoutObserver?.disconnect();
         window.removeEventListener("portfolio-loader-hiding", startIntro);
         window.removeEventListener("portfolio-loader-hidden", startIntro);
@@ -416,7 +433,7 @@ function initializeScrollDepth() {
 function startScrollDepth() {
     let destroy = initializeScrollDepth();
 
-    shortScreenQuery.addEventListener("change", () => {
+    function refreshDepth() {
         const activeLink = document.querySelector(".navbar-nav .nav-link.active");
         const section = activeLink ? document.querySelector(activeLink.getAttribute("href")) : null;
         const progress = section
@@ -431,7 +448,10 @@ function startScrollDepth() {
             window.scrollTo({ top: top + progress * section.offsetHeight, behavior: "instant" });
             if (destroy) window.ScrollTrigger?.refresh();
         }
-    });
+    }
+
+    shortScreenQuery.addEventListener("change", refreshDepth);
+    depthMotionPreference.addEventListener?.("change", refreshDepth);
 }
 
 startScrollDepth();
