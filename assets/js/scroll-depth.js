@@ -129,19 +129,33 @@ function initializeScrollDepth() {
         }
     }
 
-    function measureMobileProjects() {
+    function measureMobileLayout() {
         if (!window.matchMedia("(max-width: 760px)").matches) return;
         const height = Math.max(0, ...projectCards.map(card => card.offsetHeight));
         const value = height + "px";
         if (projectBody.style.getPropertyValue("--project-card-height") !== value) {
             projectBody.style.setProperty("--project-card-height", value);
         }
+
+        for (const title of [projectTitle, parcoursTitle]) {
+            // Mesure sans tenir compte de la perspective ou de l'animation GSAP.
+            let top = 0;
+            for (let node = title; node && node !== stage; node = node.offsetParent) {
+                top += node.offsetTop;
+            }
+            const previous = parseFloat(getComputedStyle(title).top) || 0;
+            const lift = Math.max(0, Math.min(38, Math.floor(top - previous - 20)));
+            const offset = -lift + "px";
+            if (title.style.getPropertyValue("--mobile-title-top") !== offset) {
+                title.style.setProperty("--mobile-title-top", offset);
+            }
+        }
     }
 
     function measure() {
         syncSafeArea();
         centerParcours();
-        measureMobileProjects();
+        measureMobileLayout();
         viewportWidth = viewport.clientWidth;
         compactParcours = window.matchMedia("(max-width: 760px), (max-height: 480px) and (orientation: landscape)").matches;
         horizontalDistance = Math.max(0, track.offsetWidth - viewportWidth);
@@ -323,9 +337,12 @@ function initializeScrollDepth() {
         const layoutObserver = new ResizeObserver(() => {
             syncSafeArea();
             centerParcours();
-            measureMobileProjects();
+            measureMobileLayout();
         });
         if (navbar) layoutObserver.observe(navbar);
+        layoutObserver.observe(stage);
+        layoutObserver.observe(projectTitle);
+        layoutObserver.observe(parcoursTitle);
         projectCards.forEach(card => layoutObserver.observe(card));
         layoutObserver.observe(viewport);
         entries.forEach(item => layoutObserver.observe(item.entry));

@@ -217,7 +217,7 @@ html, body {
     .depth-stage .depth-stage-panel--project .projects-title,
     .depth-stage .depth-stage-panel--parcours .parcours-title {
         flex: 0 0 auto;
-        top: 0;
+        top: var(--mobile-title-top, 0px);
     }
 
     .depth-stage .depth-stage-panel--project .projects-title {
