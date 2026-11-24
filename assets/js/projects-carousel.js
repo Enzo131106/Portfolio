@@ -19,10 +19,12 @@
     const manualPause = 5000;
     const hoverPause = 2000;
     const travelDuration = 750;
-    const hoverTravelDuration = 950;
+    const hoverTravelDuration = 720;
+    const hoverIntentDelay = 85;
+    const hoverReleaseDelay = 120;
     const mobileHold = 3000;
     const mobileTravelDuration = 800;
-    const hoverMaxAngle = Math.PI * 0.28;
+    const hoverMaxAngle = Math.min(Math.PI * 0.42, step * 1.2);
 
     let position = 0;
     let transition = null;
@@ -30,7 +32,7 @@
     let mobileNextAt = 0;
     let hoveredCard = null;
     let lastPointerPosition = null;
-    let lastHoverPosition = null;
+    let hoverIntent = null;
     let frame = 0;
     let lastFrameTime = 0;
     let visible = !("IntersectionObserver" in window);
@@ -146,6 +148,63 @@
         hoveredCard = null;
     }
 
+    function updateTilt(card, pointer) {
+        if (!card || !pointer) return;
+        const surface = card.querySelector("[data-carousel-surface]");
+        const bounds = card.getBoundingClientRect();
+        if (!surface || !bounds.width || !bounds.height) return;
+
+        const nx = Math.max(-1, Math.min(1, ((pointer.x - bounds.left) / bounds.width - 0.5) * 2));
+        const ny = Math.max(-1, Math.min(1, ((pointer.y - bounds.top) / bounds.height - 0.5) * 2));
+        surface.style.setProperty("--tilt-x", `${(-ny * 10).toFixed(1)}deg`);
+        surface.style.setProperty("--tilt-y", `${(nx * 11).toFixed(1)}deg`);
+        surface.style.setProperty("--pointer-x", `${((nx + 1) * 50).toFixed(1)}%`);
+        surface.style.setProperty("--pointer-y", `${((ny + 1) * 50).toFixed(1)}%`);
+    }
+
+    function queueHover(card, now) {
+        if (card === hoveredCard) {
+            hoverIntent = null;
+            return;
+        }
+        if (hoverIntent?.card === card) return;
+        hoverIntent = { card, at: now + (card ? hoverIntentDelay : hoverReleaseDelay) };
+    }
+
+    function applyHoverIntent(now) {
+        if (!hoverIntent || transition || now < hoverIntent.at) return;
+        const card = hoverIntent.card;
+        hoverIntent = null;
+
+        if (!card) {
+            clearHover();
+            pausedUntil = Math.max(pausedUntil, now + hoverPause);
+            return;
+        }
+
+        const angle = normalizeAngle(cards.indexOf(card) * step - position);
+        const limit = mobileScreen.matches ? step * 0.42 : hoverMaxAngle;
+        if (Math.abs(angle) > limit) return;
+
+        clearHover();
+        hoveredCard = card;
+        card.classList.add("is-hovered");
+
+        if (Math.abs(angle) < 0.002) {
+            position += angle;
+            updateTilt(card, lastPointerPosition);
+            return;
+        }
+
+        transition = {
+            from: position,
+            to: position + angle,
+            started: now,
+            duration: Math.max(360, hoverTravelDuration * Math.min(1, Math.abs(angle) / step)),
+            hover: true
+        };
+    }
+
     function stopLoop() {
         if (frame) window.cancelAnimationFrame(frame);
         frame = 0;
@@ -163,15 +222,24 @@
         const dt = lastFrameTime ? Math.min((now - lastFrameTime) / 1000, 0.05) : 0;
         lastFrameTime = now;
 
+        applyHoverIntent(now);
+
         if (transition) {
-            const progress = Math.min(1, (now - transition.started) / transition.duration);
-            const eased = progress * progress * (3 - 2 * progress);
+            const progress = Math.max(0, Math.min(1, (now - transition.started) / transition.duration));
+            const eased = transition.hover
+                ? 1 - Math.pow(1 - progress, 3)
+                : progress * progress * (3 - 2 * progress);
             position = transition.from + (transition.to - transition.from) * eased;
             if (progress === 1) {
+                const wasHover = transition.hover;
                 transition = null;
+                if (wasHover) {
+                    render();
+                    updateTilt(hoveredCard, lastPointerPosition);
+                }
                 if (mobileScreen.matches) mobileNextAt = now + mobileHold;
             }
-        } else if (mobileScreen.matches && !reducedMotion) {
+        } else if (mobileScreen.matches && !reducedMotion && !hoveredCard && !hoverIntent) {
             if (!mobileNextAt) mobileNextAt = now + mobileHold;
             if (now >= mobileNextAt) {
                 const nextIndex = Math.round(position / step) + 1;
@@ -183,7 +251,7 @@
                 };
                 mobileNextAt = 0;
             }
-        } else if (!reducedMotion && !hoveredCard && now >= pausedUntil) {
+        } else if (!mobileScreen.matches && !reducedMotion && !hoveredCard && !hoverIntent && now >= pausedUntil) {
             position += dt * speed;
         }
 
@@ -199,7 +267,8 @@
 
     function move(direction) {
         clearHover();
-        lastHoverPosition = null;
+        hoverIntent = null;
+        lastPointerPosition = null;
         const base = Math.round((transition ? transition.to : position) / step);
         const target = (base + direction) * step;
         const now = performance.now();
@@ -239,62 +308,42 @@
             const previousPosition = lastPointerPosition;
             lastPointerPosition = pointer;
 
-            if (previousPosition && Math.hypot(pointer.x - previousPosition.x, pointer.y - previousPosition.y) < 2) return;
+            if (previousPosition && pointer.x === previousPosition.x && pointer.y === previousPosition.y) return;
+
+            // Le mouvement des cartes ne doit pas changer la cible du recentrage.
+            if (transition) return;
 
             const candidate = event.target.closest?.("[data-carousel-card]");
             const selected = cards.includes(candidate) ? candidate : null;
 
-            if (hoveredCard) {
-                if (selected === hoveredCard) {
-                    const surface = hoveredCard.querySelector("[data-carousel-surface]");
-                    const bounds = hoveredCard.getBoundingClientRect();
-                    if (surface && bounds.width > 0 && bounds.height > 0) {
-                        const nx = Math.max(-1, Math.min(1, ((pointer.x - bounds.left) / bounds.width - 0.5) * 2));
-                        const ny = Math.max(-1, Math.min(1, ((pointer.y - bounds.top) / bounds.height - 0.5) * 2));
-                        surface.style.setProperty("--tilt-x", `${(-ny * 10).toFixed(1)}deg`);
-                        surface.style.setProperty("--tilt-y", `${(nx * 11).toFixed(1)}deg`);
-                        surface.style.setProperty("--pointer-x", `${((nx + 1) * 50).toFixed(1)}%`);
-                        surface.style.setProperty("--pointer-y", `${((ny + 1) * 50).toFixed(1)}%`);
-                    }
-                    return;
-                }
-                clearHover();
-                pausedUntil = Math.max(pausedUntil, now + hoverPause);
-                lastHoverPosition = null;
-            }
-
-            if (!selected) return;
-
-            if (lastHoverPosition && Math.hypot(pointer.x - lastHoverPosition.x, pointer.y - lastHoverPosition.y) < 40) return;
-
-            const index = cards.indexOf(selected);
-            const angle = normalizeAngle(index * step - position);
-            if (mobileScreen.matches) {
-                const fraction = angle / step;
-                if (Math.abs(fraction) > 0.42) return;
-            } else if (Math.abs(angle) > hoverMaxAngle) {
+            if (selected === hoveredCard && hoveredCard) {
+                hoverIntent = null;
+                updateTilt(hoveredCard, pointer);
                 return;
             }
 
-            hoveredCard = selected;
-            lastHoverPosition = pointer;
-            selected.classList.add("is-hovered");
-            transition = {
-                from: position,
-                to: position + angle,
-                started: now,
-                duration: hoverTravelDuration
-            };
-            startLoop();
+            if (selected) {
+                const angle = normalizeAngle(cards.indexOf(selected) * step - position);
+                const limit = mobileScreen.matches ? step * 0.42 : hoverMaxAngle;
+                if (Math.abs(angle) > limit) return;
+            }
+
+            if (selected || hoveredCard || hoverIntent) {
+                queueHover(selected, now);
+                startLoop();
+            }
         }, { passive: true });
 
-        scene.addEventListener("pointerleave", () => {
+        scene.addEventListener("pointerleave", event => {
+            if (transition?.hover && lastPointerPosition &&
+                event.clientX === lastPointerPosition.x && event.clientY === lastPointerPosition.y) return;
+
+            hoverIntent = null;
             if (hoveredCard) {
                 clearHover();
                 pausedUntil = Math.max(pausedUntil, performance.now() + hoverPause);
             }
             lastPointerPosition = null;
-            lastHoverPosition = null;
         });
     }
 
@@ -318,7 +367,12 @@
         const observer = new IntersectionObserver(entries => {
             visible = entries[0].intersectionRatio > 0.25;
             if (visible) startLoop();
-            else stopLoop();
+            else {
+                clearHover();
+                hoverIntent = null;
+                lastPointerPosition = null;
+                stopLoop();
+            }
         }, { threshold: [0, 0.25, 0.5] });
         observer.observe(document.querySelector("#projects"));
     }
@@ -327,7 +381,7 @@
         if (document.hidden) {
             clearHover();
             lastPointerPosition = null;
-            lastHoverPosition = null;
+            hoverIntent = null;
             stopLoop();
         }
         else {
@@ -344,6 +398,9 @@
     });
     window.addEventListener("resize", () => { measureRing(); render(); }, { passive: true });
     mobileScreen.addEventListener?.("change", () => {
+        clearHover();
+        hoverIntent = null;
+        lastPointerPosition = null;
         position = Math.round(position / step) * step;
         transition = null;
         mobileNextAt = 0;
