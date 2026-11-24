@@ -537,21 +537,21 @@
 .projects-carousel_pause {
     position: relative;
     z-index: 201;
-    align-self: center;
+    align-self: flex-end;
     flex: 0 0 auto;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    min-width: 142px;
-    height: 48px;
+    gap: 6px;
+    min-width: 112px;
+    height: 44px;
     margin: 0 0 8px;
-    padding: 0 18px;
+    padding: 0 12px;
     border: 1px solid #d6eaff;
     border-radius: 999px;
     background: #ABD2FA;
     color: #061225;
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 700;
     line-height: 1;
     box-shadow: 0 4px 20px rgba(6, 18, 37, .45);
@@ -565,8 +565,8 @@
 
 .projects-carousel_pause svg {
     flex-shrink: 0;
-    width: 26px;
-    height: 26px;
+    width: 22px;
+    height: 22px;
     fill: none;
     stroke: currentColor;
     stroke-width: 2.5;
@@ -585,12 +585,12 @@
 }
 
 .projects-carousel:has(.projects-carousel_pause:not([hidden])) .projects-carousel_arrow {
-    top: calc(50% + 28px);
+    top: calc(50% + 26px);
 }
 
 @media (max-width: 760px) and (min-height: 681px) {
     .depth-stage .depth-stage-panel--project .projects-carousel:has(.projects-carousel_pause:not([hidden])) {
-        height: calc(var(--project-card-height, 340px) + 56px);
+        height: calc(var(--project-card-height, 340px) + 52px);
     }
 }
 
