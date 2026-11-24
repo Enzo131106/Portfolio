@@ -165,6 +165,10 @@
     animation-play-state: paused;
 }
 
+body:not(.hero-intro-pending) .hero-scroll:not(.is-ready) {
+    display: none;
+}
+
 .hero-scroll.is-ready .hero-scroll-mouse span {
     animation-play-state: running;
 }
