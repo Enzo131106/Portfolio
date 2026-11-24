@@ -200,27 +200,6 @@
     transform-origin: left center;
 }
 
-@media (min-width: 761px) and (min-height: 681px) {
-    .depth-stage-panel--parcours > .parcours-content {
-        position: relative;
-        padding: 0;
-    }
-
-    .depth-stage-panel--parcours .parcours-title {
-        position: absolute;
-        z-index: 1;
-        top: clamp(76px, 10svh, 118px);
-        inset-inline: 0;
-        margin: 0;
-        pointer-events: none;
-    }
-
-    .depth-stage-panel--parcours .parcours-viewport {
-        position: absolute;
-        inset: 0;
-    }
-}
-
 @media (max-width: 760px), (max-height: 680px) {
     .depth-stage-panel--parcours > .parcours-content {
         --parcours-axis: 24px;

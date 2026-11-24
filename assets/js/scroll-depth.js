@@ -76,6 +76,11 @@ function initializeScrollDepth() {
 
     const timelineMotion = { progress: 0 };
     const playhead = { value: 0 };
+    const moveLine = gsap.quickTo(line, "scaleX", {
+        duration: 0.75,
+        ease: "power2.out"
+    });
+    let lineTarget = 0;
     const bounds = { start: 0, project: 0, parcours: 0, exit: 0, end: 0 };
     const entries = steps.map(step => {
         const entry = step.querySelector(".parcours-entry");
@@ -146,14 +151,25 @@ function initializeScrollDepth() {
         });
     }
 
-    function renderStory() {
+    function updateLine(progress, immediate = false) {
+        if (immediate) {
+            moveLine.tween.pause();
+            gsap.set(line, { scaleX: progress });
+            lineTarget = progress;
+        } else if (progress !== lineTarget) {
+            lineTarget = progress;
+            moveLine(progress);
+        }
+    }
+
+    function renderStory(immediate = false) {
         if (!story) return;
         const time = playhead.value;
         story.time(time);
         const progress = timelineMotion.progress;
         const shift = horizontalDistance * progress;
         gsap.set(track, { x: -shift });
-        gsap.set(line, { scaleX: progress });
+        updateLine(progress, immediate);
         animateParcours(shift);
 
         // Les éléments invisibles ne doivent pas recevoir le focus.
@@ -203,7 +219,7 @@ function initializeScrollDepth() {
                 updateBounds();
                 move.tween.pause();
                 playhead.value = scrollTime(self.scroll());
-                renderStory();
+                renderStory(true);
             },
             onUpdate(self) {
                 move(scrollTime(self.scroll()));
