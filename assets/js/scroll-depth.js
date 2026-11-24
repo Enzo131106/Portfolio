@@ -77,12 +77,29 @@ function initializeScrollDepth() {
     const timelineMotion = { progress: 0 };
     const playhead = { value: 0 };
     const bounds = { start: 0, project: 0, parcours: 0, exit: 0, end: 0 };
+    const entries = steps.map(step => {
+        const entry = step.querySelector(".parcours-entry");
+        return {
+            step,
+            entry,
+            center: 0,
+            width: 0,
+            setOpacity: gsap.quickSetter(entry, "opacity"),
+            setY: gsap.quickSetter(entry, "y", "px")
+        };
+    });
+    let viewportWidth = 0;
     let horizontalDistance = 0;
     let exitLength = 0;
     let story;
 
     function measure() {
-        horizontalDistance = Math.max(0, track.offsetWidth - viewport.clientWidth);
+        viewportWidth = viewport.clientWidth;
+        horizontalDistance = Math.max(0, track.offsetWidth - viewportWidth);
+        entries.forEach(item => {
+            item.center = item.step.offsetLeft + item.step.offsetWidth / 2;
+            item.width = item.entry.offsetWidth;
+        });
         const height = window.innerHeight;
         const revealLength = Math.max(height * 1.5, height * steps.length * 0.68, horizontalDistance * 1.45);
         exitLength = Math.max(height * 0.8, 320);
@@ -112,13 +129,32 @@ function initializeScrollDepth() {
         return 3 + progressBetween(scroll, bounds.exit, bounds.end);
     }
 
+    function animateParcours(shift) {
+        const center = viewportWidth / 2;
+        const readableDistance = viewportWidth * 0.23;
+
+        entries.forEach(item => {
+            const distance = Math.abs(item.center - shift - center);
+            const outerDistance = center + item.width / 2;
+            const t = gsap.utils.clamp(0, 1,
+                (distance - readableDistance) / Math.max(1, outerDistance - readableDistance)
+            );
+            const fade = t * t * (3 - 2 * t);
+
+            item.setOpacity(1 - fade);
+            item.setY(fade * 22);
+        });
+    }
+
     function renderStory() {
         if (!story) return;
         const time = playhead.value;
         story.time(time);
         const progress = timelineMotion.progress;
-        gsap.set(track, { x: -horizontalDistance * progress });
+        const shift = horizontalDistance * progress;
+        gsap.set(track, { x: -shift });
         gsap.set(line, { scaleX: progress });
+        animateParcours(shift);
 
         // Les éléments invisibles ne doivent pas recevoir le focus.
         heroPanel.inert = time >= 0.65;
