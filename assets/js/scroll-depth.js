@@ -94,19 +94,23 @@ function initializeScrollDepth() {
         };
     });
     let viewportWidth = 0;
+    let compactParcours = false;
     let horizontalDistance = 0;
     let exitLength = 0;
     let story;
 
     function measure() {
         viewportWidth = viewport.clientWidth;
+        compactParcours = window.matchMedia("(max-width: 760px), (max-height: 480px) and (orientation: landscape)").matches;
         horizontalDistance = Math.max(0, track.offsetWidth - viewportWidth);
         entries.forEach(item => {
             item.center = item.step.offsetLeft + item.step.offsetWidth / 2;
             item.width = item.entry.offsetWidth;
         });
-        const height = window.innerHeight;
-        const revealLength = Math.max(height * 1.5, height * steps.length * 0.68, horizontalDistance * 1.45);
+        const height = compactParcours ? parcoursInner.clientHeight : window.innerHeight;
+        const revealLength = compactParcours
+            ? Math.max(height * 1.5, height * steps.length * 0.5, horizontalDistance * 1.35)
+            : Math.max(height * 1.5, height * steps.length * 0.68, horizontalDistance * 1.45);
         exitLength = Math.max(height * 0.8, 320);
         parcours.style.setProperty("--parcours-scroll-length", Math.ceil(revealLength + exitLength) + "px");
     }
@@ -136,7 +140,7 @@ function initializeScrollDepth() {
 
     function animateParcours(shift) {
         const center = viewportWidth / 2;
-        const readableDistance = viewportWidth * 0.23;
+        const readableDistance = viewportWidth * (compactParcours ? 0.32 : 0.23);
 
         entries.forEach(item => {
             const distance = Math.abs(item.center - shift - center);
@@ -147,7 +151,7 @@ function initializeScrollDepth() {
             const fade = t * t * (3 - 2 * t);
 
             item.setOpacity(1 - fade);
-            item.setY(fade * 22);
+            item.setY(fade * (compactParcours ? 12 : 22));
         });
     }
 
