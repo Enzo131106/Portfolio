@@ -25,4 +25,5 @@ Files: html.svg, css.svg, javascript.svg, bootstrap.svg, threejs.svg
 
 GSAP logo is sourced from Simple Icons (https://github.com/simple-icons/simple-icons),
 distributed under CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/).
-File: gsap.svg. Brand trademarks remain the property of their respective owners.
+Files: gsap.svg, scratch.svg. Brand trademarks remain the property of their respective owners.
+Scratch icon is shown solely to identify the programming language used in the project; this portfolio is not affiliated with or endorsed by the Scratch Foundation.
