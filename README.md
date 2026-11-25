@@ -83,7 +83,7 @@ Consulter la [politique de confidentialité](https://enzo131106.github.io/Portfo
 
 ## Droits et licences
 
-**Copyright © 2026 Enzo Camilo — Tous droits réservés.**
+**Copyright © 2026 Enzo Camilo - Tous droits réservés.**
 
 Le code source est publiquement consultable à des fins d’information et d’apprentissage. Les conditions de réutilisation des créations originales sont précisées dans le fichier [LICENSE](LICENSE). Ce dépôt n’est pas distribué sous une licence open source.
 
@@ -91,6 +91,6 @@ Les bibliothèques et ressources tierces restent régies par leurs propres licen
 
 ## Contact
 
-**Enzo Camilo** — Étudiant en BUT MMI à l’IUT de Tarbes
+**Enzo Camilo** - Étudiant en BUT MMI à l’IUT de Tarbes
 
 [Portfolio](https://enzo131106.github.io/Portfolio/) · [LinkedIn](https://www.linkedin.com/in/enzo-camilo-4190a939b/) · [GitHub](https://github.com/Enzo131106) · [E-mail](mailto:enzo.camilo1306@gmail.com)
