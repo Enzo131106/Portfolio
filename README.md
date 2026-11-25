@@ -1,40 +1,42 @@
-# Portfolio - Enzo Camilo
+# Portfolio
 
-Portfolio personnel d’Enzo Camilo, étudiant en BUT Métiers du Multimédia et de l’Internet (MMI) à l’IUT de Tarbes.
+Je suis Enzo Camilo, étudiant en BUT Métiers du Multimédia et de l’Internet (MMI) à l’IUT de Tarbes. J’ai créé ce site pour présenter mon parcours, mes compétences et les projets que je réalise.
 
-Ce projet présente mon parcours, mes compétences et mes réalisations. Je l’ai conçu comme une expérience immersive qui associe développement web, animation et interactivité, tout en me permettant d’expérimenter de nouvelles techniques.
+J’ai choisi un univers spatial pour le design du portfolio. C’est aussi l’occasion pour moi de travailler la 3D sur le web, les animations et les interactions en JavaScript.
 
-**[Découvrir le portfolio](https://enzo131106.github.io/Portfolio/)**
+**[Voir mon portfolio](https://enzo131106.github.io/Portfolio/)**
 
-![Aperçu du portfolio](assets/images/portfolio-screenshot.webp)
+![Aperçu de mon portfolio](assets/images/portfolio-screenshot.webp)
 
-## Fonctionnalités
+## Le site
 
-- Fond spatial en 3D réalisé avec Three.js.
-- Navigation immersive et transitions liées au défilement avec GSAP et ScrollTrigger.
-- Carrousel interactif des projets avec rotation automatique, navigation manuelle et commande de pause.
-- Frise chronologique du parcours scolaire et professionnel.
-- Mini-jeu **Byte Invaders** intégré à la page d’accueil : score, record local, partage et export du score au format PNG.
-- Interface responsive, adaptée aux différentes tailles d’écran.
+- Un fond spatial en 3D avec Three.js.
+- Des animations au défilement avec GSAP et ScrollTrigger.
+- Un carrousel de projets avec navigation manuelle et rotation automatique désactivable.
+- Une frise chronologique de mon parcours scolaire et professionnel.
+- Byte Invaders, un mini-jeu intégré à la page d’accueil.
 
-## Technologies utilisées
+Le site s’adapte aux ordinateurs et aux mobiles. J’ai aussi prévu une navigation au clavier et pris en compte les préférences de réduction des animations.
 
-| Technologie | Utilisation |
-| --- | --- |
-| HTML5 | Structure et contenu des pages |
-| CSS3 | Mise en page, responsive et animations |
-| JavaScript | Interactions, navigation et logique du mini-jeu |
-| Bootstrap et Bootstrap Icons | Composants, utilitaires et icônes |
-| Three.js | Rendu du fond spatial en WebGL |
-| GSAP et ScrollTrigger | Animations et transitions au défilement |
-| Canvas 2D | Rendu de Byte Invaders |
-| GitHub Pages | Hébergement du site statique |
+### Byte Invaders
 
-Le site ne nécessite ni serveur applicatif, ni base de données, ni étape de compilation. Les bibliothèques utilisées sont incluses dans le dépôt.
+J’ai intégré un petit jeu d’arcade inspiré de Space Invaders, réalisé en JavaScript avec Canvas 2D. Le but est de faire le meilleur score possible. Le record est enregistré dans le navigateur et il est possible de partager son score ou de le télécharger en PNG.
 
-## Consulter le projet localement
+Pour jouer, utilise les flèches gauche et droite (ou Q/A et D) pour déplacer le vaisseau, et la barre d’espace pour tirer. Des commandes tactiles sont également disponibles sur mobile.
 
-Pour consulter et étudier le projet en local, avec Git et Python 3 installés :
+## Technologies
+
+- HTML, CSS et JavaScript
+- Bootstrap et Bootstrap Icons pour l’interface
+- Three.js pour le décor 3D
+- GSAP et ScrollTrigger pour les animations
+- GitHub Pages pour l’hébergement
+
+Le site est statique. Les bibliothèques JavaScript et CSS sont incluses dans le dépôt, sans dépendances à installer ni compilation.
+
+## Lancer le site en local
+
+Avec Git et Python 3 installés :
 
 ```bash
 git clone https://github.com/Enzo131106/Portfolio.git
@@ -42,55 +44,41 @@ cd Portfolio
 python -m http.server 8000
 ```
 
-Ouvrir ensuite [http://localhost:8000](http://localhost:8000) dans un navigateur récent. Selon l’installation de Python, la commande peut être `python3 -m http.server 8000` ou `py -m http.server 8000`.
+Ouvre ensuite [http://localhost:8000](http://localhost:8000) dans ton navigateur. Selon ton installation de Python, utilise `python3` ou `py` à la place de `python`.
 
-Un serveur HTTP local est recommandé plutôt qu’une ouverture directe du fichier `index.html`, notamment pour le chargement des modules JavaScript.
+Il vaut mieux passer par un serveur HTTP local plutôt que d’ouvrir directement `index.html`, notamment pour les modules JavaScript.
 
-## Organisation du projet
+## Organisation du code
 
 ```text
 Portfolio/
 ├── assets/
-│   ├── css/          # Feuilles de style
-│   ├── documents/    # Documents du portfolio
-│   ├── icons/        # Logo, icônes et notices
-│   ├── images/       # Images et captures des projets
-│   └── js/           # Scripts et interactions
-├── vendor/           # Bibliothèques tierces et licences
+│   ├── css/          # Styles du site
+│   ├── js/           # Animations, navigation et mini-jeu
+│   ├── images/       # Photos et captures des projets
+│   ├── icons/        # Logo et icônes
+│   └── documents/   # Documents du portfolio
+├── vendor/           # Bibliothèques et licences tierces
 ├── index.html        # Page principale
-├── privacy.html      # Confidentialité et fonctionnement
+├── privacy.html
 ├── mentions-legales.html
-├── 404.html          # Page d’erreur
-├── sitemap.xml       # Plan du site pour les moteurs de recherche
-├── LICENSE
-└── README.md
+├── 404.html
+├── sitemap.xml
+└── LICENSE
 ```
 
-## Qualité web et confidentialité
+## Confidentialité
 
-Le projet intègre plusieurs bonnes pratiques de développement web :
+Le site n’utilise ni cookies de suivi ni outil de mesure d’audience. Le stockage local sert à mémoriser la fermeture du message de confidentialité et le record de Byte Invaders. La police Inter peut être chargée depuis Bunny Fonts.
 
-- Structure HTML sémantique, libellés accessibles, navigation au clavier et indicateurs de focus.
-- Prise en compte de la préférence de réduction des animations et possibilité de mettre en pause le carrousel.
-- Ressources principales hébergées localement, images aux formats AVIF et WebP et chargement différé des images de projets.
-- Politique de sécurité du contenu (CSP) et contrôle d’intégrité de certaines bibliothèques (SRI).
-- URL canoniques, métadonnées et sitemap XML.
-- Aucun cookie de suivi ni outil de mesure d’audience. Le stockage local conserve la fermeture du message de confidentialité et le meilleur score à Byte Invaders.
-
-La police Inter peut être chargée via Bunny Fonts sur la page principale ; une solution de repli locale est prévue.
-
-Consulter la [politique de confidentialité](https://enzo131106.github.io/Portfolio/privacy.html) et les [mentions légales](https://enzo131106.github.io/Portfolio/mentions-legales.html) pour plus de détails.
+Plus de détails dans la [politique de confidentialité](https://enzo131106.github.io/Portfolio/privacy.html) et les [mentions légales](https://enzo131106.github.io/Portfolio/mentions-legales.html).
 
 ## Droits et licences
 
-**Copyright © 2026 Enzo Camilo - Tous droits réservés.**
+Copyright © 2026 Enzo Camilo. Tous droits réservés.
 
-Le code source est publiquement consultable à des fins d’information et d’apprentissage. Les conditions de réutilisation des créations originales sont précisées dans le fichier [LICENSE](LICENSE). Ce dépôt n’est pas distribué sous une licence open source.
-
-Les bibliothèques et ressources tierces restent régies par leurs propres licences, disponibles dans le dossier [vendor/](vendor/) et les [notices d’attribution](assets/icons/skills/NOTICE.txt).
+Le code est accessible pour consultation et apprentissage, mais le dépôt n’est pas sous licence open source. Les conditions de réutilisation des créations originales sont précisées dans le fichier [LICENSE](LICENSE). Les ressources et bibliothèques tierces conservent leurs propres licences et [notices d’attribution](assets/icons/skills/NOTICE.txt).
 
 ## Contact
 
-**Enzo Camilo** - Étudiant en BUT MMI à l’IUT de Tarbes
-
-[Portfolio](https://enzo131106.github.io/Portfolio/) · [LinkedIn](https://www.linkedin.com/in/enzo-camilo-4190a939b/) · [GitHub](https://github.com/Enzo131106) · [E-mail](mailto:enzo.camilo1306@gmail.com)
+[LinkedIn](https://www.linkedin.com/in/enzo-camilo-4190a939b/) · [GitHub](https://github.com/Enzo131106) · [E-mail](mailto:enzo.camilo1306@gmail.com)
