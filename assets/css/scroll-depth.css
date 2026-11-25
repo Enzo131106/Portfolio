@@ -33,6 +33,13 @@ html, body {
     
     overscroll-behavior-y: auto;
 }
+
+/* Keep the fixed 3D scene inside the viewport during touch overscroll. */
+@media (pointer: coarse) {
+    html, body {
+        overscroll-behavior-y: none;
+    }
+}
 #projects.projects-section, .projects-content { max-width: 100%; }
 
 
@@ -59,6 +66,15 @@ html, body {
     perspective-origin: 50% calc(50% - var(--depth-safe-top) / 2);
     pointer-events: none;
     overflow: clip;
+}
+
+/* The fixed viewport and navbar share the same top/bottom coordinates.
+   The scroll markers below remain independent of browser toolbar movement. */
+@media (pointer: coarse) {
+    .depth-stage {
+        inset: var(--depth-safe-top) 0 0;
+        height: auto;
+    }
 }
 
 .depth-stage-panel {
@@ -202,6 +218,14 @@ html, body {
     min-height: 100svh;
     min-height: 100dvh;
     scroll-margin-top: 0;
+}
+
+/* A stable last marker keeps Contact reachable even with the toolbar hidden. */
+@media (pointer: coarse) {
+    .depth-stage-active #contact {
+        min-height: 100svh;
+        min-height: 100lvh;
+    }
 }
 
 @media (max-width: 760px) {

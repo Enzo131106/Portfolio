@@ -50,6 +50,33 @@
         scrollFrame = window.requestAnimationFrame(updateActiveLink);
     }
 
+    // The animated sections are scroll markers, not the actual fixed content.
+    // On touch devices, jump to the marker without native anchor panning.
+    const touchViewport = window.matchMedia("(pointer: coarse)");
+    function navigateToDepthSection(event) {
+        if (event.defaultPrevented || event.button !== 0 || event.metaKey ||
+            event.ctrlKey || event.shiftKey || event.altKey ||
+            !touchViewport.matches || !document.body.classList.contains("depth-stage-active") ||
+            document.body.classList.contains("hero-intro-pending")) return;
+
+        const hash = event.currentTarget.getAttribute("href");
+        const section = document.querySelector(hash);
+        if (!section) return;
+
+        event.preventDefault();
+        const root = document.scrollingElement || document.documentElement;
+        const maxScroll = Math.max(0, root.scrollHeight - root.clientHeight);
+        const target = Math.max(0, Math.min(maxScroll,
+            section.getBoundingClientRect().top + window.scrollY));
+
+        if (location.hash !== hash) history.pushState(null, "", hash);
+        window.scrollTo({ top: target, behavior: "instant" });
+        scheduleActiveLinkUpdate();
+    }
+
+    navigationItems.forEach(({ link }) => link.addEventListener("click", navigateToDepthSection));
+    document.querySelector(".hero-scroll")?.addEventListener("click", navigateToDepthSection);
+
     window.addEventListener("scroll", scheduleActiveLinkUpdate, { passive: true });
     window.addEventListener("resize", scheduleActiveLinkUpdate, { passive: true });
     window.addEventListener("load", updateActiveLink);

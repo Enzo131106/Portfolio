@@ -2,6 +2,23 @@
 
 const shortScreenQuery = window.matchMedia("(max-height: 479px), (max-width: 380px) and (max-height: 580px)");
 const depthMotionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+const touchViewportQuery = window.matchMedia("(pointer: coarse)");
+
+// Use the small viewport on touch devices so moving browser toolbars cannot
+// cross the short-screen breakpoint and tear down the whole 3D stage.
+const stableViewportProbe = document.createElement("div");
+stableViewportProbe.setAttribute("aria-hidden", "true");
+stableViewportProbe.style.cssText = "position:fixed;top:0;left:0;width:0;height:100svh;visibility:hidden;pointer-events:none;";
+document.body.appendChild(stableViewportProbe);
+
+function isShortScreen() {
+    if (!touchViewportQuery.matches || !window.CSS?.supports("height", "100svh")) {
+        return shortScreenQuery.matches;
+    }
+    const height = stableViewportProbe.getBoundingClientRect().height;
+    const width = document.documentElement.clientWidth;
+    return height <= 479 || (width <= 380 && height <= 580);
+}
 
 function initializeScrollDepth() {
     const hero = document.querySelector("#accueil");
@@ -27,7 +44,7 @@ function initializeScrollDepth() {
     const line = track?.querySelector(".parcours-line-fill");
     const steps = track ? [...track.querySelectorAll(".parcours-step")] : [];
     const reducedMotion = depthMotionPreference.matches;
-    const shortScreen = shortScreenQuery.matches;
+    const shortScreen = isShortScreen();
     let introStarted = false;
     let released = false;
 
@@ -57,6 +74,8 @@ function initializeScrollDepth() {
     }
 
     gsap.registerPlugin(ScrollTrigger);
+    // Touch scroll markers use stable viewport heights; toolbar-only changes
+    // affect the fixed stage's layout, not the animation's scroll distances.
     ScrollTrigger.config({ ignoreMobileResize: true });
 
     const stage = document.createElement("div");
@@ -432,8 +451,16 @@ function initializeScrollDepth() {
 
 function startScrollDepth() {
     let destroy = initializeScrollDepth();
+    let previousShortScreen = isShortScreen();
+    let previousReducedMotion = depthMotionPreference.matches;
 
     function refreshDepth() {
+        const shortScreen = isShortScreen();
+        const reducedMotion = depthMotionPreference.matches;
+        if (shortScreen === previousShortScreen && reducedMotion === previousReducedMotion) return;
+        previousShortScreen = shortScreen;
+        previousReducedMotion = reducedMotion;
+
         const activeLink = document.querySelector(".navbar-nav .nav-link.active");
         const section = activeLink ? document.querySelector(activeLink.getAttribute("href")) : null;
         const progress = section
@@ -451,7 +478,13 @@ function startScrollDepth() {
     }
 
     shortScreenQuery.addEventListener("change", refreshDepth);
+    touchViewportQuery.addEventListener?.("change", refreshDepth);
     depthMotionPreference.addEventListener?.("change", refreshDepth);
+    window.addEventListener("resize", refreshDepth, { passive: true });
+    if ("ResizeObserver" in window) {
+        const viewportObserver = new ResizeObserver(refreshDepth);
+        viewportObserver.observe(stableViewportProbe);
+    }
 }
 
 startScrollDepth();
