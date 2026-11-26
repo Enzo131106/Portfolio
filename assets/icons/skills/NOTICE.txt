@@ -11,6 +11,8 @@ License: MIT
 - html.svg        — HTML
 - javascript.svg  — JavaScript
 - threejs.svg     — Three.js
+- php.svg         — PHP (PHP-Dark.svg)
+- mysql.svg       — MySQL (MySQL-Dark.svg)
 
 MIT license text:
 
