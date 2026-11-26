@@ -1,6 +1,6 @@
-SVG ICONS — SOURCES AND LICENSES
+SKILL ICONS — SOURCES AND LICENSES
 
-All SVG icons in assets/icons/skills are listed below.
+All icons in assets/icons/skills are listed below.
 
 1. Skill Icons (tandpfun)
 Source: https://github.com/tandpfun/skill-icons
@@ -48,6 +48,11 @@ License details: https://creativecommons.org/publicdomain/zero/1.0/
 
 Both icons use the Simple Icons artwork, adapted to the square backgrounds
 used for the other skill icons in this portfolio.
+
+3. q5.js
+Source: https://github.com/q5js/q5.js/blob/main/q5js_icon.png
+- q5.png — Official q5.js icon, reproduced unchanged for technology identification.
+q5.js is developed by Quinton Ashley and contributors; the library is licensed under LGPL-3.0.
 
 The names and logos of the technologies above may be trademarks of their
 respective owners. Their inclusion identifies technologies used in projects

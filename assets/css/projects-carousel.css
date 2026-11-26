@@ -210,6 +210,14 @@
     letter-spacing: -.035em;
 }
 
+.projects-carousel_details h3 .projects-carousel_project-status {
+    font-size: .48em;
+    font-weight: 500;
+    color: #ABD2FA;
+    letter-spacing: 0;
+    white-space: nowrap;
+}
+
 .projects-carousel_details p {
     margin: 0;
     color: rgba(226, 239, 255, .78);
